@@ -1,236 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- ==== EDIT THESE 4 LINES TO REBRAND THE SITE ==== -->
-  <title>Meridian — Plan your semester, not your panic</title>
-  <meta name="description" content="Meridian turns a messy syllabus into a calm, week-by-week study plan. A student project by Ebthal Gamal.">
-  <meta property="og:title" content="Meridian — Plan your semester, not your panic">
-  <meta property="og:description" content="Turn a messy syllabus into a calm, week-by-week study plan.">
-  <!-- ================================================ -->
-
-  <meta property="og:type" content="website">
-  <meta name="theme-color" content="#0B1020">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
-  <link rel="stylesheet" href="css/style.css">
-
-  <!-- Marks the page as "JavaScript is running" BEFORE the CSS paints.
-       Scroll-reveal only hides content under `.js`, so if this script never
-       runs the whole page still renders — just without the animations. -->
-  <script>document.documentElement.classList.add('js');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEO Kairo — A Meeting Place for Learning (Concept Redesign)</title>
+<meta name="description" content="Student redesign concept for DEO Kairo — a German-Egyptian school in Cairo, from Kindergarten through Abitur.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- Lets keyboard users jump past the nav. Visible only when focused. -->
-  <a class="skip-link" href="#main">Skip to main content</a>
+<a href="#main" class="skip-link">Skip to main content</a>
 
-  <header class="site-header">
-    <nav class="nav" aria-label="Main">
-      <a href="#" class="logo">
-        <span class="logo-mark" aria-hidden="true"></span>
-        Meridian
-      </a>
+<div class="concept-banner">
+  Student redesign concept — inspired by <a href="https://deokairo.com" target="_blank" rel="noopener">deokairo.com</a>, not the official DEO Kairo website.
+</div>
 
-      <button
-        class="nav-toggle"
-        id="nav-toggle"
-        aria-expanded="false"
-        aria-controls="nav-menu"
-        aria-label="Open navigation menu">
-        <span class="nav-toggle-bar" aria-hidden="true"></span>
-        <span class="nav-toggle-bar" aria-hidden="true"></span>
-        <span class="nav-toggle-bar" aria-hidden="true"></span>
-      </button>
-
-      <ul class="nav-links" id="nav-menu">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#how">How it works</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact" class="nav-cta">Get started</a></li>
-      </ul>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span data-en="DEO Kairo" data-de="DEO Kairo">DEO Kairo</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="#pillars" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="#community" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="#contact" data-en="Contact" data-de="Kontakt">Contact</a>
     </nav>
-  </header>
+    <div class="header-actions">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
+        <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
+      </button>
+      <a href="#contact" class="btn btn-primary nav-cta" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+      <span class="sr-only">Menu</span>
+    </button>
+  </div>
+</header>
 
-  <main id="main">
+<main id="main">
 
-    <!-- ============ HERO ============ -->
-    <section class="hero" id="hero">
-      <!-- Decorative glow that follows the pointer. Positioned by main.js. -->
-      <div class="hero-glow" aria-hidden="true"></div>
-
-      <div class="hero-content">
-        <p class="eyebrow">
-          <span class="eyebrow-dot" aria-hidden="true"></span>
-          Student project · Fall 2026
-        </p>
-
-        <h1>Plan your semester,<br><span class="gradient-text">not your panic.</span></h1>
-
-        <p class="hero-sub">
-          Meridian reads your syllabus dates and turns them into a calm, week-by-week
-          study plan — so you always know what's next instead of what's late.
-        </p>
-
-        <div class="hero-actions">
-          <a href="#contact" class="btn btn-primary">Get started</a>
-          <a href="#how" class="btn btn-ghost">
-            See how it works
-            <span class="btn-arrow" aria-hidden="true">→</span>
-          </a>
-        </div>
-
-        <dl class="hero-stats">
-          <div class="stat">
-            <dt>Setup time</dt>
-            <dd><span class="counter" data-count-to="90">90</span>s</dd>
-          </div>
-          <div class="stat">
-            <dt>Classes tracked</dt>
-            <dd><span class="counter" data-count-to="12">12</span></dd>
-          </div>
-          <div class="stat">
-            <dt>Deadlines missed</dt>
-            <dd><span class="counter" data-count-to="0">0</span></dd>
-          </div>
-        </dl>
+  <section class="hero">
+    <div class="hero-ornament" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <p class="eyebrow" data-en="German-Egyptian School · Cairo, since 1873" data-de="Deutsch-Ägyptische Schule · Kairo, seit 1873">German-Egyptian School · Cairo, since 1873</p>
+      <h1>
+        <span data-en="Where two cultures" data-de="Wo zwei Kulturen">Where two cultures</span><br>
+        <em data-en="sit at one table." data-de="an einem Tisch sitzen.">sit at one table.</em>
+      </h1>
+      <p class="hero-lead" data-en="DEO Kairo is a bilingual school built on encounter, not separation — German curriculum and Egyptian life, taught side by side from Kindergarten through the Abitur." data-de="Die DEO Kairo ist eine zweisprachige Schule, die auf Begegnung statt Trennung setzt — deutscher Lehrplan und ägyptisches Leben, gemeinsam unterrichtet vom Kindergarten bis zum Abitur.">
+        DEO Kairo is a bilingual school built on encounter, not separation — German curriculum and Egyptian life, taught side by side from Kindergarten through the Abitur.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
+        <a href="#path" class="btn btn-ghost" data-en="See the School Path ↓" data-de="Schulaufbau ansehen ↓">See the School Path ↓</a>
       </div>
-    </section>
+      <dl class="hero-stats">
+        <div><dt data-en="Founded" data-de="Gegründet">Founded</dt><dd>1873</dd></div>
+        <div><dt data-en="Languages taught" data-de="Unterrichtssprachen">Languages taught</dt><dd>3</dd></div>
+        <div><dt data-en="Grades" data-de="Klassenstufen">Grades</dt><dd>KG–13</dd></div>
+      </dl>
+    </div>
+  </section>
 
-    <!-- ============ FEATURES ============ -->
-    <section id="features" class="section" aria-labelledby="features-title">
-      <div class="section-head reveal">
-        <h2 id="features-title">Everything in one calm view</h2>
-        <p class="section-sub">
-          Three things most planners get wrong, and how Meridian handles them instead.
-        </p>
+  <section class="pillars" id="pillars">
+    <div class="wrap">
+      <p class="section-eyebrow" data-en="What we build on" data-de="Worauf wir bauen">What we build on</p>
+      <h2 data-en="Five things every family should know about us" data-de="Fünf Dinge, die jede Familie über uns wissen sollte">Five things every family should know about us</h2>
+      <div class="pillar-grid">
+        <article class="pillar-card">
+          <div class="pillar-icon" aria-hidden="true">◐</div>
+          <h3 data-en="Begegnung — Encounter" data-de="Begegnung">Begegnung — Encounter</h3>
+          <p data-en="Classrooms bring German and Egyptian students together deliberately, not by coincidence — encounter is a teaching method here, not a slogan." data-de="Klassenräume bringen deutsche und ägyptische Schüler bewusst zusammen, nicht zufällig — Begegnung ist hier eine Unterrichtsmethode, kein Slogan.">Classrooms bring German and Egyptian students together deliberately, not by coincidence — encounter is a teaching method here, not a slogan.</p>
+        </article>
+        <article class="pillar-card">
+          <div class="pillar-icon" aria-hidden="true">✦</div>
+          <h3 data-en="Bildung — Education" data-de="Bildung">Bildung — Education</h3>
+          <p data-en="A German curriculum toward the Abitur, taught with methods suited to how our students actually learn." data-de="Ein deutscher Lehrplan mit Blick auf das Abitur, unterrichtet mit Methoden, die zum Lernen unserer Schüler passen.">A German curriculum toward the Abitur, taught with methods suited to how our students actually learn.</p>
+        </article>
+        <article class="pillar-card">
+          <div class="pillar-icon" aria-hidden="true">☾</div>
+          <h3 data-en="Religion &amp; Spiritualität" data-de="Religion &amp; Spiritualität">Religion &amp; Spiritualität</h3>
+          <p data-en="Interfaith school life beyond a single chapel service — space for reflection, respect, and dialogue across traditions." data-de="Interreligiöses Schulleben über den Schulgottesdienst hinaus — Raum für Reflexion, Respekt und Dialog zwischen den Traditionen.">Interfaith school life beyond a single chapel service — space for reflection, respect, and dialogue across traditions.</p>
+        </article>
+        <article class="pillar-card">
+          <div class="pillar-icon" aria-hidden="true">◇</div>
+          <h3 data-en="Individuum &amp; Gemeinschaft" data-de="Individuum &amp; Gemeinschaft">Individuum &amp; Gemeinschaft</h3>
+          <p data-en="Room to become yourself inside a community that notices when you don't show up — smaller classes, known names." data-de="Raum, um man selbst zu werden, in einer Gemeinschaft, die es bemerkt, wenn man fehlt — kleinere Klassen, bekannte Namen.">Room to become yourself inside a community that notices when you don't show up — smaller classes, known names.</p>
+        </article>
+        <article class="pillar-card">
+          <div class="pillar-icon" aria-hidden="true">◈</div>
+          <h3 data-en="Partizipation" data-de="Partizipation">Partizipation</h3>
+          <p data-en="Parents, teachers, and students each hold a real seat in how the school runs — not an advisory board that meets once a year." data-de="Eltern, Lehrkräfte und Schüler haben echten Einfluss auf die Schulentwicklung — kein Beirat, der nur einmal im Jahr tagt.">Parents, teachers, and students each hold a real seat in how the school runs — not an advisory board that meets once a year.</p>
+        </article>
       </div>
+    </div>
+  </section>
 
-      <ul class="features">
-        <li class="feature-card reveal">
-          <span class="feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="17" rx="3"/>
-              <path d="M3 9h18M8 2v4M16 2v4M8.5 14.5l2 2 4-4"/>
-            </svg>
-          </span>
-          <h3>Deadlines that find you</h3>
-          <p>Paste a syllabus, get a timeline. Every due date lands on a calendar you can actually read at a glance.</p>
+  <section class="path" id="path">
+    <div class="wrap">
+      <p class="section-eyebrow" data-en="One school, one path" data-de="Eine Schule, ein Weg">One school, one path</p>
+      <h2 data-en="From first steps to Abitur" data-de="Von den ersten Schritten bis zum Abitur">From first steps to Abitur</h2>
+      <ol class="path-track">
+        <li>
+          <span class="path-step">01</span>
+          <h3>Kindergarten</h3>
+          <p data-en="Ages 4–6. Play-based, bilingual from day one." data-de="4–6 Jahre. Spielerisch, von Anfang an zweisprachig.">Ages 4–6. Play-based, bilingual from day one.</p>
         </li>
-
-        <li class="feature-card reveal">
-          <span class="feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 19V9M10 19V4M16 19v-7M22 19H2"/>
-            </svg>
-          </span>
-          <h3>Workload you can see</h3>
-          <p>Spot the week where three finals collide — while there's still time to start early instead of all at once.</p>
+        <li>
+          <span class="path-step">02</span>
+          <h3>Grundschule</h3>
+          <p data-en="Grades 1–4. Foundations in German, Arabic, and English." data-de="Klassen 1–4. Grundlagen in Deutsch, Arabisch und Englisch.">Grades 1–4. Foundations in German, Arabic, and English.</p>
         </li>
-
-        <li class="feature-card reveal">
-          <span class="feature-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9"/>
-              <path d="M12 7v5l3 2"/>
-            </svg>
-          </span>
-          <h3>Focus blocks, not guilt</h3>
-          <p>Meridian suggests short, realistic study sessions that fit the gaps you already have between classes.</p>
+        <li>
+          <span class="path-step">03</span>
+          <h3 data-en="Gymnasium (Sek. I &amp; II)" data-de="Gymnasium (Sek. I &amp; II)">Gymnasium (Sek. I &amp; II)</h3>
+          <p data-en="Grades 5–12/13. Full German secondary curriculum." data-de="Klassen 5–12/13. Vollständiger deutscher Sekundarlehrplan.">Grades 5–12/13. Full German secondary curriculum.</p>
         </li>
-      </ul>
-    </section>
-
-    <!-- ============ HOW IT WORKS ============ -->
-    <section id="how" class="section section-alt" aria-labelledby="how-title">
-      <div class="section-head reveal">
-        <h2 id="how-title">Three steps, once a semester</h2>
-        <p class="section-sub">Set it up in the first week and coast on it until finals.</p>
-      </div>
-
-      <ol class="steps">
-        <li class="step reveal">
-          <span class="step-num" aria-hidden="true">01</span>
-          <h3>Add your classes</h3>
-          <p>Name, meeting times, and the syllabus. That's the whole setup.</p>
-        </li>
-        <li class="step reveal">
-          <span class="step-num" aria-hidden="true">02</span>
-          <h3>Review the plan</h3>
-          <p>Meridian drafts your semester. Drag anything that looks wrong.</p>
-        </li>
-        <li class="step reveal">
-          <span class="step-num" aria-hidden="true">03</span>
-          <h3>Check in weekly</h3>
-          <p>Five minutes each Sunday keeps the whole term on track.</p>
+        <li>
+          <span class="path-step">04</span>
+          <h3>Abitur</h3>
+          <p data-en="German university-entrance qualification, recognized worldwide." data-de="Deutsche Hochschulreife, weltweit anerkannt.">German university-entrance qualification, recognized worldwide.</p>
         </li>
       </ol>
-    </section>
+    </div>
+  </section>
 
-    <!-- ============ ABOUT ============ -->
-    <section id="about" class="section" aria-labelledby="about-title">
-      <div class="about reveal">
-        <div class="about-text">
-          <h2 id="about-title">Why I built this</h2>
-          <p>
-            I kept missing assignments that I <em>knew</em> about — they just lived in six
-            different places. Meridian is my attempt at the planner I wanted: one screen,
-            no notifications, no streaks to maintain.
-          </p>
-          <p>
-            It's built as a course project with plain HTML, CSS, and JavaScript — no
-            frameworks, no build step. The source is on GitHub if you'd like to poke at it.
-          </p>
-          <a class="btn btn-ghost" href="https://github.com/Ebthalgamal2020/my-school-project">
-            View the source
-            <span class="btn-arrow" aria-hidden="true">→</span>
-          </a>
-        </div>
-
-        <div class="about-card" aria-hidden="true">
-          <div class="about-card-row"><span class="dot dot-a"></span> Essay draft · Tue</div>
-          <div class="about-card-row"><span class="dot dot-b"></span> Lab report · Thu</div>
-          <div class="about-card-row"><span class="dot dot-c"></span> Midterm review · Sat</div>
-          <div class="about-card-bar"><span style="width:72%"></span></div>
-          <p class="about-card-caption">Week 6 · 72% planned</p>
-        </div>
+  <section class="community" id="community">
+    <div class="wrap community-inner">
+      <div class="community-copy">
+        <p class="section-eyebrow" data-en="Who teaches here" data-de="Wer hier unterrichtet">Who teaches here</p>
+        <h2 data-en="Teachers who stay long enough to know your child's name — and use it." data-de="Lehrkräfte, die lange genug bleiben, um den Namen Ihres Kindes zu kennen — und ihn zu benutzen.">Teachers who stay long enough to know your child's name — and use it.</h2>
+        <p data-en="Our faculty mixes German-trained educators with long-standing local staff, many teaching here for over a decade. That continuity is deliberate: children learn better from people who remember them from one year to the next." data-de="Unser Kollegium besteht aus deutsch ausgebildeten Lehrkräften und langjährigem lokalen Personal, viele seit über zehn Jahren im Haus. Diese Kontinuität ist bewusst gewählt: Kinder lernen besser bei Menschen, die sie von Jahr zu Jahr kennen.">Our faculty mixes German-trained educators with long-standing local staff, many teaching here for over a decade. That continuity is deliberate: children learn better from people who remember them from one year to the next.</p>
+        <a href="#contact" class="btn btn-ghost" data-en="Meet the school →" data-de="Schule kennenlernen →">Meet the school →</a>
       </div>
-    </section>
+      <div class="community-quote">
+        <blockquote data-en="&quot;We didn't want a school that felt like two schools sharing a building. We wanted one school with two languages in its bones.&quot;" data-de="&quot;Wir wollten keine Schule, die sich wie zwei Schulen unter einem Dach anfühlt. Wir wollten eine Schule mit zwei Sprachen in ihrem Kern.&quot;">
+          "We didn't want a school that felt like two schools sharing a building. We wanted one school with two languages in its bones."
+        </blockquote>
+        <p class="quote-attribution" data-en="— School Leadership, DEO Kairo (illustrative quote)" data-de="— Schulleitung, DEO Kairo (illustratives Zitat)">— School Leadership, DEO Kairo (illustrative quote)</p>
+      </div>
+    </div>
+  </section>
 
-    <!-- ============ CONTACT / CTA ============ -->
-    <section id="contact" class="section" aria-labelledby="contact-title">
-      <div class="cta-panel reveal">
-        <h2 id="contact-title">Want to try it?</h2>
-        <p>Drop your email and I'll send the beta link when it's ready.</p>
-
-        <form class="signup" id="signup-form" novalidate>
-          <div class="signup-field">
-            <label for="email">Email address</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="you@school.edu"
-              autocomplete="email"
-              required
-              aria-describedby="form-status">
-          </div>
-          <button type="submit" class="btn btn-primary">Notify me</button>
-        </form>
-
-        <!-- role="status" makes screen readers announce the result without stealing focus -->
+  <section class="contact" id="contact">
+    <div class="wrap contact-inner">
+      <div>
+        <p class="section-eyebrow" data-en="Get in touch" data-de="Kontakt aufnehmen">Get in touch</p>
+        <h2 data-en="Come see it before you decide." data-de="Schauen Sie vorbei, bevor Sie entscheiden.">Come see it before you decide.</h2>
+        <p data-en="Tours run weekday mornings. Fill in the form and we'll confirm a time within one working day." data-de="Führungen finden werktags vormittags statt. Füllen Sie das Formular aus, wir bestätigen einen Termin innerhalb eines Arbeitstages.">Tours run weekday mornings. Fill in the form and we'll confirm a time within one working day.</p>
+        <ul class="contact-details">
+          <li><strong data-en="Address" data-de="Adresse">Address</strong> 6, El Dokki St., Dokki, 12612 Cairo</li>
+          <li><strong data-en="Phone" data-de="Telefon">Phone</strong> +20 (0)2‑37481475</li>
+          <li><strong data-en="Email" data-de="E-Mail">Email</strong> info@deokairo.de</li>
+        </ul>
+      </div>
+      <form class="visit-form" id="visit-form" novalidate>
+        <div class="field">
+          <label for="name" data-en="Full name" data-de="Vollständiger Name">Full name</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div class="field">
+          <label for="email" data-en="Email" data-de="E-Mail">Email</label>
+          <input type="email" id="email" name="email" required>
+          <span class="field-error" id="email-error" role="alert"></span>
+        </div>
+        <div class="field">
+          <label for="grade" data-en="Interested grade level" data-de="Interessierte Klassenstufe">Interested grade level</label>
+          <select id="grade" name="grade">
+            <option>Kindergarten</option>
+            <option>Grundschule</option>
+            <option>Gymnasium</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" data-en="Request a Visit" data-de="Besuch anfragen">Request a Visit</button>
         <p class="form-status" id="form-status" role="status"></p>
-      </div>
-    </section>
+      </form>
+    </div>
+  </section>
 
-  </main>
+</main>
 
-  <footer class="site-footer">
-    <p>&copy; 2026 Meridian — a student project by Ebthal Gamal.</p>
-    <p class="footer-meta">Built with HTML, CSS &amp; JavaScript. No frameworks harmed.</p>
-  </footer>
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p data-en="© 2026 DEO Kairo concept site. Built as a student web project." data-de="© 2026 DEO Kairo Konzeptseite. Erstellt als Studierendenprojekt.">© 2026 DEO Kairo concept site. Built as a student web project.</p>
+    <p class="footer-note" data-en="Unofficial redesign concept — not affiliated with or endorsed by DEO Kairo. Official site: deokairo.com" data-de="Inoffizielles Redesign-Konzept — nicht verbunden mit oder autorisiert von der DEO Kairo. Offizielle Seite: deokairo.com">Unofficial redesign concept — not affiliated with or endorsed by DEO Kairo. Official site: deokairo.com</p>
+  </div>
+</footer>
 
-  <script src="js/main.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

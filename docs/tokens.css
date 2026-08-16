@@ -1,0 +1,247 @@
+/* =============================================================================
+   DEO Kairo — Design Tokens
+   Companion to docs/design-blueprint.md · v0.1 draft
+
+   This file is TOKENS ONLY. No components, no layout — just the values every
+   component should draw from. Import it before any other stylesheet.
+
+   Contrast figures in comments were measured with the WCAG 2.1 relative
+   luminance formula. Re-measure if any colour changes.
+   ============================================================================= */
+
+:root {
+
+  /* ---------------------------------------------------------------------------
+     1. BRAND PALETTE (raw)
+     Do not reference these directly in components — use the semantic roles in
+     section 2. That way a palette revision touches one block, not 400 rules.
+     --------------------------------------------------------------------------- */
+  --nile-900:    #123832;   /* deep Nile teal */
+  --papyrus-50:  #F7F0DE;   /* papyrus */
+  --clay-600:    #A64B2A;   /* clay */
+  --gold-500:    #C89B3C;   /* sun-gold */
+  --teal-500:    #3E9C86;   /* bright teal */
+
+  /* Derived — these three exist because the brand palette has no accessible
+     colour for these roles. See blueprint §1.2. */
+  --teal-700:    #2A6E5E;   /* readable teal · 5.29:1 on papyrus · 6.02:1 w/ white */
+  --ink-muted:   #4E5F57;   /* muted text   · 5.96:1 on papyrus */
+  --teal-100:    #B8CFC8;   /* muted on dark· 7.82:1 on nile-900 */
+
+  /* Tints & shades */
+  --surface-raised: #FFFDF7;  /* half-step above papyrus, for cards */
+  --clay-700:       #8F3F22;  /* clay hover  */
+  --nile-800:       #1A4A42;  /* dark-band hover / divider on dark */
+  --gold-200:       #EBD9A8;  /* soft gold, ornament on dark only */
+
+
+  /* ---------------------------------------------------------------------------
+     2. SEMANTIC ROLES
+     Components reference ONLY these.
+     --------------------------------------------------------------------------- */
+
+  /* Surfaces */
+  --surface:            var(--papyrus-50);
+  --surface-2:          var(--surface-raised);
+  --surface-invert:     var(--nile-900);
+
+  /* Text — every pair below is >= 4.5:1 on its intended surface */
+  --text:               var(--nile-900);    /* on --surface      · 11.28:1 AAA */
+  --text-muted:         var(--ink-muted);   /* on --surface      ·  5.96:1 AA  */
+  --text-invert:        var(--papyrus-50);  /* on --surface-invert· 11.28:1 AAA */
+  --text-invert-muted:  var(--teal-100);    /* on --surface-invert·  7.82:1 AAA */
+
+  /* Action */
+  --action:             var(--clay-600);    /* w/ --text-on-action ·  5.74:1 AA */
+  --action-hover:       var(--clay-700);
+  --text-on-action:     #FFFFFF;
+
+  --action-alt:         var(--teal-700);    /* w/ white            ·  6.02:1 AA */
+  --link:               var(--teal-700);    /* on --surface        ·  5.29:1 AA */
+  --link-invert:        var(--gold-500);    /* on --surface-invert ·  5.01:1 AA */
+
+  /* Accent & graphic
+     WARNING: --accent is 2.25:1 on papyrus. It is for rules, timeline nodes,
+     and ornament ONLY. Never body text on a light surface.
+     WARNING: --graphic is 2.93:1 on papyrus. Fills and illustration only. */
+  --accent:             var(--gold-500);
+  --accent-soft:        var(--gold-200);
+  --graphic:            var(--teal-500);
+
+  /* Text ON gold must be dark — white on gold is 2.56:1 and fails. */
+  --text-on-accent:     var(--nile-900);    /* on --accent         ·  5.01:1 AA */
+
+  /* Borders
+     --border and --border-strong are decorative separators (1.27:1 and 1.66:1
+     on papyrus) and are fine as such. But WCAG 1.4.11 requires 3:1 for any
+     boundary that IDENTIFIES a control — an input's edge, a checkbox outline.
+     Those must use --border-interactive. */
+  --border:             #E0D6BC;            /* decorative rule   · 1.27:1 */
+  --border-strong:      #C9BC9B;            /* decorative rule   · 1.66:1 */
+  --border-interactive: #8A7B5C;            /* input/control edge· 3.65:1 AA */
+  --border-invert:      var(--nile-800);    /* on --surface-invert        */
+
+  /* Focus — two-tone on light, single on dark. Gold alone on papyrus is
+     2.25:1 and fails WCAG 2.2 focus-appearance. See blueprint §1.2. */
+  --focus-ring:         var(--clay-600);
+  --focus-ring-invert:  var(--gold-500);
+  --focus-ring-width:   3px;
+  --focus-ring-offset:  2px;
+
+  /* Feedback */
+  --success:            #2A6E5E;            /* on --surface        ·  5.29:1 AA */
+  --error:              #A33224;            /* on --surface        ·  6.08:1 AA */
+  --error-invert:       #F2A99B;            /* on --surface-invert ·  6.67:1 AA */
+
+
+  /* ---------------------------------------------------------------------------
+     3. TYPOGRAPHY
+     All four families are self-hosted — see blueprint §0.3. Do NOT load these
+     from fonts.googleapis.com.
+     --------------------------------------------------------------------------- */
+  --font-heading:        'Spectral', Georgia, 'Times New Roman', serif;
+  --font-body:           'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-heading-ar:     'Amiri', 'Noto Naskh Arabic', serif;
+  --font-body-ar:        'IBM Plex Sans Arabic', 'Noto Sans Arabic', sans-serif;
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+  --weight-bold:    700;
+
+  /* Fluid scale — no font-size media queries needed */
+  --text-display: clamp(2.5rem, 5.5vw, 4rem);
+  --text-h2:      clamp(1.9rem, 3.5vw, 2.75rem);
+  --text-h3:      clamp(1.25rem, 2vw, 1.5rem);
+  --text-lg:      1.125rem;
+  --text-base:    1rem;      /* never go below this for body copy */
+  --text-sm:      0.9rem;
+  --text-label:   0.8rem;
+
+  --leading-tight:   1.1;
+  --leading-heading: 1.15;
+  --leading-body:    1.65;
+  --leading-body-ar: 1.9;    /* Arabic needs more room — see blueprint §1.3 */
+
+  --measure:    66ch;        /* max line length, Latin  */
+  --measure-ar: 60ch;        /* max line length, Arabic */
+
+  /* Arabic renders visually smaller at the same nominal size */
+  --ar-size-boost: 1.08;
+
+
+  /* ---------------------------------------------------------------------------
+     4. SPACING  (4px base)
+     --------------------------------------------------------------------------- */
+  --space-1:  0.25rem;   /*   4px */
+  --space-2:  0.5rem;    /*   8px */
+  --space-3:  0.75rem;   /*  12px */
+  --space-4:  1rem;      /*  16px */
+  --space-6:  1.5rem;    /*  24px */
+  --space-8:  2rem;      /*  32px */
+  --space-12: 3rem;      /*  48px */
+  --space-16: 4rem;      /*  64px */
+  --space-24: 6rem;      /*  96px */
+  --space-32: 8rem;      /* 128px */
+
+  --section-y:  clamp(var(--space-16), 10vw, var(--space-24));
+  --gutter:     clamp(var(--space-4), 4vw, var(--space-8));
+  --container:  1200px;
+
+
+  /* ---------------------------------------------------------------------------
+     5. SHAPE & ELEVATION
+     --------------------------------------------------------------------------- */
+  --radius-sm:   4px;    /* inputs */
+  --radius-md:  10px;    /* cards  */
+  --radius-pill: 999px;  /* buttons, tags */
+
+  --shadow-card:  0 2px 8px rgba(18, 56, 50, 0.06),
+                  0 8px 24px -12px rgba(18, 56, 50, 0.12);
+  --shadow-lift:  0 4px 12px rgba(18, 56, 50, 0.08),
+                  0 16px 40px -16px rgba(18, 56, 50, 0.18);
+
+  --touch-target: 44px;  /* minimum interactive size */
+
+
+  /* ---------------------------------------------------------------------------
+     6. MOTION
+     Every animation using these must have a prefers-reduced-motion fallback.
+     --------------------------------------------------------------------------- */
+  --ease:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:   200ms;   /* state changes  */
+  --dur-slow:   500ms;   /* reveals        */
+
+
+  /* ---------------------------------------------------------------------------
+     7. LAYOUT
+     --------------------------------------------------------------------------- */
+  --z-header: 100;
+  --z-menu:   200;
+  --z-modal:  300;
+
+  /* Breakpoints are documented here for reference; CSS custom properties
+     cannot be used in @media queries, so these must be duplicated as literals.
+     <480 · 480-767 · 768-1023 · 1024-1279 · >=1280   (blueprint §5.4) */
+}
+
+
+/* =============================================================================
+   LANGUAGE-SPECIFIC OVERRIDES
+   Applied via the <html lang> attribute. No JavaScript involved.
+   ============================================================================= */
+
+/* --- Arabic: fonts, size boost, looser leading ----------------------------- */
+:root:lang(ar) {
+  --font-heading:  var(--font-heading-ar);
+  --font-body:     var(--font-body-ar);
+  --leading-body:  var(--leading-body-ar);
+  --measure:       var(--measure-ar);
+  --text-base:     calc(1rem * var(--ar-size-boost));
+}
+
+/* Arabic letters connect — letter-spacing breaks the joins and makes text
+   genuinely hard to read. Scope ALL tracking away from Arabic. */
+:lang(ar) * {
+  letter-spacing: normal !important;
+}
+
+/* Arabic has no italic form. Faux-italic is a slanted distortion, not a style. */
+:lang(ar) em,
+:lang(ar) i {
+  font-style: normal;
+  font-weight: var(--weight-semi);
+}
+
+/* --- German: long compound nouns need help breaking ------------------------ */
+/* Datenschutzerklärung is 24 characters with no natural break point. */
+:lang(de) {
+  hyphens: auto;
+  overflow-wrap: break-word;
+}
+
+
+/* =============================================================================
+   REDUCED MOTION
+   Collapse the durations at the token level, so every component that uses
+   --dur-* inherits the fallback without needing its own media query.
+   ============================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0.01ms;
+    --dur-slow: 0.01ms;
+  }
+}
+
+
+/* =============================================================================
+   FORCED COLORS (Windows High Contrast)
+   Let the OS palette take over rather than fighting it.
+   ============================================================================= */
+@media (forced-colors: active) {
+  :root {
+    --shadow-card: none;
+    --shadow-lift: none;
+  }
+}
