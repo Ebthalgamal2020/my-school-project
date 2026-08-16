@@ -182,11 +182,76 @@ a { color: inherit; }
 /* ===== Hero ===== */
 .hero {
   position: relative;
-  background: var(--ink);
+  isolation: isolate;              /* keeps the z-index stack local to the hero */
+  display: grid;
+  align-items: center;
+
+  /* True full-screen. svh is the "small viewport" unit — on mobile it accounts
+     for the browser's collapsing address bar, which plain vh does not. */
+  min-height: 100vh;
+  min-height: 100svh;
+
+  /* Slide up under the sticky 76px header so the video starts at pixel 0.
+     The padding puts it straight back for the content, so nothing below moves. */
+  margin-top: -76px;
+  padding: 172px 0 96px;
+
+  background: var(--ink);          /* shows through until the video paints */
   color: var(--text-on-dark);
   overflow: hidden;
-  padding: 96px 0 72px;
 }
+
+/* ---- Background video ---- */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;               /* fills edge-to-edge without distorting */
+  object-position: center;
+  display: block;
+}
+
+/* ---- Dark scrim: guarantees the headline stays readable over any frame ---- */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* Pause control — WCAG 2.2.2 requires a way to stop anything that plays
+   automatically for longer than five seconds. */
+.hero-videobtn {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 0.72rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+.hero-videobtn:hover {
+  background: var(--red);
+  border-color: var(--red);
+  transform: scale(1.08);
+}
+/* Without JS the button can't toggle anything, so don't show a dead control. */
+html:not(.js) .hero-videobtn { display: none; }
 .hero-ornament {
   position: absolute;
   right: -120px;
@@ -196,7 +261,10 @@ a { color: inherit; }
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255,206,3,0.30), transparent 70%);
 }
-.hero-inner { position: relative; }
+.hero-inner { position: relative; z-index: 1; width: 100%; }
+/* Brand glows sit above the scrim so they tint the footage rather than
+   getting buried under it. */
+.hero-ornament, .hero-grid { z-index: -1; }
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -768,6 +836,209 @@ html:not(.js) .to-top,
 html:not(.js) .scroll-progress { display: none; }
 
 /* =====================================================================
+   SHOWCASE — asymmetric collage + editorial copy
+   Self-contained: adds no rules to any existing selector.
+   ===================================================================== */
+.showcase { background: var(--cream-soft); }
+
+/* Wider than the site's standard 1120px .wrap — scoped to this section only,
+   so every other section keeps its existing measure. */
+.showcase > .wrap {
+  max-width: min(1440px, 92vw);
+}
+
+.showcase-inner {
+  display: grid;
+  /* Proportional tracks, NOT a fixed 550px column. A hard 550px track wins
+     the space war against a 1fr sibling on mid-size screens and squeezes the
+     collage down to a sliver around 800-1100px wide. The copy is capped by
+     its own max-width instead, so both columns shrink together. */
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(40px, 5.5vw, 80px);
+  align-items: center;
+}
+
+/* ---- Left: the stack -----------------------------------------------------
+   A 12x12 grid with overlapping areas. The container carries the
+   aspect-ratio, so the whole collage scales with its column — no fixed
+   pixel heights, nothing to break on ultra-wide or narrow screens. */
+.collage {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(12, 1fr);
+  /* A real height rather than an aspect-ratio, so the stack keeps its visual
+     weight as the column widens instead of only growing when it gets taller. */
+  height: clamp(440px, 40vw, 580px);
+  width: 100%;
+  margin-inline: auto;
+}
+
+.collage-layer {
+  /* <figure> carries a UA default of `margin: 1em 40px`, which the page's
+     reset doesn't cover. Left in, it shrinks every layer inside its grid
+     cell by 80px and the overlaps collapse. */
+  margin: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  transition: transform var(--dur-slow) var(--ease-out),
+              box-shadow var(--dur-slow) var(--ease-out);
+}
+/* object-fit means the photo is cropped, never squashed, at any size */
+.collage-layer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.collage-base  { grid-area: 1 / 1 / 10 / 10; z-index: 1; }
+.collage-crest { grid-area: 8 / 2 / 13 / 8;  z-index: 2; }
+.collage-front { grid-area: 4 / 6 / 13 / 13; z-index: 3; }
+
+/* Faces sit in the upper half of both photos, so bias the crop upward */
+.collage-base img  { object-position: 50% 42%; }
+.collage-front img { object-position: 52% 28%; }
+
+/* The crimson crest block */
+.collage-crest {
+  display: grid;
+  place-items: center;
+  padding: clamp(14px, 2.2vw, 26px);
+  background: var(--red);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.14);
+}
+.collage-crest img {
+  width: auto;
+  height: auto;
+  max-width: 72%;
+  max-height: 62%;
+  object-fit: contain;
+  filter: brightness(0) invert(1);   /* knock the logo to white on the red */
+}
+.collage-crest figcaption {
+  margin-top: 10px;
+  color: #fff;
+  font-size: clamp(0.6rem, 0.9vw, 0.72rem);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Hover: each layer lifts a different amount, so the stack gains depth */
+.collage:hover .collage-base  { transform: translate(-6px, -6px); }
+.collage:hover .collage-crest { transform: translateY(6px); }
+.collage:hover .collage-front {
+  transform: translate(10px, -12px);
+  box-shadow: 0 34px 60px rgba(0, 0, 0, 0.16);
+}
+
+/* ---- Right: the copy ---- */
+.showcase-copy { max-width: 550px; }
+/* Beats `section h2` on specificity (0,1,1 vs 0,0,2), so no !important needed */
+.showcase-copy h2 {
+  font-size: clamp(2rem, 3.5vw, 3.2rem);
+  max-width: 16ch;
+}
+.showcase-copy p {
+  color: var(--text-muted-light);
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  max-width: 52ch;
+  margin-bottom: 18px;
+}
+
+.showcase-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 3vw, 44px);
+  margin: 32px 0 36px;
+}
+.showcase-stats div { border-left: 3px solid var(--gold); padding-left: 14px; }
+.showcase-stats b {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  line-height: 1.1;
+}
+.showcase-stats span {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+
+/* ---- Custom CTA: label plus a circle that swallows it on hover ---- */
+.btn-arrow-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 8px 8px 26px;
+  border: 1.5px solid var(--ink);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background var(--dur-med) var(--ease-out),
+              color var(--dur-med) var(--ease-out),
+              border-color var(--dur-med) var(--ease-out);
+}
+.btn-arrow-cta .circle {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;                 /* 4.96:1 on --red */
+  transition: transform var(--dur-med) var(--ease-spring),
+              background var(--dur-med) var(--ease-out);
+}
+.btn-arrow-cta:hover { background: var(--ink); color: var(--text-on-dark); border-color: var(--ink); }
+.btn-arrow-cta:hover .circle { transform: translateX(4px) rotate(45deg); background: var(--gold); color: var(--ink); }
+
+/* ==================== RESPONSIVE ====================
+   768px and below: one column, text full-width, collage restacked with
+   no overlap at all — nothing can clip or crush on a phone. */
+@media (max-width: 768px) {
+  .showcase > .wrap { max-width: 100%; }
+  .showcase-inner { grid-template-columns: 1fr; gap: 40px; }
+
+  .collage {
+    /* Drop the 12x12 overlap grid entirely */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 14px;
+    height: auto;            /* release the desktop fixed height */
+    aspect-ratio: auto;
+    max-width: none;
+  }
+  .collage-layer { transform: none !important; }   /* cancel the desktop hover offsets */
+
+  .collage-base  { grid-area: 1 / 1 / 2 / 3; aspect-ratio: 16 / 10; }
+  .collage-front { grid-area: 2 / 1 / 3 / 2; aspect-ratio: 4 / 5; }
+  .collage-crest { grid-area: 2 / 2 / 3 / 3; aspect-ratio: 4 / 5; }
+
+  /* Full-width text on mobile — overrides the 550px desktop cap */
+  .showcase-copy,
+  .showcase-copy h2,
+  .showcase-copy p { max-width: none; }
+}
+
+/* Very small phones: a single clean column, nothing side by side */
+@media (max-width: 460px) {
+  .collage { grid-template-columns: 1fr; }
+  .collage-base  { grid-area: auto; aspect-ratio: 16 / 10; }
+  .collage-front { grid-area: auto; aspect-ratio: 4 / 5; }
+  .collage-crest { grid-area: auto; aspect-ratio: 16 / 9; }
+  .btn-arrow-cta { width: 100%; justify-content: space-between; }
+}
+
+/* =====================================================================
    REDUCED MOTION
    Strip the movement, keep the design. Nothing here hides content —
    every reveal is forced visible.
@@ -792,6 +1063,12 @@ html:not(.js) .scroll-progress { display: none; }
     animation: none !important;
   }
   .path-track li::before { transform: scaleY(1) !important; }
+
+  /* Collage layers hold still */
+  .collage:hover .collage-base,
+  .collage:hover .collage-crest,
+  .collage:hover .collage-front { transform: none; }
+  .btn-arrow-cta:hover .circle { transform: none; }
 
   /* Purely decorative motion — remove outright */
   .hero-grid, .scroll-cue { display: none; }

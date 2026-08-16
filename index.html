@@ -46,6 +46,13 @@
 <main id="main">
 
   <section class="hero">
+    <!-- Background footage. muted + playsinline are what make autoplay legal
+         on iOS and Chrome; without them the browser silently blocks it. -->
+    <video class="hero-video" id="hero-video" autoplay muted loop playsinline>
+      <source src="deo-background.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay" aria-hidden="true"></div>
+
     <div class="hero-ornament" aria-hidden="true"></div>
     <div class="hero-ornament hero-ornament-2" aria-hidden="true"></div>
     <div class="hero-grid" aria-hidden="true"></div>
@@ -77,7 +84,67 @@
         </div>
       </dl>
     </div>
+    <button class="hero-videobtn" id="hero-videobtn" aria-label="Pause background video" aria-pressed="false">
+      <span aria-hidden="true">&#10073;&#10073;</span>
+    </button>
+
     <div class="scroll-cue" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- ===================== SHOWCASE / COLLAGE ===================== -->
+  <section class="showcase" id="showcase">
+    <div class="wrap showcase-inner">
+
+      <!-- Left column: three layers stacked on a 12x12 grid -->
+      <div class="collage" data-reveal style="--i:0">
+        <figure class="collage-layer collage-base">
+          <img src="assets/campus-building.jpg"
+               alt="The school's girls' football team standing with their coach on the pitch"
+               width="1600" height="1067" loading="lazy" decoding="async">
+        </figure>
+
+        <figure class="collage-layer collage-crest">
+          <img src="assets/logo.png" alt="" width="68" height="48" loading="lazy" decoding="async">
+          <figcaption data-en="Seit 1873" data-de="Seit 1873">Seit 1873</figcaption>
+        </figure>
+
+        <figure class="collage-layer collage-front">
+          <img src="assets/student-portrait.jpg"
+               alt="Primary pupils in costume with their teacher during a school theme day"
+               width="1920" height="1780" loading="lazy" decoding="async">
+        </figure>
+      </div>
+
+      <!-- Right column: editorial copy -->
+      <div class="showcase-copy">
+        <p class="section-eyebrow" data-reveal style="--i:1"
+           data-en="Life beyond the timetable" data-de="Leben jenseits des Stundenplans">Life beyond the timetable</p>
+
+        <h2 data-reveal style="--i:2"
+            data-en="A school day that doesn't end when the bell does."
+            data-de="Ein Schultag, der nicht mit der Glocke endet.">A school day that doesn't end when the bell does.</h2>
+
+        <p data-reveal style="--i:3"
+           data-en="Sport, music, theatre and theme days aren't extras bolted onto the timetable — they're where friendships across two cultures actually get made. A pitch and a stage teach things a classroom cannot."
+           data-de="Sport, Musik, Theater und Thementage sind keine Zusätze zum Stundenplan — dort entstehen die Freundschaften über beide Kulturen hinweg. Ein Spielfeld und eine Bühne lehren, was ein Klassenzimmer nicht kann.">Sport, music, theatre and theme days aren't extras bolted onto the timetable — they're where friendships across two cultures actually get made. A pitch and a stage teach things a classroom cannot.</p>
+
+        <p data-reveal style="--i:4"
+           data-en="Every pupil joins at least one club. Teams train on campus, perform on campus, and travel together — because a school is a community before it is a curriculum."
+           data-de="Jede Schülerin und jeder Schüler ist in mindestens einer AG. Teams trainieren und treten auf dem Campus auf und reisen gemeinsam — denn eine Schule ist eine Gemeinschaft, bevor sie ein Lehrplan ist.">Every pupil joins at least one club. Teams train on campus, perform on campus, and travel together — because a school is a community before it is a curriculum.</p>
+
+        <div class="showcase-stats" data-reveal style="--i:5">
+          <div><b>20+</b><span data-en="Clubs and teams" data-de="AGs und Teams">Clubs and teams</span></div>
+          <div><b>4</b><span data-en="Stage productions a year" data-de="Bühnenstücke pro Jahr">Stage productions a year</span></div>
+          <div><b>100%</b><span data-en="Pupils in a club" data-de="Schüler in einer AG">Pupils in a club</span></div>
+        </div>
+
+        <a class="btn-arrow-cta" href="#contact" data-reveal style="--i:6">
+          <span data-en="Explore school life" data-de="Schulleben entdecken">Explore school life</span>
+          <span class="circle" aria-hidden="true">→</span>
+        </a>
+      </div>
+
+    </div>
   </section>
 
   <section class="pillars" id="pillars">

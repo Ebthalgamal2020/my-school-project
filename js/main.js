@@ -264,6 +264,50 @@ function initForm() {
 }
 
 
+/* --------------------------------------------------------------------------
+   10. HERO BACKGROUND VIDEO
+   Reduced motion means no autoplay — the visitor can still start it by hand.
+   If the file is missing or won't decode, the video and its button are removed
+   so the dark hero behind them stands on its own.
+   -------------------------------------------------------------------------- */
+function initHeroVideo() {
+  const video = document.getElementById('hero-video');
+  const button = document.getElementById('hero-videobtn');
+  if (!video || !button) return;
+
+  function setLabel(playing) {
+    button.setAttribute('aria-label', playing ? 'Pause background video' : 'Play background video');
+    button.setAttribute('aria-pressed', String(!playing));
+    button.firstElementChild.textContent = playing ? '▉▉' : '▶';
+  }
+
+  function drop() { video.remove(); button.remove(); }
+  video.addEventListener('error', drop);
+  const source = video.querySelector('source');
+  if (source) source.addEventListener('error', drop);
+
+  video.addEventListener('play', () => setLabel(true));
+  video.addEventListener('pause', () => setLabel(false));
+
+  button.addEventListener('click', () => {
+    if (video.paused) video.play().catch(() => {});
+    else video.pause();
+  });
+
+  if (REDUCE) {
+    video.removeAttribute('autoplay');
+    video.pause();
+    setLabel(false);
+    return;
+  }
+
+  // Autoplay can still be refused (low-power mode, data saver) — reflect reality.
+  setLabel(!video.paused);
+  const attempt = video.play();
+  if (attempt && attempt.catch) attempt.catch(() => setLabel(false));
+}
+
+
 /* ---- start --------------------------------------------------------------- */
 initMenu();
 initScrollChrome();
@@ -274,3 +318,4 @@ initParallax();
 initRipple();
 initLang();
 initForm();
+initHeroVideo();
