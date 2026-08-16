@@ -201,25 +201,30 @@ a { color: inherit; }
   overflow: hidden;
 }
 
-/* ---- Background video ---- */
-.hero-video {
+/* ---- Background video: layer 1 of 3 ----
+   Explicit width/height stop the element collapsing to 0px; object-fit keeps
+   the frame filled without distortion at any viewport size. */
+.hero-video-bg {
   position: absolute;
-  inset: 0;
-  z-index: -3;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;               /* fills edge-to-edge without distorting */
+  object-fit: cover;
   object-position: center;
   display: block;
+  z-index: 1;
 }
 
-/* ---- Dark scrim: guarantees the headline stays readable over any frame ---- */
+/* ---- Dark dimming mask: layer 2 of 3 ----
+   The hero's own solid background is only a fallback behind the video. The
+   dimming is done here with an alpha channel so it never hides the footage. */
 .hero-overlay {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: 2;
   pointer-events: none;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 /* Pause control — WCAG 2.2.2 requires a way to stop anything that plays
@@ -261,10 +266,16 @@ html:not(.js) .hero-videobtn { display: none; }
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255,206,3,0.30), transparent 70%);
 }
-.hero-inner { position: relative; z-index: 1; width: 100%; }
-/* Brand glows sit above the scrim so they tint the footage rather than
-   getting buried under it. */
-.hero-ornament, .hero-grid { z-index: -1; }
+/* ---- Headline / buttons / stats: layer 3 of 3, always on top ---- */
+.hero-inner { position: relative; z-index: 3; width: 100%; }
+
+/* Brand glows share layer 2 with the mask. They come after it in the DOM, so
+   they tint the footage rather than being buried under it. */
+.hero-ornament, .hero-grid { z-index: 2; }
+
+/* These sit above the video too, or they'd vanish behind it */
+.scroll-cue { z-index: 3; }
+.hero-videobtn { z-index: 4; }
 .eyebrow {
   text-transform: uppercase;
   letter-spacing: 0.12em;
