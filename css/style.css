@@ -16,6 +16,16 @@
   --font-display: 'Newsreader', Georgia, serif;
   --font-body: 'Manrope', system-ui, sans-serif;
   --max-width: 1120px;
+
+  /* ---- Motion scale ----
+     One easing family and three durations, so everything on the page
+     accelerates the same way and reads as a single system. */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);   /* default: fast then settle */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);/* slight overshoot          */
+  --dur-fast: 180ms;   /* hovers, small state flips */
+  --dur-med:  320ms;   /* cards, menus              */
+  --dur-slow: 640ms;   /* entrances, reveals        */
+  --stagger:   90ms;   /* delay between sibling reveals */
 }
 
 * { box-sizing: border-box; }
@@ -101,6 +111,10 @@ a { color: inherit; }
   align-items: center;
   justify-content: space-between;
   height: 76px;
+  /* .header-actions uses margin-left:auto, which absorbs all the free space
+     space-between would otherwise distribute — so the brand and nav need an
+     explicit gap or they sit flush against each other. */
+  gap: 32px;
 }
 .brand {
   display: flex;
@@ -268,20 +282,41 @@ section h2 {
   border-radius: var(--radius);
   padding: 28px 24px;
 }
-.js .pillar-card {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+.pillar-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-med) var(--ease-out),
+              border-color var(--dur-med) var(--ease-out),
+              box-shadow var(--dur-med) var(--ease-out);
 }
-.js .pillar-card.reveal {
-  opacity: 1;
-  transform: translateY(0);
+/* Accent bar that sweeps across the bottom edge on hover */
+.pillar-card::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-med) var(--ease-out);
 }
+.pillar-card:hover,
+.pillar-card:focus-within {
+  transform: translateY(-6px);
+  border-color: var(--gold);
+  box-shadow: 0 18px 40px -22px rgba(20, 20, 20, 0.45);
+}
+.pillar-card:hover::after,
+.pillar-card:focus-within::after { transform: scaleX(1); }
+
 .pillar-icon {
   font-size: 1.6rem;
   color: var(--red);
   margin-bottom: 14px;
+  display: inline-block;
+  transition: transform var(--dur-slow) var(--ease-spring);
 }
+.pillar-card:hover .pillar-icon { transform: scale(1.25) rotate(-8deg); }
 .pillar-card h3 { font-size: 1.15rem; }
 .pillar-card p { color: var(--text-muted-light); font-size: 0.95rem; margin-bottom: 0; }
 
@@ -442,12 +477,324 @@ section h2 {
   .path-track { grid-template-columns: 1fr; }
 }
 
-/* ===== Reduced motion ===== */
+/* =====================================================================
+   MOTION SYSTEM
+   Everything that hides content is scoped to .js, which is set by an
+   inline script in <head>. With JavaScript off, nothing below applies
+   and the page renders as plain static content.
+   ===================================================================== */
+
+/* ---- Scroll progress bar ---- */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 200;
+  pointer-events: none;
+  background: transparent;
+}
+.scroll-progress span {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+  transform-origin: left;
+}
+
+/* ---- Header: condenses once you scroll ---- */
+.site-header {
+  transition: height var(--dur-med) var(--ease-out),
+              box-shadow var(--dur-med) var(--ease-out),
+              background var(--dur-med) var(--ease-out);
+}
+.header-inner {
+  transition: height var(--dur-med) var(--ease-out);
+}
+.site-header.is-scrolled {
+  box-shadow: 0 6px 24px -14px rgba(20, 20, 20, 0.5);
+  background: rgba(250, 247, 241, 0.96);
+}
+.site-header.is-scrolled .header-inner { height: 62px; }
+.brand img { transition: transform var(--dur-med) var(--ease-out); }
+.site-header.is-scrolled .brand img { transform: scale(0.86); }
+
+/* ---- Nav: underline grows from the left ---- */
+.main-nav a {
+  position: relative;
+  padding-bottom: 3px;
+}
+.main-nav a::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 100%; height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.main-nav a:hover::after,
+.main-nav a:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---- Buttons: lift, plus a sheen that wipes across the primary ---- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+.btn:hover { transform: translateY(-2px); }
+.btn:active { transform: translateY(0) scale(0.98); }
+.btn-primary:hover { box-shadow: 0 12px 26px -12px var(--red); }
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.28) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.btn-primary:hover::before { transform: translateX(120%); }
+
+/* Ripple injected by main.js on click */
+.ripple {
+  position: absolute;
+  width: 12px; height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  transform: scale(0);
+  animation: ripple 620ms var(--ease-out) forwards;
+}
+@keyframes ripple { to { transform: scale(26); opacity: 0; } }
+
+/* ---- Hero: layered ornaments that drift ---- */
+.hero-ornament {
+  animation: float 14s ease-in-out infinite;
+  will-change: transform;
+}
+.hero-ornament-2 {
+  right: auto;
+  left: -160px;
+  top: auto;
+  bottom: -200px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(219,31,38,0.28), transparent 70%);
+  animation: float 18s ease-in-out infinite reverse;
+}
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(-24px, 26px, 0) scale(1.08); }
+}
+
+/* Faint grid, drifts slowly upward — gives the dark band some depth */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at 50% 40%, #000 30%, transparent 78%);
+  animation: grid-drift 24s linear infinite;
+}
+@keyframes grid-drift { to { background-position: 0 -64px, -64px 0; } }
+
+/* Pointer parallax — main.js writes --px / --py */
+.js .hero-ornament {
+  translate: calc(var(--px, 0) * 26px) calc(var(--py, 0) * 26px);
+  transition: translate 600ms var(--ease-out);
+}
+.js .hero-ornament-2 {
+  translate: calc(var(--px, 0) * -18px) calc(var(--py, 0) * -18px);
+}
+
+/* ---- Hero entrance: staggered fade-up on load ---- */
+.js .hero-anim {
+  opacity: 0;
+  transform: translateY(22px);
+}
+.js .hero-anim.is-in {
+  animation: rise var(--dur-slow) var(--ease-out) forwards;
+  animation-delay: calc(var(--i, 0) * 110ms);
+}
+@keyframes rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.hero h1 em {
+  display: inline-block;
+  transition: transform var(--dur-slow) var(--ease-spring);
+}
+.hero:hover h1 em { transform: translateX(6px) rotate(-1.5deg); }
+
+.hero-stats dd { font-variant-numeric: tabular-nums; }
+
+/* ---- Scroll cue at the bottom of the hero ---- */
+.scroll-cue {
+  position: absolute;
+  left: 50%; bottom: 26px;
+  margin-left: -11px;
+  width: 22px; height: 34px;
+  border: 2px solid rgba(255,255,255,0.35);
+  border-radius: 12px;
+  pointer-events: none;
+}
+.scroll-cue span {
+  position: absolute;
+  left: 50%; top: 7px;
+  margin-left: -2px;
+  width: 4px; height: 6px;
+  border-radius: 2px;
+  background: var(--gold);
+  animation: cue 1.9s var(--ease-out) infinite;
+}
+@keyframes cue {
+  0%   { opacity: 0; transform: translateY(0); }
+  35%  { opacity: 1; }
+  75%  { opacity: 0; transform: translateY(11px); }
+  100% { opacity: 0; }
+}
+
+/* ---- Generic scroll reveal ----
+   Any element with [data-reveal] fades up when it enters the viewport.
+   Set --i on siblings to stagger them. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity var(--dur-slow) var(--ease-out),
+              transform var(--dur-slow) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Path: the gold rule draws downward, the number pops ---- */
+.path-track li {
+  border-left: 0;                 /* replaced by the animated ::before */
+  position: relative;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+.path-track li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--gold), var(--red));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--dur-slow) var(--ease-out);
+  transition-delay: calc(var(--i, 0) * var(--stagger) + 120ms);
+}
+.path-track li.is-visible::before { transform: scaleY(1); }
+.path-track li:hover { transform: translateY(-4px); }
+
+.path-step {
+  transition: transform var(--dur-med) var(--ease-spring),
+              color var(--dur-fast) var(--ease-out);
+}
+.path-track li:hover .path-step {
+  transform: scale(1.15);
+  color: var(--red-dark);
+}
+
+/* ---- Community quote: gentle tilt that settles on reveal ---- */
+.community-quote { transition: transform var(--dur-med) var(--ease-out); }
+.community-quote:hover { transform: translateY(-5px) rotate(-0.5deg); }
+
+/* ---- Form fields ---- */
+.field input, .field select {
+  transition: border-color var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+.field input:focus, .field select:focus {
+  box-shadow: 0 0 0 4px rgba(255, 206, 3, 0.25);
+}
+.field input[aria-invalid="true"] { animation: shake 420ms var(--ease-out); }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(5px); }
+  60%      { transform: translateX(-3px); }
+  80%      { transform: translateX(2px); }
+}
+
+/* ---- Language toggle crossfade ---- */
+.js [data-en] { transition: opacity var(--dur-fast) linear; }
+.js.lang-switching [data-en] { opacity: 0; }
+
+/* ---- Back to top ---- */
+.to-top {
+  position: fixed;
+  right: 22px; bottom: 22px;
+  z-index: 150;
+  width: 46px; height: 46px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.15rem;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(0.85);
+  transition: opacity var(--dur-med) var(--ease-out),
+              transform var(--dur-med) var(--ease-spring),
+              visibility var(--dur-med),
+              background var(--dur-fast) var(--ease-out);
+}
+.to-top.is-shown {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+.to-top:hover { background: var(--red-dark); transform: translateY(-3px); }
+
+/* Without JS the button can't scroll anything, so hide it entirely. */
+html:not(.js) .to-top,
+html:not(.js) .scroll-progress { display: none; }
+
+/* =====================================================================
+   REDUCED MOTION
+   Strip the movement, keep the design. Nothing here hides content —
+   every reveal is forced visible.
+   ===================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .pillar-card {
-    transition: none;
-    opacity: 1;
-    transform: none;
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
+
+  /* Force every animated-in element to its final state */
+  .js [data-reveal],
+  .js [data-reveal].is-visible,
+  .js .hero-anim,
+  .js .hero-anim.is-in {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .path-track li::before { transform: scaleY(1) !important; }
+
+  /* Purely decorative motion — remove outright */
+  .hero-grid, .scroll-cue { display: none; }
+  .js .hero-ornament, .js .hero-ornament-2 { translate: none; }
+  .btn-primary::before { display: none; }
 }
