@@ -1,17 +1,17 @@
 /* ===== Design tokens ===== */
 :root {
-  --ink: #123832;
-  --ink-soft: #1B4A42;
-  --cream: #F7F0DE;
-  --cream-soft: #FBF7EC;
-  --clay: #A64B2A;
-  --gold: #C89B3C;
-  --teal-bright: #3E9C86;
-  --text-on-dark: #F3EFE3;
-  --text-on-light: #1B2B27;
-  --text-muted-dark: #C9DCD7;
-  --text-muted-light: #4B5A56;
-  --border-light: #E4DAC0;
+  --ink: #141414;
+  --ink-soft: #262626;
+  --cream: #FAF7F1;
+  --cream-soft: #FFFFFF;
+  --red: #DB1F26;
+  --red-dark: #8F1216;
+  --gold: #FFCE03;
+  --text-on-dark: #F5F3EF;
+  --text-on-light: #1A1A1A;
+  --text-muted-dark: #C9C6C0;
+  --text-muted-light: #55524D;
+  --border-light: #E7E2D8;
   --radius: 14px;
   --font-display: 'Newsreader', Georgia, serif;
   --font-body: 'Manrope', system-ui, sans-serif;
@@ -59,8 +59,11 @@ a { color: inherit; }
 }
 
 :focus-visible {
-  outline: 3px solid var(--teal-bright);
+  outline: 3px solid var(--red);
   outline-offset: 2px;
+}
+.hero :focus-visible {
+  outline-color: var(--gold);
 }
 
 /* ===== Buttons ===== */
@@ -78,28 +81,18 @@ a { color: inherit; }
   transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 .btn:hover { transform: translateY(-1px); }
-.btn-primary { background: var(--clay); color: var(--cream-soft); }
-.btn-primary:hover { background: #8F3F22; }
+.btn-primary { background: var(--red); color: var(--cream-soft); }
+.btn-primary:hover { background: var(--red-dark); }
 .btn-ghost { background: transparent; border-color: var(--ink); color: var(--ink); }
 .btn-ghost:hover { background: var(--ink); color: var(--text-on-dark); }
 .btn-block { width: 100%; justify-content: center; }
-
-/* ===== Concept banner ===== */
-.concept-banner {
-  background: var(--gold);
-  color: var(--text-on-light);
-  text-align: center;
-  font-size: 0.85rem;
-  padding: 8px 16px;
-}
-.concept-banner a { text-decoration: underline; }
 
 /* ===== Header ===== */
 .site-header {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(247, 240, 222, 0.9);
+  background: rgba(250, 247, 241, 0.9);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-light);
 }
@@ -122,7 +115,7 @@ a { color: inherit; }
 .brand-mark {
   width: 26px; height: 26px;
   border-radius: 50%;
-  background: conic-gradient(var(--gold), var(--clay), var(--teal-bright), var(--gold));
+  background: conic-gradient(var(--red), var(--ink), var(--gold), var(--red));
 }
 .main-nav {
   display: flex;
@@ -134,7 +127,7 @@ a { color: inherit; }
   font-size: 0.95rem;
   color: var(--text-on-light);
 }
-.main-nav a:hover { color: var(--clay); }
+.main-nav a:hover { color: var(--red); }
 
 .header-actions {
   margin-left: auto;
@@ -155,7 +148,7 @@ a { color: inherit; }
 }
 .lang-toggle:hover { background: var(--ink); color: var(--text-on-dark); }
 .lang-current { text-decoration: underline; }
-.lang-other { opacity: 0.6; }
+.lang-other { color: var(--text-muted-light); }
 
 .menu-toggle {
   display: none;
@@ -187,7 +180,7 @@ a { color: inherit; }
   width: 480px;
   height: 480px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(200,155,60,0.35), transparent 70%);
+  background: radial-gradient(circle, rgba(255,206,3,0.30), transparent 70%);
 }
 .hero-inner { position: relative; }
 .eyebrow {
@@ -205,7 +198,7 @@ a { color: inherit; }
 }
 .hero h1 em {
   font-style: italic;
-  color: var(--teal-bright);
+  color: var(--gold);
 }
 .hero-lead {
   max-width: 46ch;
@@ -253,7 +246,7 @@ section { padding: 88px 0; }
   letter-spacing: 0.1em;
   font-size: 0.78rem;
   font-weight: 700;
-  color: var(--clay);
+  color: var(--red);
   margin-bottom: 10px;
 }
 section h2 {
@@ -274,6 +267,8 @@ section h2 {
   border: 1px solid var(--border-light);
   border-radius: var(--radius);
   padding: 28px 24px;
+}
+.js .pillar-card {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.5s ease, transform 0.5s ease;
@@ -284,7 +279,7 @@ section h2 {
 }
 .pillar-icon {
   font-size: 1.6rem;
-  color: var(--teal-bright);
+  color: var(--red);
   margin-bottom: 14px;
 }
 .pillar-card h3 { font-size: 1.15rem; }
@@ -308,7 +303,7 @@ section h2 {
   display: block;
   font-family: var(--font-display);
   font-size: 1.4rem;
-  color: var(--clay);
+  color: var(--red);
   margin-bottom: 6px;
 }
 .path-track h3 { font-size: 1.1rem; }
@@ -377,14 +372,14 @@ section h2 {
   background: #fff;
 }
 .field input:focus, .field select:focus {
-  border-color: var(--teal-bright);
+  border-color: var(--gold);
 }
 .field input[aria-invalid="true"] {
-  border-color: var(--clay);
+  border-color: var(--red);
 }
 .field-error {
   display: block;
-  color: var(--clay);
+  color: var(--red);
   font-size: 0.85rem;
   margin-top: 6px;
   min-height: 1em;
@@ -392,9 +387,14 @@ section h2 {
 .form-status {
   margin-top: 14px;
   font-size: 0.9rem;
-  color: var(--teal-bright);
+  color: var(--red-dark);
   font-weight: 600;
   min-height: 1.2em;
+}
+.form-note {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted-light);
 }
 
 /* ===== Footer ===== */
@@ -445,8 +445,7 @@ section h2 {
 /* ===== Reduced motion ===== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .js .pillar-card.reveal,
-  .pillar-card {
+  .js .pillar-card {
     transition: none;
     opacity: 1;
     transform: none;
