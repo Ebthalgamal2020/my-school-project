@@ -16,3 +16,13 @@ node_modules/
 dist/
 .env
 .env.local
+
+# Claude Code local state
+.claude/
+
+# Raw video. GitHub rejects any file over 100MB, and a background video
+# should ship at 2-5MB anyway. Compress before committing, then remove
+# this line for the compressed file only.
+deo-background.mp4
+*.mov
+*.avi
