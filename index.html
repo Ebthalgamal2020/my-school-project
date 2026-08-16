@@ -49,6 +49,10 @@
     <!-- Background footage. muted + playsinline are what make autoplay legal
          on iOS and Chrome; without them the browser silently blocks it. -->
     <video autoplay muted loop playsinline class="hero-video-bg" id="hero-video">
+      <!-- Hosted as a GitHub Release asset so it isn't in the repo (482MB is
+           far over GitHub's 100MB file limit). Falls through to the local
+           copy below if the remote is unreachable. -->
+      <source src="https://github.com/Ebthalgamal2020/my-school-project/releases/download/v1/deo-background.mp4" type="video/mp4">
       <source src="deo-background.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay" aria-hidden="true"></div>
