@@ -33,3 +33,6 @@ deo-background.mp4
 Homepage _ DEO Cairo_files/
 Homepage _ DEO Cairo.html
 Homepage _ DEO Cairo.png
+
+# Throwaway build scripts
+_*.py
