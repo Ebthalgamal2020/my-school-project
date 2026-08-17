@@ -294,8 +294,18 @@ a { color: inherit; text-decoration: none; }
 
 /* ==========================================================================
    2. SPOTLIGHT  —  Allbirds: calm, cream, one soft shape, lots of air
+   --------------------------------------------------------------------------
+   Palette note: the brief supplied the retired nile/papyrus/clay/gold/teal
+   tokens. Mapped 1:1 onto the live logo palette so this section can't drift
+   back out of sync with index.html:
+     --nile-900  #122A32  ->  --ink   #141414
+     --papyrus-50 #FBFBF8 ->  --cream #FAF7F1
+     --clay-500  #DC602E  ->  --red   #DB1F26
+     --gold-500  #F3C012  ->  --gold  #FFCE03
+   Swap --oval-accent below if you want the old gold back on the card border.
    ========================================================================== */
-.spotlight {
+.spotlight-section {
+  --oval-accent: 255, 206, 3;      /* --gold as an RGB triplet, for rgba() */
   background: var(--cream);
   padding-block: clamp(80px, 12vw, 170px);
   text-align: center;
@@ -306,117 +316,128 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-muted-light);                                  /* 7.27:1 on cream */
   margin-bottom: 16px;
 }
-.spotlight h2 {
+.spotlight-section h2 {
   font-family: var(--serif);
   font-size: clamp(1.9rem, 4vw, 3rem);
   font-weight: 400; line-height: 1.15; letter-spacing: -.015em;
 }
 
-/* The stadium capsule */
-.capsule {
+/* The stage exists so the running-kids graphic can be positioned against the
+   OVAL rather than the whole section. Anchored to the section, `bottom: -30px`
+   would drop it to the section's floor instead of onto the capsule's edge. */
+.oval-stage {
+  position: relative;
+  padding-bottom: 40px;            /* room for the overlay's -40px hang */
+}
+
+/* ---- Background oval ---- */
+.allbirds-oval {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 8;
-  border-radius: 999px;                /* stadium shape */
+  border-radius: 500px;
   overflow: hidden;
   isolation: isolate;
-  box-shadow: 0 40px 80px -50px rgba(20, 20, 20, .55);
-}
-
-/* The real school building. The gradient below stays as the last layer, so
-   if the file is ever missing the capsule still looks finished. */
-.capsule-media {
-  --capsule-img: url("assets/deo-building.jpg");
-  position: absolute; inset: 0; z-index: 1;
-  background-image:
-    var(--capsule-img),
-    linear-gradient(168deg, #F2EFE7 0%, #E7E2D8 46%, #D6D1C5 100%);
-  background-size: cover;              /* fills the oval, never distorts */
-  background-position: center center;  /* keeps the three flags centred */
+  background-image: url("assets/deo-building.jpg");
+  background-size: cover;
+  background-position: center center;
   background-repeat: no-repeat;
-  transition: transform var(--slow) var(--ease);
-}
-.capsule:hover .capsule-media { transform: scale(1.04); }
+  box-shadow: 0 40px 80px -50px rgba(20, 20, 20, .55);
 
-/* ---- Scroll-driven entrance ----
-   The capsule swells from 0.85 to full size as it comes into view. This is
-   more specific than the generic [data-reveal] rule below, so it replaces
-   that element's translateY rather than fighting it. Scoped to .js, so with
-   JavaScript off the capsule simply renders at full size. */
-.js .capsule[data-reveal] {
-  opacity: 0;
-  transform: scale(0.85);
-  transition: opacity 900ms cubic-bezier(.16, 1, .3, 1),
-              transform 900ms cubic-bezier(.16, 1, .3, 1);
-  transition-delay: 0ms;
-  will-change: transform, opacity;
+  /* Entrance — see .animate-in. Scoped to .js below so that with JavaScript
+     off the oval is simply visible instead of stuck at opacity 0. */
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.1s ease;
 }
-.js .capsule[data-reveal].is-visible {
-  opacity: 1;
-  transform: scale(1);
-}
+.js .allbirds-oval { transform: scale(0.88); opacity: 0; }
+.js .allbirds-oval.animate-in { transform: scale(1); opacity: 1; }
 
-/* Base vignette only — the flat 42% tint is gone, so the building reads at
-   full brightness. This just anchors the bottom edge of the oval and keeps
-   the steps from dissolving into the section background. */
-.capsule-veil {
-  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+/* Dark vignette so the base of the building blends into the section */
+.oval-tint {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
   background: linear-gradient(
     180deg,
     transparent 0%,
-    transparent 52%,
-    rgba(20, 20, 20, .22) 78%,
-    rgba(20, 20, 20, .52) 100%
+    transparent 50%,
+    rgba(20, 20, 20, .24) 76%,
+    rgba(20, 20, 20, .58) 100%
   );
 }
 
-/* Frosted glass card. Your values translated to the current palette:
-   rgba(251,251,248,.75) was papyrus-50 -> --cream  #FAF7F1
-   rgba(18,42,50,...)    was nile-900   -> --ink    #141414 */
-.capsule-card {
+/* ---- Frosted typography card ---- */
+.oval-glass-card {
   position: absolute; z-index: 4;
-  top: 50%; left: 50%;
+  top: 44%; left: 50%;                /* sits above the runners, not behind */
   translate: -50% -50%;
-
   max-width: 650px;
   width: min(650px, 78%);
   padding: clamp(26px, 3.4vw, 40px);
 
-  background: rgba(250, 247, 241, 0.75);
+  background: rgba(250, 247, 241, 0.85);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(20, 20, 20, 0.1);
+  border: 1px solid rgba(var(--oval-accent), 0.3);
   border-radius: 24px;
   box-shadow: 0 20px 40px rgba(20, 20, 20, 0.08);
 }
 
-/* Firefox before 103 and any browser with the filter disabled get no blur,
-   which would leave the text sitting on a 75%-transparent panel. Fall back
-   to a near-opaque card so legibility never depends on an optional feature. */
+/* Without backdrop-filter a 75% panel leaves the text on bare building.
+   Fall back to a near-opaque card so legibility never depends on it. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .capsule-card { background: rgba(250, 247, 241, 0.94); }
+  .oval-glass-card { background: rgba(250, 247, 241, 0.96); }
 }
-.capsule-card p {
+
+.oval-glass-card p {
   font-family: var(--serif);
   font-size: clamp(1rem, 1.65vw, 1.32rem);
   line-height: 1.55;
-  color: var(--ink);                                        /* 15.8:1 on cream */
+  color: var(--ink);                  /* measured 12.3:1 over the frosted panel */
   text-wrap: pretty;
 }
-.capsule-card .lede { font-weight: 500; }
-.capsule-card .years { color: var(--red); font-style: italic; }
+.oval-glass-card .lede  { font-weight: 500; }
+.oval-glass-card .years { color: var(--red); font-style: italic; }
 
-.capsule-rule {
+.oval-rule {
   width: 46px; height: 3px; margin: 22px auto 0;
   border-radius: 2px;
   background: linear-gradient(90deg, var(--red), var(--gold));
+}
+
+/* ---- Foreground cut-out ---- */
+.running-kids-overlay {
+  /* NOTE: students-running.png is NOT actually cut out — 0% of its pixels are
+     transparent and 68% are opaque white, so it paints as a white rectangle.
+     `multiply` makes white vanish (white x backdrop = backdrop) while the
+     children still composite, which rescues the layered effect until the file
+     is re-exported with a real alpha channel. Delete this one line then. */
+  mix-blend-mode: multiply;
+
+  position: absolute;
+  left: 50%;
+  bottom: -40px;
+  z-index: 10;
+  max-width: 550px;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.3s ease;
+  /* Resting transform must include the -50% or the image jumps off-centre
+     the moment the transition starts. */
+  transform: translateX(-50%);
+}
+.js .running-kids-overlay {
+  transform: translateX(-50%) scale(0.92) translateY(25px);
+  opacity: 0;
+}
+.js .running-kids-overlay.animate-in {
+  transform: translateX(-50%) scale(1) translateY(0);
+  opacity: 1;
 }
 
 /* Three quiet facts under the capsule */
 .facts {
   display: flex; flex-wrap: wrap; justify-content: center;
   gap: clamp(28px, 6vw, 90px);
-  margin-top: clamp(48px, 7vw, 84px);
+  margin-top: clamp(70px, 9vw, 110px);   /* clears the overhanging runners */
 }
 .facts div { min-width: 130px; }
 .facts b {
@@ -488,13 +509,23 @@ a { color: inherit; text-decoration: none; }
   .nav a { color: var(--ink) !important; padding: 15px 0; border-top: 1px solid rgba(20,20,20,.12); font-size: 1rem; }
 
   /* A stadium radius squeezes text at narrow widths — ease it off */
-  .capsule { aspect-ratio: 4 / 5; border-radius: 44px; }
-  .capsule-card { width: 84%; }
+  .allbirds-oval { aspect-ratio: 4 / 5; border-radius: 44px; }
+  .oval-glass-card { width: 84%; top: 42%; }
+  /* Shrink the runners so they read against a much narrower oval */
+  .running-kids-overlay { max-width: 78%; bottom: -18px; }
+  .oval-stage { padding-bottom: 18px; }
 }
 
 @media (max-width: 520px) {
-  .capsule { aspect-ratio: 3 / 4; border-radius: 30px; }
-  .capsule-card { width: 88%; }
+  .allbirds-oval { aspect-ratio: 2 / 3; border-radius: 30px; }
+  .oval-glass-card {
+    width: 90%; top: 38%;
+    padding: 18px 16px;                 /* card overflowed the oval at 320px */
+  }
+  .oval-glass-card p { font-size: .92rem; line-height: 1.45; }
+  .oval-rule { margin-top: 14px; }
+  .running-kids-overlay { max-width: 86%; bottom: -12px; }
+  .oval-stage { padding-bottom: 12px; }
   .hero-cta .btn { width: 100%; }
   .facts { gap: 30px 40px; }
 }
@@ -513,13 +544,20 @@ a { color: inherit; text-decoration: none; }
   .js [data-reveal], .js [data-reveal].is-visible {
     opacity: 1 !important; transform: none !important;
   }
+  /* The scroll-driven pair: land them at their end state immediately */
+  .js .allbirds-oval, .js .allbirds-oval.animate-in {
+    opacity: 1 !important; transform: none !important;
+  }
+  .js .running-kids-overlay, .js .running-kids-overlay.animate-in {
+    opacity: 1 !important; transform: translateX(-50%) !important;
+  }
   .hero-media { animation: none; transform: none; }
   .scroll-cue, .caret { display: none; }
 }
 
 @media (forced-colors: active) {
-  .capsule-card, .capsule { border: 1px solid CanvasText; }
-  .hero-tint, .hero-beams, .capsule-veil { display: none; }
+  .oval-glass-card, .allbirds-oval { border: 1px solid CanvasText; }
+  .hero-tint, .hero-beams, .oval-tint { display: none; }
 }
 </style>
 </head>
@@ -572,7 +610,7 @@ a { color: inherit; text-decoration: none; }
       </p>
 
       <div class="hero-cta">
-        <a class="btn" href="https://deokairo.com" target="_blank" rel="noopener noreferrer">
+        <a class="btn" href="#spotlight">
           Discover Our Events
           <span class="arw" aria-hidden="true">&rarr;</span>
         </a>
@@ -585,7 +623,7 @@ a { color: inherit; text-decoration: none; }
   </section>
 
   <!-- ===================== 2. SPOTLIGHT (Allbirds) ===================== -->
-  <section class="spotlight" id="spotlight">
+  <section class="spotlight-section" id="spotlight">
     <div class="wrap">
 
       <div class="spotlight-head" data-reveal style="--i:0">
@@ -593,23 +631,34 @@ a { color: inherit; text-decoration: none; }
         <h2>A place built for the long view.</h2>
       </div>
 
-      <div class="capsule" data-reveal style="--i:1">
-        <div class="capsule-media" role="img"
-             aria-label="The DEO Kairo school building, with the German, European and Egyptian flags flying at the entrance"></div>
-        <div class="capsule-veil" aria-hidden="true"></div>
+      <!-- Stage = positioning context for the overlay, so it lands on the
+           oval's edge rather than the section floor. -->
+      <div class="oval-stage">
 
-        <div class="capsule-card">
-          <p class="lede">
-            We set out to create a learning environment inspired by global perspectives,
-            guided by an ethos to shape better futures. We have celebrated
-            <span class="years">over 150 years</span> of academic excellence, but we are
-            just getting started.
-          </p>
-          <div class="capsule-rule" aria-hidden="true"></div>
+        <div class="allbirds-oval" id="allbirds-oval" role="img"
+             aria-label="The DEO Kairo school building, with the German, European and Egyptian flags flying at the entrance">
+          <div class="oval-tint" aria-hidden="true"></div>
+
+          <div class="oval-glass-card">
+            <p class="lede">
+              We set out to create a learning environment inspired by global perspectives,
+              guided by an ethos to shape better futures. We have celebrated
+              <span class="years">over 150 years</span> of academic excellence, but we are
+              just getting started.
+            </p>
+            <div class="oval-rule" aria-hidden="true"></div>
+          </div>
         </div>
+
+        <img src="assets/students-running.png"
+             class="running-kids-overlay"
+             id="running-kids"
+             alt="Students running together"
+             width="1737" height="1429"
+             loading="lazy" decoding="async">
       </div>
 
-      <div class="facts" data-reveal style="--i:2">
+      <div class="facts" data-reveal style="--i:1">
         <div><b>1873</b><span>Founded</span></div>
         <div><b>3</b><span>Languages taught</span></div>
         <div><b>KG&ndash;13</b><span>Every stage</span></div>
@@ -628,7 +677,6 @@ a { color: inherit; text-decoration: none; }
         <a href="index.html">Home</a>
         <a href="about.html">About Us</a>
         <a href="index.html#contact">Contact</a>
-        <a href="https://deokairo.com" target="_blank" rel="noopener noreferrer">Official site</a>
       </nav>
     </div>
 
@@ -722,7 +770,39 @@ a { color: inherit; text-decoration: none; }
     Array.prototype.forEach.call(items, function (el) { io.observe(el); });
   }
 
-  typewriter(); header(); menu(); reveal();
+  /* ---- Spotlight scroll observer ---------------------------------------
+     Watches the section itself. At 25% visible it tags the oval and the
+     runners; the CSS transitions (1.1s / 1.3s) do the rest, so the runners
+     land just after the oval and read as a second plane. */
+  function spotlight() {
+    var section = document.getElementById('spotlight');
+    if (!section) return;
+
+    var targets = [
+      document.getElementById('allbirds-oval'),
+      document.getElementById('running-kids')
+    ].filter(Boolean);
+    if (!targets.length) return;
+
+    function show() {
+      targets.forEach(function (el) { el.classList.add('animate-in'); });
+    }
+
+    // No observer support, or motion turned off: show it immediately.
+    if (REDUCE || !('IntersectionObserver' in window)) { show(); return; }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        show();
+        io.unobserve(entry.target);        // play once, then stop watching
+      });
+    }, { threshold: 0.25 });
+
+    io.observe(section);
+  }
+
+  typewriter(); header(); menu(); reveal(); spotlight();
 })();
 </script>
 </body>
