@@ -366,7 +366,7 @@ a { color: inherit; text-decoration: none; }
 /* ---- Frosted typography card ---- */
 .oval-glass-card {
   position: absolute; z-index: 4;
-  top: 44%; left: 50%;                /* sits above the runners, not behind */
+  top: 36%; left: 50%;                /* lifted clear of the runners' faces */
   translate: -50% -50%;
   max-width: 650px;
   width: min(650px, 78%);
@@ -404,12 +404,11 @@ a { color: inherit; text-decoration: none; }
 
 /* ---- Foreground cut-out ---- */
 .running-kids-overlay {
-  /* NOTE: students-running.png is NOT actually cut out — 0% of its pixels are
-     transparent and 68% are opaque white, so it paints as a white rectangle.
-     `multiply` makes white vanish (white x backdrop = backdrop) while the
-     children still composite, which rescues the layered effect until the file
-     is re-exported with a real alpha channel. Delete this one line then. */
-  mix-blend-mode: multiply;
+  /* The PNG now carries a real alpha channel (68.8% transparent), so the
+     children composite at full opacity with no blend-mode trickery. The
+     drop-shadow follows the cut-out silhouette rather than a bounding box,
+     which is what lifts them off the building. */
+  filter: drop-shadow(0px 15px 20px rgba(20, 20, 20, 0.15));
 
   position: absolute;
   left: 50%;
@@ -493,6 +492,13 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
+/* Between ~770 and 1100px the oval gets shorter but the runners keep their
+   550px cap, so they crowd the card. Scale them to the oval instead. */
+@media (max-width: 1100px) and (min-width: 769px) {
+  .running-kids-overlay { max-width: 46%; }
+  .oval-glass-card { top: 32%; }
+}
+
 @media (max-width: 860px) {
   .burger { display: flex; }
   .nav {
@@ -510,7 +516,7 @@ a { color: inherit; text-decoration: none; }
 
   /* A stadium radius squeezes text at narrow widths — ease it off */
   .allbirds-oval { aspect-ratio: 4 / 5; border-radius: 44px; }
-  .oval-glass-card { width: 84%; top: 42%; }
+  .oval-glass-card { width: 84%; top: 34%; }
   /* Shrink the runners so they read against a much narrower oval */
   .running-kids-overlay { max-width: 78%; bottom: -18px; }
   .oval-stage { padding-bottom: 18px; }
