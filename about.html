@@ -338,26 +338,63 @@ a { color: inherit; text-decoration: none; }
 }
 .capsule:hover .capsule-media { transform: scale(1.04); }
 
-/* Dark tint over the photo. The building's walls are bright white in full
-   sun, which would swallow the card's edge — this holds it apart. Built from
-   --ink so it tracks the palette instead of being a loose hex. */
-.capsule-veil {
-  position: absolute; inset: 0; z-index: 3; pointer-events: none;
-  background: rgba(20, 20, 20, .42);                          /* fallback */
-  background: color-mix(in srgb, var(--ink) 42%, transparent);
+/* ---- Scroll-driven entrance ----
+   The capsule swells from 0.85 to full size as it comes into view. This is
+   more specific than the generic [data-reveal] rule below, so it replaces
+   that element's translateY rather than fighting it. Scoped to .js, so with
+   JavaScript off the capsule simply renders at full size. */
+.js .capsule[data-reveal] {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 900ms cubic-bezier(.16, 1, .3, 1),
+              transform 900ms cubic-bezier(.16, 1, .3, 1);
+  transition-delay: 0ms;
+  will-change: transform, opacity;
+}
+.js .capsule[data-reveal].is-visible {
+  opacity: 1;
+  transform: scale(1);
 }
 
-/* The centred text card */
+/* Base vignette only — the flat 42% tint is gone, so the building reads at
+   full brightness. This just anchors the bottom edge of the oval and keeps
+   the steps from dissolving into the section background. */
+.capsule-veil {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 52%,
+    rgba(20, 20, 20, .22) 78%,
+    rgba(20, 20, 20, .52) 100%
+  );
+}
+
+/* Frosted glass card. Your values translated to the current palette:
+   rgba(251,251,248,.75) was papyrus-50 -> --cream  #FAF7F1
+   rgba(18,42,50,...)    was nile-900   -> --ink    #141414 */
 .capsule-card {
   position: absolute; z-index: 4;
   top: 50%; left: 50%;
   translate: -50% -50%;
-  width: min(620px, 74%);
-  padding: clamp(28px, 3.6vw, 52px);
-  background: rgba(245, 243, 239, .96);
-  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  border-radius: 22px;
-  box-shadow: 0 26px 60px -34px rgba(20, 20, 20, .5);
+
+  max-width: 650px;
+  width: min(650px, 78%);
+  padding: clamp(26px, 3.4vw, 40px);
+
+  background: rgba(250, 247, 241, 0.75);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(20, 20, 20, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(20, 20, 20, 0.08);
+}
+
+/* Firefox before 103 and any browser with the filter disabled get no blur,
+   which would leave the text sitting on a 75%-transparent panel. Fall back
+   to a near-opaque card so legibility never depends on an optional feature. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .capsule-card { background: rgba(250, 247, 241, 0.94); }
 }
 .capsule-card p {
   font-family: var(--serif);
@@ -541,7 +578,7 @@ a { color: inherit; text-decoration: none; }
         </a>
       </div>
 
-      <p class="hero-note">Opens deokairo.com in a new tab</p>
+      
     </div>
 
     <div class="scroll-cue" aria-hidden="true"><i></i></div>
