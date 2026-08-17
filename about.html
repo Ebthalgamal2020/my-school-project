@@ -293,21 +293,17 @@ a { color: inherit; text-decoration: none; }
    transform/opacity animate; --pill-h is written on resize only.
    ========================================================================== */
 .deo-story {
-  /* growth budget - the three capsule layers, deliberately not identical */
-  /* Kept modest on purpose: every 1% the capsule grows pushes its lower
-     curve down, which eats into the students' overhang. */
-  --grow:      0.13;    /* main capsule            */
-  --grow-mid:  0.125;   /* middle outline          */
-  --grow-out:  0.12;    /* outer outline           */
-  --zoom:      0.10;    /* building inside the pill */
-  --ring-gap:  22px;    /* even step between layers */
-  --kid-rise: -32px;
-  --kid-grow:  0.10;
+  /* Two phases, driven by --pg and --sg (see the script):
+       0 - 65%   pill + outlines + axis grow together from tiny to full
+       65 - 100% pill holds at full size; only then do the students arrive
+     The section is deliberately tall so each phase has real scroll distance
+     rather than happening in a few pixels. */
+  --ring-gap:  16px;    /* even step between the capsule layers */
+  --zoom:      0.10;    /* building drift inside the pill       */
   --copy-rise: -16px;
-  --pill-h:    460px;   /* unscaled capsule height, set by the script */
 
   position: relative;
-  height: 180vh;
+  height: 280vh;
   background: var(--cream);
 }
 
@@ -360,11 +356,12 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: clamp(40px, 8vh, 104px);    /* the large intentional void */
+  margin-top: clamp(24px, 4vh, 48px);     /* the intentional void */
   /* Must clear the OUTER outline (2 x --ring-gap above the pill), not the
      pill itself - otherwise the line lands on top of the rings. */
-  margin-bottom: calc(var(--ring-gap) * 2 + clamp(20px, 3.2vh, 46px));
+  margin-bottom: calc(var(--ring-gap) * 2 + clamp(12px, 1.8vh, 26px));
 }
+.js .deo-line-dot { opacity: var(--fade, 1); }
 .deo-line-dot span {
   display: block;
   width: 6px; height: 6px;
@@ -376,7 +373,7 @@ a { color: inherit; text-decoration: none; }
   content: "";
   display: block;
   width: 1px;
-  height: clamp(40px, 6.5vh, 86px);
+  height: clamp(30px, 4.6vh, 56px);
   margin-top: 8px;
   background: linear-gradient(180deg, rgba(20, 20, 20, .22), rgba(20, 20, 20, .04));
 }
@@ -385,7 +382,11 @@ a { color: inherit; text-decoration: none; }
 .deo-stage {
   position: relative;
   flex: none;
-  width: min(65vw, 1000px);
+  /* Invisible until the section is entered. The fallback is 1 so that with
+     JavaScript off the finished composition simply renders. */
+  opacity: var(--fade, 1);
+  /* Final composition is deliberately dominant: ~80vw x ~61vh at full size */
+  width: min(80vw, 1400px);
   z-index: 5;
   overflow: visible;
 }
@@ -405,12 +406,12 @@ a { color: inherit; text-decoration: none; }
 .deo-pill-border-middle {
   inset: calc(var(--ring-gap) * -1);
   color: rgba(20, 20, 20, .12);
-  transform: scale(calc(1 + var(--p, 0) * var(--grow-mid)));
+  transform: scale(calc(0.36 + var(--pg, 1) * 0.64));
 }
 .deo-pill-border-outer {
   inset: calc(var(--ring-gap) * -2);
   color: rgba(20, 20, 20, .07);
-  transform: scale(calc(1 + var(--p, 0) * var(--grow-out)));
+  transform: scale(calc(0.38 + var(--pg, 1) * 0.62));
 }
 
 /* The capsule: contains the building and nothing else */
@@ -418,11 +419,12 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   z-index: 1;
   width: 100%;
-  aspect-ratio: 2.3;                 /* deep capsule, not a thin pill */
+  aspect-ratio: 2.1;
   border-radius: 999px;
   overflow: hidden;
   box-shadow: 0 44px 90px -56px rgba(20, 20, 20, .5);
-  transform: scale(calc(1 + var(--p, 0) * var(--grow)));
+  /* Starts small, reaches full size at 65% of the section */
+  transform: scale(calc(0.34 + var(--pg, 1) * 0.66));
   will-change: transform;
 }
 .deo-pill img {
@@ -430,7 +432,7 @@ a { color: inherit; text-decoration: none; }
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: scale(calc(1.02 + var(--p, 0) * var(--zoom)));
+  transform: scale(calc(1.02 + var(--pg, 1) * var(--zoom)));
   will-change: transform;
 }
 /* No dark overlay: the building stays bright and the orange architecture
@@ -442,20 +444,22 @@ a { color: inherit; text-decoration: none; }
 .deo-floating-students {
   position: absolute;
   left: 50%;
-  bottom: -11%;
+  bottom: -2%;
   z-index: 5;
-  width: 54%;                        /* ~35vw on desktop */
+  /* Finishes large against the bigger capsule */
+  width: 43%;
   height: auto;
   pointer-events: none;
   filter: drop-shadow(0 18px 26px rgba(20, 20, 20, .2));
   translate: -50% 0;
+  /* Phase two only. The pill is already static by the time this runs, so no
+     tracking maths is needed - they simply rise and grow into place. */
+  opacity: var(--sg, 1);
   transform:
-    translate3d(0,
-      calc(var(--p, 0) * (var(--grow) * var(--pill-h) / 2 + var(--kid-rise))),
-      0)
-    scale(calc(1 + var(--p, 0) * var(--kid-grow)));
+    translate3d(0, calc((1 - var(--sg, 1)) * 42px), 0)
+    scale(calc(0.70 + var(--sg, 1) * 0.30));
   transform-origin: 50% 100%;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
 /* ---- Paragraph lives below the scene, in its own calm band ---- */
@@ -882,19 +886,12 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    RESPONSIVE
    ========================================================================== */
-/* Between ~770 and 1100px the oval gets shorter but the runners keep their
-   550px cap, so they crowd the card. Scale them to the oval instead. */
 @media (max-width: 1100px) and (min-width: 769px) {
-  /* Tablet: same composition, a shorter travel budget */
-  .deo-story {
-    --grow: 0.12; --grow-mid: 0.115; --grow-out: 0.11;
-    --zoom: 0.08; --ring-gap: 16px;
-    --kid-rise: -34px; --kid-grow: 0.08;
-    height: 175vh;
-  }
-  .deo-stage { width: 68vw; }
+  /* Tablet: same two-phase choreography, slightly less section height */
+  .deo-story { height: 260vh; --ring-gap: 13px; }
+  .deo-stage { width: 84vw; }
   .deo-pill { aspect-ratio: 1.95; }
-  .deo-floating-students { width: 62%; bottom: -14%; }
+  .deo-floating-students { width: 47%; bottom: -4%; }
 }
 
 @media (max-width: 860px) {
@@ -912,33 +909,34 @@ a { color: inherit; text-decoration: none; }
   .nav.is-open { max-height: 300px; visibility: visible; padding-block: 8px 20px; }
   .nav a { color: var(--ink) !important; padding: 15px 0; border-top: 1px solid rgba(20,20,20,.12); font-size: 1rem; }
 
-  /* A stadium radius squeezes text at narrow widths — ease it off */
-  /* Mobile: same idea, motion dialled right down. The capsule keeps a
-     squarer crop so the building still reads at narrow widths, and stays
-     large relative to the viewport. */
-  .deo-story {
-    --grow: 0.09; --grow-mid: 0.085; --grow-out: 0.08;
-    --zoom: 0.05; --ring-gap: 10px;
-    --kid-rise: -24px; --kid-grow: 0.06;
-    height: 165vh;
-  }
+  /* Mobile: same idea, a squarer capsule so the building still reads */
+  .deo-story { height: 240vh; --ring-gap: 9px; }
   .deo-story-sticky { gap: 0; padding-top: calc(76px + 1vh); }
-  /* Leaves room for both outlines each side once the capsule scales up */
-  .deo-stage { width: 76vw; }
-  .deo-pill { aspect-ratio: 1.15; }
-  .deo-floating-students { width: 74%; bottom: -12%; }
+  .deo-stage { width: 82vw; }
+  .deo-pill { aspect-ratio: 1.3; }
+  .deo-floating-students { width: 60%; bottom: -4%; }
+
+  .heritage-content { grid-template-columns: 1fr; }
+  .heritage-year { max-width: 240px; margin-inline: auto; }
+  .journey-step { grid-template-columns: 2.2rem 1fr; }
+  .journey-step p { grid-column: 2; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 520px) {
-  .deo-stage { width: 74vw; }
+  .deo-stage { width: 84vw; }
   .deo-story { --ring-gap: 8px; }
-  .deo-pill { aspect-ratio: 1 / 1; }
-  .deo-floating-students { width: 80%; }
-  .hero-cta .btn { width: 100%; }
-  }
+  .deo-pill { aspect-ratio: 1.1; }
+  .deo-floating-students { width: 70%; }
+
+  .journey-step { grid-template-columns: 1fr; gap: 6px; }
+  .journey-step p { grid-column: 1; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .closing-content .btn { width: 100%; }
+}
 
 /* ==========================================================================
-   REDUCED MOTION — strip the movement, keep the design intact
+   REDUCED MOTION - strip the movement, keep the design intact
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -954,12 +952,11 @@ a { color: inherit; text-decoration: none; }
   .js .value-block, .js .closing-content {
     opacity: 1 !important; transform: none !important;
   }
-  /* Pin the campus scene at a calm resting state; nothing tracks scroll. */
+  /* Pin the campus scene at its finished composition; nothing tracks scroll. */
   .deo-story { height: auto; }
   .deo-story-sticky { position: static; height: auto; padding-block: 60px 100px; }
-  .deo-pill, .deo-pill img, .deo-floating-students,
-  .deo-pill-border-outer, .deo-pill-border-middle { transform: none !important; }
   .js .story-heading { opacity: 1 !important; transform: none !important; }
+  .js .deo-line-dot { opacity: 1 !important; }
   .scroll-cue, .caret { display: none; }
 }
 
@@ -1380,69 +1377,61 @@ a { color: inherit; text-decoration: none; }
   function storyScene() {
     var section = document.getElementById('deo-story');
     var sticky  = document.getElementById('deo-story-sticky');
-    var pill    = document.getElementById('deo-pill');
     if (!section || !sticky) return;
 
     var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
 
-    // The capsule scales from its centre, so the students shift down by half
-    // its height growth to hold their overlap with the lower curve. That needs
-    // the UNSCALED height, which only changes when the layout does.
-    function measureStage() {
-      if (!pill) return;
-      var scaled = pill.getBoundingClientRect().height;
-      var prog   = parseFloat(sticky.style.getPropertyValue('--p')) || 0;
-      var grow   = parseFloat(getComputedStyle(section).getPropertyValue('--grow')) || 0;
-      sticky.style.setProperty('--pill-h', Math.round(scaled / (1 + prog * grow)) + 'px');
+    function paint(pg, sg, fade, text) {
+      sticky.style.setProperty('--pg', pg.toFixed(4));
+      sticky.style.setProperty('--sg', sg.toFixed(4));
+      sticky.style.setProperty('--fade', fade.toFixed(4));
+      sticky.style.setProperty('--text', text.toFixed(4));
     }
 
-    // Motion off: rest the scene at its calm start state and never listen.
-    if (REDUCE) {
-      sticky.style.setProperty('--p', 0);
-      sticky.style.setProperty('--text', 1);
-      measureStage();
-      return;
-    }
+    // Motion off: skip straight to the finished composition.
+    if (REDUCE) { paint(1, 1, 1, 1); return; }
 
+    var SPLIT = 0.65;            // pill finishes growing; students then start
+    var FADE_IN = 0.16;          // how much of phase one is the fade from nothing
     var ticking = false;
 
+    // The ratchet. Visuals are driven by `peak`, never by the raw scroll
+    // position, so scrolling back up cannot walk the animation backwards.
+    var peak = 0;
+    var campusAnimationComplete = false;
+
     function update() {
+      ticking = false;
+      if (campusAnimationComplete) return;   // locked: never recompute
+
       var vh = window.innerHeight || document.documentElement.clientHeight;
       var r  = section.getBoundingClientRect();
-
-      // The sticky pins for (section height - viewport height); progress is
-      // how far into that travel we are. Bound to scroll POSITION, so it
-      // runs backwards when you scroll up and stops when you stop.
       var travel = r.height - vh;
       var p = travel > 0 ? clamp(-r.top / travel) : 0;
 
-      // The heading sits above the capsule in its own space, so it only
-      // needs a gentle settle at the very end - never a disappearing act.
-      var text = p <= 0.80 ? 1 : 1 - ((p - 0.80) / 0.20) * 0.35;
+      if (p <= peak) return;                 // moving back up: hold the frame
+      peak = p;
 
-      sticky.style.setProperty('--p', p.toFixed(4));
-      sticky.style.setProperty('--text', text.toFixed(4));
+      var pg = clamp(peak / SPLIT);                       // pill + rings + axis
+      var sg = clamp((peak - SPLIT) / (1 - SPLIT));       // students
+      var fade = clamp(pg / FADE_IN);                     // in from nothing
+      var text = peak <= 0.86 ? 1 : 1 - ((peak - 0.86) / 0.14) * 0.35;
 
-      ticking = false;
+      paint(pg, sg, fade, text);
+
+      if (peak >= 0.999) {
+        paint(1, 1, 1, text);
+        campusAnimationComplete = true;      // final state is now permanent
+      }
     }
 
     window.addEventListener('scroll', function () {
       if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
 
-    window.addEventListener('resize', function () {
-      measureStage();
-      update();
-    }, { passive: true });
-
-    // The capsule's height depends on the decoded image box, so re-measure
-    // once it has loaded.
-    var img = pill ? pill.querySelector('img') : null;
-    if (img && !img.complete) {
-      img.addEventListener('load', function () { measureStage(); update(); });
-    }
-
-    measureStage();
+    // Start hidden, then let the first measurement decide.
+    paint(0, 0, 0, 1);
     update();
   }
 
