@@ -67,7 +67,7 @@ body {
   color: var(--ink);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;   /* NOT hidden: that makes body a scroll container and breaks position:sticky */
 }
 
 a { color: inherit; text-decoration: none; }
@@ -293,150 +293,188 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ==========================================================================
-   2. SPOTLIGHT  —  Allbirds: calm, cream, one soft shape, lots of air
+   2. DEO STORY - sticky, scroll-driven campus scene
    --------------------------------------------------------------------------
-   Palette note: the brief supplied the retired nile/papyrus/clay/gold/teal
-   tokens. Mapped 1:1 onto the live logo palette so this section can't drift
-   back out of sync with index.html:
-     --nile-900  #122A32  ->  --ink   #141414
-     --papyrus-50 #FBFBF8 ->  --cream #FAF7F1
-     --clay-500  #DC602E  ->  --red   #DB1F26
-     --gold-500  #F3C012  ->  --gold  #FFCE03
-   Swap --oval-accent below if you want the old gold back on the card border.
+   Vertical stack inside one pinned viewport, all centred in cream space:
+
+        OUR CAMPUS                 <- label
+        A place built for...       <- heading
+            |
+            *                      <- line draws down, dot at its end
+        [   BIG CAPSULE   ]        <- the section hero
+            students               <- separate layer, in front, breaks the edge
+
+   Sizing: the capsule is the dominant element - 66vw at rest, growing to
+   ~77vw. It scales from its CENTRE, so the students get a matching downward
+   shift (half the height growth) which keeps their overlap with the lower
+   curve constant while they also rise. That arithmetic needs the capsule
+   unscaled height, published by the script as --oval-h.
+
+   Only transform/opacity animate; --oval-h is written on resize only.
    ========================================================================== */
-.spotlight-section {
-  --oval-accent: 255, 206, 3;      /* --gold as an RGB triplet, for rgba() */
+.deo-story {
+  /* movement budget - retuned per breakpoint below */
+  --grow:      0.17;    /* capsule scale delta: 1.00 -> 1.17 */
+  --zoom:      0.10;    /* building zoom inside the capsule   */
+  --kid-rise: -46px;    /* students rise, on top of tracking  */
+  --kid-grow:  0.10;
+  --copy-rise: -16px;
+  --oval-h:    480px;   /* overwritten by the script on resize */
+
+  position: relative;
+  height: 180vh;
   background: var(--cream);
-  padding-block: clamp(80px, 12vw, 170px);
-  text-align: center;
 }
-.spotlight-head { max-width: 660px; margin: 0 auto clamp(40px, 6vw, 72px); }
+
+.deo-story-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vh, 20px);
+  padding: calc(76px + 1.5vh) 20px 2vh;
+  overflow: visible;                 /* students must break the capsule */
+}
+
+/* ---- Label + heading: their own airspace, never near the students ---- */
+.story-heading {
+  flex: none;
+  max-width: 640px;
+  text-align: center;
+  transform: translate3d(0, calc(var(--p, 0) * var(--copy-rise)), 0);
+  will-change: transform;
+}
+.js .story-heading { opacity: var(--text, 1); }
+
 .spotlight-eyebrow {
   font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
-  color: var(--text-muted-light);                                  /* 7.27:1 on cream */
-  margin-bottom: 16px;
+  color: var(--text-muted-light);                       /* 7.27:1 on cream */
+  margin-bottom: 10px;
 }
-.spotlight-section h2 {
+.story-heading h2 {
   font-family: var(--serif);
-  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-size: clamp(1.5rem, 2.9vw, 2.35rem);
   font-weight: 400; line-height: 1.15; letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0;
 }
 
-/* The stage exists so the running-kids graphic can be positioned against the
-   OVAL rather than the whole section. Anchored to the section, `bottom: -30px`
-   would drop it to the section's floor instead of onto the capsule's edge. */
-.oval-stage {
+/* ---- Thin line, dot at its drawing end ---- */
+.story-line {
   position: relative;
-  padding-bottom: 40px;            /* room for the overlay's -40px hang */
+  flex: none;
+  width: 2px;
+  height: clamp(36px, 6vh, 70px);
+  /* No rail: at rest only the dot shows, and the red draws down behind it
+     as you scroll - the line's length IS the progress. */
+  background: transparent;
+  border-radius: 2px;
+  z-index: 6;                        /* stays readable against the capsule */
+}
+.story-line-fill {                   /* scaleY, so no layout work per frame */
+  position: absolute; inset: 0;
+  background: var(--red);            /* DEO brand red-orange */
+  border-radius: 2px;
+  transform: scaleY(var(--p, 0));
+  transform-origin: 50% 0;
+}
+.story-dot {
+  position: absolute;
+  left: 50%; top: 0;
+  width: 8px; height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--red);
+  box-shadow: 0 0 0 4px rgba(219, 31, 38, .16);
+  /* --line-travel is measured each frame so the dot lands exactly on the
+     capsule top centre however large it has grown. */
+  translate: -50% calc(var(--p, 0) * var(--line-travel, 0px));
+  will-change: translate;
 }
 
-/* ---- Background oval ---- */
-.allbirds-oval {
+/* ---- Stage holds the capsule; students are its sibling layer ---- */
+.deo-story-stage {
   position: relative;
+  flex: none;
+  width: min(66vw, 1040px);          /* grows to ~77vw at full progress */
+  z-index: 5;
+  overflow: visible;
+}
+
+.deo-building-oval {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  aspect-ratio: 16 / 8;
-  border-radius: 500px;
+  aspect-ratio: 2.05;                /* deep capsule, not a thin pill */
+  border-radius: 999px;
   overflow: hidden;
-  isolation: isolate;
-  background-image: url("assets/deo-building.jpg");
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  box-shadow: 0 40px 80px -50px rgba(20, 20, 20, .55);
-
-  /* Entrance — see .animate-in. Scoped to .js below so that with JavaScript
-     off the oval is simply visible instead of stuck at opacity 0. */
-  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.1s ease;
+  box-shadow: 0 44px 90px -56px rgba(20, 20, 20, .5);
+  transform: scale(calc(1 + var(--p, 0) * var(--grow)));
+  will-change: transform;
 }
-.js .allbirds-oval { transform: scale(0.88); opacity: 0; }
-.js .allbirds-oval.animate-in { transform: scale(1); opacity: 1; }
-
-/* Dark vignette so the base of the building blends into the section */
-.oval-tint {
-  position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    transparent 50%,
-    rgba(20, 20, 20, .24) 76%,
-    rgba(20, 20, 20, .58) 100%
-  );
+.deo-building-oval img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(calc(1.02 + var(--p, 0) * var(--zoom)));
+  will-change: transform;
 }
+/* No dark overlay: the building stays bright and the orange architecture
+   reads as it should. Nothing sits on top of it, so none is needed. */
 
-/* ---- Frosted typography card ---- */
-.oval-glass-card {
-  position: absolute; z-index: 4;
-  top: 36%; left: 50%;                /* lifted clear of the runners' faces */
-  translate: -50% -50%;
-  max-width: 650px;
-  width: min(650px, 78%);
-  padding: clamp(26px, 3.4vw, 40px);
-
-  background: rgba(250, 247, 241, 0.85);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(var(--oval-accent), 0.3);
-  border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(20, 20, 20, 0.08);
+/* Students: in front, free to extend past the capsule.
+   translateY = (half the capsule height growth, so the overlap with the
+   lower curve holds) + (their own rise). */
+.students-running {
+  position: absolute;
+  left: 50%;
+  bottom: -20%;
+  z-index: 5;
+  width: min(620px, 46%);
+  height: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 26px rgba(20, 20, 20, .2));
+  translate: -50% 0;
+  transform:
+    translate3d(0,
+      calc(var(--p, 0) * (var(--grow) * var(--oval-h) / 2 + var(--kid-rise))),
+      0)
+    scale(calc(1 + var(--p, 0) * var(--kid-grow)));
+  transform-origin: 50% 100%;
+  will-change: transform;
 }
 
-/* Without backdrop-filter a 75% panel leaves the text on bare building.
-   Fall back to a near-opaque card so legibility never depends on it. */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .oval-glass-card { background: rgba(250, 247, 241, 0.96); }
+/* ---- Paragraph lives below the scene, in its own calm band ---- */
+.story-prose {
+  background: var(--cream);
+  padding-block: clamp(56px, 8vw, 110px) clamp(20px, 3vw, 40px);
+  text-align: center;
 }
-
-.oval-glass-card p {
+.story-prose blockquote {
+  margin: 0 auto;
+  max-width: 62ch;
   font-family: var(--serif);
-  font-size: clamp(1rem, 1.65vw, 1.32rem);
-  line-height: 1.55;
-  color: var(--ink);                  /* measured 12.3:1 over the frosted panel */
+  font-size: clamp(1.05rem, 1.7vw, 1.45rem);
+  line-height: 1.6;
+  color: var(--ink);                                    /* 15.8:1 on cream */
   text-wrap: pretty;
 }
-.oval-glass-card .lede  { font-weight: 500; }
-.oval-glass-card .years { color: var(--red); font-style: italic; }
-
-.oval-rule {
-  width: 46px; height: 3px; margin: 22px auto 0;
+.story-prose .years { color: var(--red); font-style: italic; }
+.story-prose-rule {
+  display: block;
+  width: 52px; height: 3px; margin: 26px auto 0;
   border-radius: 2px;
   background: linear-gradient(90deg, var(--red), var(--gold));
 }
 
-/* ---- Foreground cut-out ---- */
-.running-kids-overlay {
-  /* The PNG now carries a real alpha channel (68.8% transparent), so the
-     children composite at full opacity with no blend-mode trickery. The
-     drop-shadow follows the cut-out silhouette rather than a bounding box,
-     which is what lifts them off the building. */
-  filter: drop-shadow(0px 15px 20px rgba(20, 20, 20, 0.15));
-
-  position: absolute;
-  left: 50%;
-  bottom: -40px;
-  z-index: 10;
-  max-width: 550px;
-  width: 100%;
-  height: auto;
-  pointer-events: none;
-  transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.3s ease;
-  /* Resting transform must include the -50% or the image jumps off-centre
-     the moment the transition starts. */
-  transform: translateX(-50%);
-}
-.js .running-kids-overlay {
-  transform: translateX(-50%) scale(0.92) translateY(25px);
-  opacity: 0;
-}
-.js .running-kids-overlay.animate-in {
-  transform: translateX(-50%) scale(1) translateY(0);
-  opacity: 1;
-}
-
-/* Three quiet facts under the capsule */
+.facts-section { background: var(--cream); padding-block: clamp(40px, 6vw, 70px) clamp(80px, 12vw, 150px); }
 .facts {
   display: flex; flex-wrap: wrap; justify-content: center;
   gap: clamp(28px, 6vw, 90px);
-  margin-top: clamp(70px, 9vw, 110px);   /* clears the overhanging runners */
 }
 .facts div { min-width: 130px; }
 .facts b {
@@ -448,7 +486,7 @@ a { color: inherit; text-decoration: none; }
 .facts span {
   display: block; margin-top: 8px;
   font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-  color: var(--text-muted-light);                                  /* 7.27:1 on cream */
+  color: var(--text-muted-light);                       /* 7.27:1 on cream */
 }
 
 /* ==========================================================================
@@ -495,8 +533,11 @@ a { color: inherit; text-decoration: none; }
 /* Between ~770 and 1100px the oval gets shorter but the runners keep their
    550px cap, so they crowd the card. Scale them to the oval instead. */
 @media (max-width: 1100px) and (min-width: 769px) {
-  .running-kids-overlay { max-width: 46%; }
-  .oval-glass-card { top: 32%; }
+  /* Tablet: same composition, a shorter travel budget */
+  .deo-story { --grow: 0.12; --zoom: 0.08; --kid-rise: -34px; --kid-grow: 0.08; height: 175vh; }
+  .deo-story-stage { width: 70vw; }
+  .deo-building-oval { aspect-ratio: 1.8; }
+  .students-running { width: 52%; bottom: -12%; }
 }
 
 @media (max-width: 860px) {
@@ -515,23 +556,20 @@ a { color: inherit; text-decoration: none; }
   .nav a { color: var(--ink) !important; padding: 15px 0; border-top: 1px solid rgba(20,20,20,.12); font-size: 1rem; }
 
   /* A stadium radius squeezes text at narrow widths — ease it off */
-  .allbirds-oval { aspect-ratio: 4 / 5; border-radius: 44px; }
-  .oval-glass-card { width: 84%; top: 34%; }
-  /* Shrink the runners so they read against a much narrower oval */
-  .running-kids-overlay { max-width: 78%; bottom: -18px; }
-  .oval-stage { padding-bottom: 18px; }
+  /* Mobile: same idea, motion dialled right down. The capsule keeps a
+     squarer crop so the building still reads at narrow widths, and stays
+     large relative to the viewport. */
+  .deo-story { --grow: 0.09; --zoom: 0.05; --kid-rise: -24px; --kid-grow: 0.06; height: 165vh; }
+  .deo-story-sticky { gap: 10px; padding-top: calc(76px + 1vh); }
+  .deo-story-stage { width: 86vw; }
+  .deo-building-oval { aspect-ratio: 1.15; border-radius: 999px; }
+  .students-running { width: 64%; bottom: -10%; }
+  .story-line { height: clamp(30px, 4.5vh, 54px); }
 }
 
 @media (max-width: 520px) {
-  .allbirds-oval { aspect-ratio: 2 / 3; border-radius: 30px; }
-  .oval-glass-card {
-    width: 90%; top: 38%;
-    padding: 18px 16px;                 /* card overflowed the oval at 320px */
-  }
-  .oval-glass-card p { font-size: .92rem; line-height: 1.45; }
-  .oval-rule { margin-top: 14px; }
-  .running-kids-overlay { max-width: 86%; bottom: -12px; }
-  .oval-stage { padding-bottom: 12px; }
+  .deo-building-oval { aspect-ratio: 1 / 1; }
+  .students-running { width: 66%; }
   .hero-cta .btn { width: 100%; }
   .facts { gap: 30px 40px; }
 }
@@ -551,19 +589,21 @@ a { color: inherit; text-decoration: none; }
     opacity: 1 !important; transform: none !important;
   }
   /* The scroll-driven pair: land them at their end state immediately */
-  .js .allbirds-oval, .js .allbirds-oval.animate-in {
-    opacity: 1 !important; transform: none !important;
-  }
-  .js .running-kids-overlay, .js .running-kids-overlay.animate-in {
-    opacity: 1 !important; transform: translateX(-50%) !important;
-  }
+  /* Pin the scene at a calm resting state; nothing tracks scroll. */
+  .deo-story { height: auto; }
+  .deo-story-sticky { position: static; height: auto; padding-block: 60px 100px; }
+  .deo-building-oval, .deo-building-oval img, .students-running { transform: none !important; }
+  .story-line-fill { transform: scaleY(1) !important; }
+  .story-dot { translate: -50% var(--line-travel, 0px) !important; }
+  .js .story-heading { opacity: 1 !important; transform: none !important; }
   .hero-media { animation: none; transform: none; }
   .scroll-cue, .caret { display: none; }
 }
 
 @media (forced-colors: active) {
-  .oval-glass-card, .allbirds-oval { border: 1px solid CanvasText; }
-  .hero-tint, .hero-beams, .oval-tint { display: none; }
+  .deo-building-oval { border: 1px solid CanvasText; }
+  .hero-tint, .hero-beams { display: none; }
+  .deo-building-oval::after { display: none; }
 }
 </style>
 </head>
@@ -628,48 +668,55 @@ a { color: inherit; text-decoration: none; }
     <div class="scroll-cue" aria-hidden="true"><i></i></div>
   </section>
 
-  <!-- ===================== 2. SPOTLIGHT (Allbirds) ===================== -->
-  <section class="spotlight-section" id="spotlight">
-    <div class="wrap">
+  <!-- ===================== 2. DEO STORY - sticky scroll scene ===================== -->
+  <section class="deo-story" id="deo-story">
+    <div class="deo-story-sticky" id="deo-story-sticky">
 
-      <div class="spotlight-head" data-reveal style="--i:0">
+      <div class="story-heading">
         <p class="spotlight-eyebrow">Our Campus</p>
-        <h2>A place built for the long view.</h2>
+        <h2>A place built for the future.</h2>
       </div>
 
-      <!-- Stage = positioning context for the overlay, so it lands on the
-           oval's edge rather than the section floor. -->
-      <div class="oval-stage">
+      <div class="story-line" id="story-line" aria-hidden="true">
+        <span class="story-line-fill"></span>
+        <span class="story-dot"></span>
+      </div>
 
-        <div class="allbirds-oval" id="allbirds-oval" role="img"
-             aria-label="The DEO Kairo school building, with the German, European and Egyptian flags flying at the entrance">
-          <div class="oval-tint" aria-hidden="true"></div>
-
-          <div class="oval-glass-card">
-            <p class="lede">
-              We set out to create a learning environment inspired by global perspectives,
-              guided by an ethos to shape better futures. We have celebrated
-              <span class="years">over 150 years</span> of academic excellence, but we are
-              just getting started.
-            </p>
-            <div class="oval-rule" aria-hidden="true"></div>
-          </div>
+      <div class="deo-story-stage">
+        <div class="deo-building-oval" id="deo-building-oval">
+          <img src="assets/deo-building.jpg"
+               alt="The DEO Kairo school building, with the German, European and Egyptian flags flying at the entrance"
+               width="3072" height="2048" decoding="async">
         </div>
 
-        <img src="assets/students-running.png"
-             class="running-kids-overlay"
-             id="running-kids"
-             alt="Students running together"
-             width="1737" height="1429"
-             loading="lazy" decoding="async">
+        <img class="students-running"
+             src="assets/students-running.png"
+             alt="Students running together outside the school"
+             width="1565" height="1150" decoding="async">
       </div>
 
-      <div class="facts" data-reveal style="--i:1">
+    </div>
+  </section>
+
+  <section class="story-prose">
+    <div class="wrap">
+      <blockquote data-reveal style="--i:0">
+        We set out to create a learning environment inspired by global perspectives,
+        guided by an ethos to shape better futures. We have celebrated
+        <span class="years">over 150 years</span> of academic excellence, but we are
+        just getting started.
+        <span class="story-prose-rule" aria-hidden="true"></span>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="facts-section">
+    <div class="wrap">
+      <div class="facts" data-reveal style="--i:0">
         <div><b>1873</b><span>Founded</span></div>
         <div><b>3</b><span>Languages taught</span></div>
         <div><b>KG&ndash;13</b><span>Every stage</span></div>
       </div>
-
     </div>
   </section>
 
@@ -776,39 +823,104 @@ a { color: inherit; text-decoration: none; }
     Array.prototype.forEach.call(items, function (el) { io.observe(el); });
   }
 
-  /* ---- Spotlight scroll observer ---------------------------------------
-     Watches the section itself. At 25% visible it tags the oval and the
-     runners; the CSS transitions (1.1s / 1.3s) do the rest, so the runners
-     land just after the oval and read as a second plane. */
-  function spotlight() {
-    var section = document.getElementById('spotlight');
-    if (!section) return;
+  /* ---- The single scroll controller for the story scene -------------------
+     Progress is derived from how far the tall .deo-story section has travelled
+     past the top of the viewport, so it is bound to scroll POSITION, not to a
+     one-shot trigger: scroll slowly and it moves slowly, scroll back up and it
+     runs in reverse. Only two custom properties are written; the CSS turns
+     them into transforms, so nothing here touches layout.
+     ------------------------------------------------------------------------ */
+  function storyScene() {
+    var section = document.getElementById('deo-story');
+    var sticky  = document.getElementById('deo-story-sticky');
+    var line    = document.getElementById('story-line');
+    var oval    = document.getElementById('deo-building-oval');
+    if (!section || !sticky) return;
 
-    var targets = [
-      document.getElementById('allbirds-oval'),
-      document.getElementById('running-kids')
-    ].filter(Boolean);
-    if (!targets.length) return;
+    var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
 
-    function show() {
-      targets.forEach(function (el) { el.classList.add('animate-in'); });
+    // Motion off: rest the scene at its calm start state and never listen.
+    if (REDUCE) {
+      sticky.style.setProperty('--p', 0);
+      sticky.style.setProperty('--text', 1);
+      measureStage();
+      measureLine();
+      return;
     }
 
-    // No observer support, or motion turned off: show it immediately.
-    if (REDUCE || !('IntersectionObserver' in window)) { show(); return; }
+    // The capsule scales from its centre, so the students shift down by half
+    // its height growth to hold their overlap with the lower curve. That needs
+    // the UNSCALED height, which only changes when the layout does.
+    function measureStage() {
+      if (!oval) return;
+      var scaled = oval.getBoundingClientRect().height;
+      var prog   = parseFloat(sticky.style.getPropertyValue('--p')) || 0;
+      var grow   = parseFloat(getComputedStyle(section).getPropertyValue('--grow')) || 0;
+      sticky.style.setProperty('--oval-h', Math.round(scaled / (1 + prog * grow)) + 'px');
+    }
 
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        show();
-        io.unobserve(entry.target);        // play once, then stop watching
-      });
-    }, { threshold: 0.25 });
+    // Where the dot must stop: the capsule's top centre. The capsule's top
+    // rises as it scales, so this is re-read each frame. It is the only
+    // layout read in the loop, and it happens before any style writes.
+    function measureLine() {
+      if (!line || !oval) return;
+      var l = line.getBoundingClientRect(), o = oval.getBoundingClientRect();
+      sticky.style.setProperty('--line-travel',
+        Math.max(0, Math.round(o.top - l.top)) + 'px');
+    }
 
-    io.observe(section);
+    var ticking = false;
+
+    function update() {
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      var r  = section.getBoundingClientRect();
+
+      // The sticky pins for (section height - viewport height); progress is
+      // how far into that travel we are. Bound to scroll POSITION, so it
+      // runs backwards when you scroll up and stops when you stop.
+      var travel = r.height - vh;
+      var p = travel > 0 ? clamp(-r.top / travel) : 0;
+
+      // Read layout first, then write, so nothing thrashes.
+      var lRect = line ? line.getBoundingClientRect() : null;
+      var oRect = oval ? oval.getBoundingClientRect() : null;
+
+      // The heading sits above the capsule in its own space, so it only
+      // needs a gentle settle at the very end - never a disappearing act.
+      var text = p <= 0.80 ? 1 : 1 - ((p - 0.80) / 0.20) * 0.35;
+
+      sticky.style.setProperty('--p', p.toFixed(4));
+      sticky.style.setProperty('--text', text.toFixed(4));
+
+      if (lRect && oRect) {
+        sticky.style.setProperty('--line-travel',
+          Math.max(0, Math.round(oRect.top - lRect.top)) + 'px');
+      }
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+
+    window.addEventListener('resize', function () {
+      measureStage();
+      update();
+    }, { passive: true });
+
+    // The capsule's height depends on the decoded image box, so re-measure
+    // once it has loaded.
+    var img = oval ? oval.querySelector('img') : null;
+    if (img && !img.complete) {
+      img.addEventListener('load', function () { measureStage(); update(); });
+    }
+
+    measureStage();
+    update();
   }
 
-  typewriter(); header(); menu(); reveal(); spotlight();
+  typewriter(); header(); menu(); reveal(); storyScene();
 })();
 </script>
 </body>
