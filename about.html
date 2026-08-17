@@ -299,6 +299,7 @@ a { color: inherit; text-decoration: none; }
      The section is deliberately tall so each phase has real scroll distance
      rather than happening in a few pixels. */
   --ring-gap:  16px;    /* even step between the capsule layers */
+  --axis-len:  clamp(34px, 5vh, 64px);  /* line length = dot travel */
   --zoom:      0.10;    /* building drift inside the pill       */
   --copy-rise: -16px;
 
@@ -345,45 +346,54 @@ a { color: inherit; text-decoration: none; }
 
 /* ---- Small static marker above the capsule. Deliberately quiet: it is a
        full stop after the heading, not an animation. ---- */
-/* ---- Centre axis: dot on top, line beneath it ----
-   Sits on the same 50% axis as the capsule because every child of the sticky
-   column is centred by align-items. The two margins are the whole point of
-   the hierarchy: a large void after the heading, a small one before the
-   capsule. ---- */
+/* ---- Centre axis: the dot travels down as the line draws behind it ----
+   Both are driven by --pg, so the line's LENGTH and the dot's POSITION come
+   from the same scroll value. --axis-len is shared by the container height
+   and the dot's travel, so they cannot drift apart. ---- */
 .deo-line-dot {
   position: relative;
   flex: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: clamp(24px, 4vh, 48px);     /* the intentional void */
-  /* Must clear the OUTER outline (2 x --ring-gap above the pill), not the
-     pill itself - otherwise the line lands on top of the rings. */
+  width: 2px;
+  height: var(--axis-len);
+  margin-top: clamp(24px, 4vh, 48px);
   margin-bottom: calc(var(--ring-gap) * 2 + clamp(12px, 1.8vh, 26px));
 }
-.js .deo-line-dot { opacity: var(--fade, 1); }
-.deo-line-dot span {
-  display: block;
-  width: 6px; height: 6px;
+.axis-line {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, rgba(20, 20, 20, .30), rgba(20, 20, 20, .08));
+  transform: scaleY(var(--pg, 1));
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+.axis-dot {
+  position: absolute;
+  left: 50%; top: 0;
+  width: 8px; height: 8px;
   border-radius: 50%;
   background: var(--red);
-  opacity: .6;
-}
-.deo-line-dot::after {
-  content: "";
-  display: block;
-  width: 1px;
-  height: clamp(30px, 4.6vh, 56px);
-  margin-top: 8px;
-  background: linear-gradient(180deg, rgba(20, 20, 20, .22), rgba(20, 20, 20, .04));
+  box-shadow: 0 0 0 4px rgba(219, 31, 38, .14);
+  translate: -50% calc(var(--pg, 1) * var(--axis-len) - 4px);
+  will-change: translate;
 }
 
 /* ---- Stage: the shared box every capsule layer is measured against ---- */
+
+/* ---- Nothing exists until the section is actually entered ----------------
+   Gated on a class, not a low opacity, so the first frame contains no ghost,
+   no tiny pill and nothing hit-testable. Scoped to .js, so with JavaScript
+   off the finished composition simply renders. */
+.js .deo-story-sticky:not(.is-live) .deo-stage,
+.js .deo-story-sticky:not(.is-live) .deo-line-dot {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .deo-stage {
   position: relative;
   flex: none;
-  /* Invisible until the section is entered. The fallback is 1 so that with
-     JavaScript off the finished composition simply renders. */
   opacity: var(--fade, 1);
   /* Final composition is deliberately dominant: ~80vw x ~61vh at full size */
   width: min(80vw, 1400px);
@@ -406,12 +416,12 @@ a { color: inherit; text-decoration: none; }
 .deo-pill-border-middle {
   inset: calc(var(--ring-gap) * -1);
   color: rgba(20, 20, 20, .12);
-  transform: scale(calc(0.36 + var(--pg, 1) * 0.64));
+  transform: scale(calc(0.06 + var(--pg, 1) * 0.94));
 }
 .deo-pill-border-outer {
   inset: calc(var(--ring-gap) * -2);
   color: rgba(20, 20, 20, .07);
-  transform: scale(calc(0.38 + var(--pg, 1) * 0.62));
+  transform: scale(calc(0.08 + var(--pg, 1) * 0.92));
 }
 
 /* The capsule: contains the building and nothing else */
@@ -424,7 +434,7 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   box-shadow: 0 44px 90px -56px rgba(20, 20, 20, .5);
   /* Starts small, reaches full size at 65% of the section */
-  transform: scale(calc(0.34 + var(--pg, 1) * 0.66));
+  transform: scale(calc(0.04 + var(--pg, 1) * 0.96));
   will-change: transform;
 }
 .deo-pill img {
@@ -498,6 +508,13 @@ a { color: inherit; text-decoration: none; }
   transform: translateY(0);
 }
 /* Sequential stagger, so the journey reveals stage by stage */
+/* ---- "One continuous path": the five stages slide in from the RIGHT ----
+   Overrides only .journey-step. Every other revealed block keeps its
+   translateY rise. Placed after the shared rule so it wins on order, at the
+   same specificity. ---- */
+.js .journey-step { transform: translateX(60px); }
+.js .journey-step.visible { transform: translateX(0); }
+
 .js .journey-step:nth-child(2), .js .person-block:nth-child(2), .js .value-block:nth-child(2) { transition-delay:  80ms; }
 .js .journey-step:nth-child(3), .js .person-block:nth-child(3), .js .value-block:nth-child(3) { transition-delay: 160ms; }
 .js .journey-step:nth-child(4), .js .person-block:nth-child(4), .js .value-block:nth-child(4) { transition-delay: 240ms; }
@@ -956,7 +973,10 @@ a { color: inherit; text-decoration: none; }
   .deo-story { height: auto; }
   .deo-story-sticky { position: static; height: auto; padding-block: 60px 100px; }
   .js .story-heading { opacity: 1 !important; transform: none !important; }
-  .js .deo-line-dot { opacity: 1 !important; }
+  .js .deo-story-sticky .deo-stage,
+  .js .deo-story-sticky .deo-line-dot {
+    opacity: 1 !important; visibility: visible !important;
+  }
   .scroll-cue, .caret { display: none; }
 }
 
@@ -1026,7 +1046,9 @@ a { color: inherit; text-decoration: none; }
         <h2>A place built for the future.</h2>
       </div>
 
-      <div class="deo-line-dot" aria-hidden="true"><span></span></div>
+      <div class="deo-line-dot" aria-hidden="true">
+        <span class="axis-line"></span><span class="axis-dot"></span>
+      </div>
 
       <div class="deo-stage">
         <div class="deo-pill-border-outer" aria-hidden="true"></div>
@@ -1388,40 +1410,41 @@ a { color: inherit; text-decoration: none; }
       sticky.style.setProperty('--text', text.toFixed(4));
     }
 
-    // Motion off: skip straight to the finished composition.
-    if (REDUCE) { paint(1, 1, 1, 1); return; }
+    if (REDUCE) { sticky.classList.add('is-live'); paint(1, 1, 1, 1); return; }
 
-    var SPLIT = 0.65;            // pill finishes growing; students then start
-    var FADE_IN = 0.16;          // how much of phase one is the fade from nothing
+    var SPLIT = 0.65;
+    var FADE_IN = 0.10;
     var ticking = false;
 
-    // The ratchet. Visuals are driven by `peak`, never by the raw scroll
-    // position, so scrolling back up cannot walk the animation backwards.
+    // Ratchet: visuals follow `peak`, never raw scroll position, so scrolling
+    // back up cannot walk the reveal backwards. Locked once complete.
     var peak = 0;
     var campusAnimationComplete = false;
 
     function update() {
       ticking = false;
-      if (campusAnimationComplete) return;   // locked: never recompute
+      if (campusAnimationComplete) return;
 
       var vh = window.innerHeight || document.documentElement.clientHeight;
       var r  = section.getBoundingClientRect();
       var travel = r.height - vh;
       var p = travel > 0 ? clamp(-r.top / travel) : 0;
 
-      if (p <= peak) return;                 // moving back up: hold the frame
+      if (p <= peak) return;
       peak = p;
 
-      var pg = clamp(peak / SPLIT);                       // pill + rings + axis
-      var sg = clamp((peak - SPLIT) / (1 - SPLIT));       // students
-      var fade = clamp(pg / FADE_IN);                     // in from nothing
+      if (peak > 0) sticky.classList.add('is-live');
+
+      var pg = clamp(peak / SPLIT);
+      var sg = clamp((peak - SPLIT) / (1 - SPLIT));
+      var fade = clamp(pg / FADE_IN);
       var text = peak <= 0.86 ? 1 : 1 - ((peak - 0.86) / 0.14) * 0.35;
 
       paint(pg, sg, fade, text);
 
       if (peak >= 0.999) {
         paint(1, 1, 1, text);
-        campusAnimationComplete = true;      // final state is now permanent
+        campusAnimationComplete = true;
       }
     }
 
@@ -1430,7 +1453,6 @@ a { color: inherit; text-decoration: none; }
     }, { passive: true });
     window.addEventListener('resize', update, { passive: true });
 
-    // Start hidden, then let the first measurement decide.
     paint(0, 0, 0, 1);
     update();
   }
