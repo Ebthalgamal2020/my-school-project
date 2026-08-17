@@ -295,31 +295,34 @@ a { color: inherit; text-decoration: none; }
 /* ==========================================================================
    2. DEO STORY - sticky, scroll-driven campus scene
    --------------------------------------------------------------------------
-   Vertical stack inside one pinned viewport, all centred in cream space:
+   Layered composition, each layer transformed independently:
 
-        OUR CAMPUS                 <- label
-        A place built for...       <- heading
-            |
-            *                      <- line draws down, dot at its end
-        [   BIG CAPSULE   ]        <- the section hero
-            students               <- separate layer, in front, breaks the edge
+     .deo-pill-border-outer     thin outline, slowest growth
+     .deo-pill-border-middle    thin outline
+     .deo-pill                  clipped capsule - building ONLY
+     .deo-floating-students     separate foreground object, breaks the capsule
+     .deo-line-dot              small static marker above the capsule
 
-   Sizing: the capsule is the dominant element - 66vw at rest, growing to
-   ~77vw. It scales from its CENTRE, so the students get a matching downward
-   shift (half the height growth) which keeps their overlap with the lower
-   curve constant while they also rise. That arithmetic needs the capsule
-   unscaled height, published by the script as --oval-h.
+   The three capsule layers share a centre but scale at slightly different
+   rates, so the frame breathes rather than moving as one rigid block. Their
+   base insets are even, and the rates are close enough that they can never
+   cross or reorder.
 
-   Only transform/opacity animate; --oval-h is written on resize only.
+   One rAF controller writes --p (0..1) from scroll POSITION, so the scene
+   reverses on the way back up and stops when scrolling stops. Only
+   transform/opacity animate; --pill-h is written on resize only.
    ========================================================================== */
 .deo-story {
-  /* movement budget - retuned per breakpoint below */
-  --grow:      0.17;    /* capsule scale delta: 1.00 -> 1.17 */
-  --zoom:      0.10;    /* building zoom inside the capsule   */
-  --kid-rise: -46px;    /* students rise, on top of tracking  */
+  /* growth budget - the three capsule layers, deliberately not identical */
+  --grow:      0.15;    /* main capsule            */
+  --grow-mid:  0.14;    /* middle outline          */
+  --grow-out:  0.13;    /* outer outline           */
+  --zoom:      0.10;    /* building inside the pill */
+  --ring-gap:  22px;    /* even step between layers */
+  --kid-rise: -46px;
   --kid-grow:  0.10;
   --copy-rise: -16px;
-  --oval-h:    480px;   /* overwritten by the script on resize */
+  --pill-h:    460px;   /* unscaled capsule height, set by the script */
 
   position: relative;
   height: 180vh;
@@ -334,7 +337,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(10px, 1.6vh, 20px);
+  gap: clamp(14px, 2.4vh, 30px);
   padding: calc(76px + 1.5vh) 20px 2vh;
   overflow: visible;                 /* students must break the capsule */
 }
@@ -362,49 +365,60 @@ a { color: inherit; text-decoration: none; }
   margin: 0;
 }
 
-/* ---- Thin line, dot at its drawing end ---- */
-.story-line {
+/* ---- Small static marker above the capsule. Deliberately quiet: it is a
+       full stop after the heading, not an animation. ---- */
+.deo-line-dot {
   position: relative;
   flex: none;
-  width: 2px;
-  height: clamp(36px, 6vh, 70px);
-  /* No rail: at rest only the dot shows, and the red draws down behind it
-     as you scroll - the line's length IS the progress. */
-  background: transparent;
-  border-radius: 2px;
-  z-index: 6;                        /* stays readable against the capsule */
+  width: 1px;
+  height: clamp(26px, 4vh, 44px);
+  background: linear-gradient(180deg, transparent, rgba(20, 20, 20, .18));
 }
-.story-line-fill {                   /* scaleY, so no layout work per frame */
-  position: absolute; inset: 0;
-  background: var(--red);            /* DEO brand red-orange */
-  border-radius: 2px;
-  transform: scaleY(var(--p, 0));
-  transform-origin: 50% 0;
-}
-.story-dot {
+.deo-line-dot::after {
+  content: "";
   position: absolute;
-  left: 50%; top: 0;
-  width: 8px; height: 8px;
-  margin-top: -4px;
+  left: 50%; bottom: -3px;
+  width: 6px; height: 6px;
+  margin-left: -3px;
   border-radius: 50%;
   background: var(--red);
-  box-shadow: 0 0 0 4px rgba(219, 31, 38, .16);
-  /* --line-travel is measured each frame so the dot lands exactly on the
-     capsule top centre however large it has grown. */
-  translate: -50% calc(var(--p, 0) * var(--line-travel, 0px));
-  will-change: translate;
+  opacity: .55;
 }
 
-/* ---- Stage holds the capsule; students are its sibling layer ---- */
-.deo-story-stage {
+/* ---- Stage: the shared box every capsule layer is measured against ---- */
+.deo-stage {
   position: relative;
   flex: none;
-  width: min(66vw, 1040px);          /* grows to ~77vw at full progress */
+  width: min(65vw, 1000px);
   z-index: 5;
   overflow: visible;
 }
 
-.deo-building-oval {
+/* Two outlines. Absolutely positioned against the stage, so they share the
+   capsule's centre; a stadium offset outward stays a stadium, so a matching
+   border-radius traces the curvature exactly at any size. */
+.deo-pill-border-outer,
+.deo-pill-border-middle {
+  position: absolute;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  pointer-events: none;
+  z-index: 0;                        /* behind the capsule, never over it */
+  will-change: transform;
+}
+.deo-pill-border-middle {
+  inset: calc(var(--ring-gap) * -1);
+  color: rgba(20, 20, 20, .12);
+  transform: scale(calc(1 + var(--p, 0) * var(--grow-mid)));
+}
+.deo-pill-border-outer {
+  inset: calc(var(--ring-gap) * -2);
+  color: rgba(20, 20, 20, .07);
+  transform: scale(calc(1 + var(--p, 0) * var(--grow-out)));
+}
+
+/* The capsule: contains the building and nothing else */
+.deo-pill {
   position: relative;
   z-index: 1;
   width: 100%;
@@ -415,7 +429,7 @@ a { color: inherit; text-decoration: none; }
   transform: scale(calc(1 + var(--p, 0) * var(--grow)));
   will-change: transform;
 }
-.deo-building-oval img {
+.deo-pill img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -426,22 +440,22 @@ a { color: inherit; text-decoration: none; }
 /* No dark overlay: the building stays bright and the orange architecture
    reads as it should. Nothing sits on top of it, so none is needed. */
 
-/* Students: in front, free to extend past the capsule.
-   translateY = (half the capsule height growth, so the overlap with the
-   lower curve holds) + (their own rise). */
-.students-running {
+/* Foreground object, outside the clipped capsule so it can extend past its
+   lower curve. translateY = (half the capsule's height growth, so the
+   overlap survives the scale) + (its own rise). */
+.deo-floating-students {
   position: absolute;
   left: 50%;
   bottom: -20%;
   z-index: 5;
-  width: min(620px, 46%);
+  width: 62%;                        /* ~40vw on desktop */
   height: auto;
   pointer-events: none;
   filter: drop-shadow(0 18px 26px rgba(20, 20, 20, .2));
   translate: -50% 0;
   transform:
     translate3d(0,
-      calc(var(--p, 0) * (var(--grow) * var(--oval-h) / 2 + var(--kid-rise))),
+      calc(var(--p, 0) * (var(--grow) * var(--pill-h) / 2 + var(--kid-rise))),
       0)
     scale(calc(1 + var(--p, 0) * var(--kid-grow)));
   transform-origin: 50% 100%;
@@ -534,10 +548,15 @@ a { color: inherit; text-decoration: none; }
    550px cap, so they crowd the card. Scale them to the oval instead. */
 @media (max-width: 1100px) and (min-width: 769px) {
   /* Tablet: same composition, a shorter travel budget */
-  .deo-story { --grow: 0.12; --zoom: 0.08; --kid-rise: -34px; --kid-grow: 0.08; height: 175vh; }
-  .deo-story-stage { width: 70vw; }
-  .deo-building-oval { aspect-ratio: 1.8; }
-  .students-running { width: 52%; bottom: -12%; }
+  .deo-story {
+    --grow: 0.12; --grow-mid: 0.115; --grow-out: 0.11;
+    --zoom: 0.08; --ring-gap: 16px;
+    --kid-rise: -34px; --kid-grow: 0.08;
+    height: 175vh;
+  }
+  .deo-stage { width: 68vw; }
+  .deo-pill { aspect-ratio: 1.8; }
+  .deo-floating-students { width: 62%; bottom: -14%; }
 }
 
 @media (max-width: 860px) {
@@ -559,17 +578,24 @@ a { color: inherit; text-decoration: none; }
   /* Mobile: same idea, motion dialled right down. The capsule keeps a
      squarer crop so the building still reads at narrow widths, and stays
      large relative to the viewport. */
-  .deo-story { --grow: 0.09; --zoom: 0.05; --kid-rise: -24px; --kid-grow: 0.06; height: 165vh; }
+  .deo-story {
+    --grow: 0.09; --grow-mid: 0.085; --grow-out: 0.08;
+    --zoom: 0.05; --ring-gap: 10px;
+    --kid-rise: -24px; --kid-grow: 0.06;
+    height: 165vh;
+  }
   .deo-story-sticky { gap: 10px; padding-top: calc(76px + 1vh); }
-  .deo-story-stage { width: 86vw; }
-  .deo-building-oval { aspect-ratio: 1.15; border-radius: 999px; }
-  .students-running { width: 64%; bottom: -10%; }
-  .story-line { height: clamp(30px, 4.5vh, 54px); }
+  /* Leaves room for both outlines each side once the capsule scales up */
+  .deo-stage { width: 76vw; }
+  .deo-pill { aspect-ratio: 1.15; }
+  .deo-floating-students { width: 74%; bottom: -12%; }
 }
 
 @media (max-width: 520px) {
-  .deo-building-oval { aspect-ratio: 1 / 1; }
-  .students-running { width: 66%; }
+  .deo-stage { width: 74vw; }
+  .deo-story { --ring-gap: 8px; }
+  .deo-pill { aspect-ratio: 1 / 1; }
+  .deo-floating-students { width: 80%; }
   .hero-cta .btn { width: 100%; }
   .facts { gap: 30px 40px; }
 }
@@ -592,18 +618,16 @@ a { color: inherit; text-decoration: none; }
   /* Pin the scene at a calm resting state; nothing tracks scroll. */
   .deo-story { height: auto; }
   .deo-story-sticky { position: static; height: auto; padding-block: 60px 100px; }
-  .deo-building-oval, .deo-building-oval img, .students-running { transform: none !important; }
-  .story-line-fill { transform: scaleY(1) !important; }
-  .story-dot { translate: -50% var(--line-travel, 0px) !important; }
+  .deo-pill, .deo-pill img, .deo-floating-students,
+  .deo-pill-border-outer, .deo-pill-border-middle { transform: none !important; }
   .js .story-heading { opacity: 1 !important; transform: none !important; }
   .hero-media { animation: none; transform: none; }
   .scroll-cue, .caret { display: none; }
 }
 
 @media (forced-colors: active) {
-  .deo-building-oval { border: 1px solid CanvasText; }
+  .deo-pill { border: 1px solid CanvasText; }
   .hero-tint, .hero-beams { display: none; }
-  .deo-building-oval::after { display: none; }
 }
 </style>
 </head>
@@ -677,19 +701,19 @@ a { color: inherit; text-decoration: none; }
         <h2>A place built for the future.</h2>
       </div>
 
-      <div class="story-line" id="story-line" aria-hidden="true">
-        <span class="story-line-fill"></span>
-        <span class="story-dot"></span>
-      </div>
+      <div class="deo-line-dot" aria-hidden="true"></div>
 
-      <div class="deo-story-stage">
-        <div class="deo-building-oval" id="deo-building-oval">
+      <div class="deo-stage">
+        <div class="deo-pill-border-outer" aria-hidden="true"></div>
+        <div class="deo-pill-border-middle" aria-hidden="true"></div>
+
+        <div class="deo-pill" id="deo-pill">
           <img src="assets/deo-building.jpg"
                alt="The DEO Kairo school building, with the German, European and Egyptian flags flying at the entrance"
                width="3072" height="2048" decoding="async">
         </div>
 
-        <img class="students-running"
+        <img class="deo-floating-students"
              src="assets/students-running.png"
              alt="Students running together outside the school"
              width="1565" height="1150" decoding="async">
@@ -833,40 +857,28 @@ a { color: inherit; text-decoration: none; }
   function storyScene() {
     var section = document.getElementById('deo-story');
     var sticky  = document.getElementById('deo-story-sticky');
-    var line    = document.getElementById('story-line');
-    var oval    = document.getElementById('deo-building-oval');
+    var pill    = document.getElementById('deo-pill');
     if (!section || !sticky) return;
 
     var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+
+    // The capsule scales from its centre, so the students shift down by half
+    // its height growth to hold their overlap with the lower curve. That needs
+    // the UNSCALED height, which only changes when the layout does.
+    function measureStage() {
+      if (!pill) return;
+      var scaled = pill.getBoundingClientRect().height;
+      var prog   = parseFloat(sticky.style.getPropertyValue('--p')) || 0;
+      var grow   = parseFloat(getComputedStyle(section).getPropertyValue('--grow')) || 0;
+      sticky.style.setProperty('--pill-h', Math.round(scaled / (1 + prog * grow)) + 'px');
+    }
 
     // Motion off: rest the scene at its calm start state and never listen.
     if (REDUCE) {
       sticky.style.setProperty('--p', 0);
       sticky.style.setProperty('--text', 1);
       measureStage();
-      measureLine();
       return;
-    }
-
-    // The capsule scales from its centre, so the students shift down by half
-    // its height growth to hold their overlap with the lower curve. That needs
-    // the UNSCALED height, which only changes when the layout does.
-    function measureStage() {
-      if (!oval) return;
-      var scaled = oval.getBoundingClientRect().height;
-      var prog   = parseFloat(sticky.style.getPropertyValue('--p')) || 0;
-      var grow   = parseFloat(getComputedStyle(section).getPropertyValue('--grow')) || 0;
-      sticky.style.setProperty('--oval-h', Math.round(scaled / (1 + prog * grow)) + 'px');
-    }
-
-    // Where the dot must stop: the capsule's top centre. The capsule's top
-    // rises as it scales, so this is re-read each frame. It is the only
-    // layout read in the loop, and it happens before any style writes.
-    function measureLine() {
-      if (!line || !oval) return;
-      var l = line.getBoundingClientRect(), o = oval.getBoundingClientRect();
-      sticky.style.setProperty('--line-travel',
-        Math.max(0, Math.round(o.top - l.top)) + 'px');
     }
 
     var ticking = false;
@@ -881,21 +893,12 @@ a { color: inherit; text-decoration: none; }
       var travel = r.height - vh;
       var p = travel > 0 ? clamp(-r.top / travel) : 0;
 
-      // Read layout first, then write, so nothing thrashes.
-      var lRect = line ? line.getBoundingClientRect() : null;
-      var oRect = oval ? oval.getBoundingClientRect() : null;
-
       // The heading sits above the capsule in its own space, so it only
       // needs a gentle settle at the very end - never a disappearing act.
       var text = p <= 0.80 ? 1 : 1 - ((p - 0.80) / 0.20) * 0.35;
 
       sticky.style.setProperty('--p', p.toFixed(4));
       sticky.style.setProperty('--text', text.toFixed(4));
-
-      if (lRect && oRect) {
-        sticky.style.setProperty('--line-travel',
-          Math.max(0, Math.round(oRect.top - lRect.top)) + 'px');
-      }
 
       ticking = false;
     }
@@ -911,7 +914,7 @@ a { color: inherit; text-decoration: none; }
 
     // The capsule's height depends on the decoded image box, so re-measure
     // once it has loaded.
-    var img = oval ? oval.querySelector('img') : null;
+    var img = pill ? pill.querySelector('img') : null;
     if (img && !img.complete) {
       img.addEventListener('load', function () { measureStage(); update(); });
     }
