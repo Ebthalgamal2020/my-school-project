@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us — DEO Kairo</title>
+<meta name="description" content="About DEO Kairo, the Deutsche Evangelische Oberschule Kairo — a German-Egyptian school in Cairo. Student concept redesign.">
+<meta name="theme-color" content="#141414">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+<!-- Set before first paint so CSS only hides things when JS is confirmed alive -->
+<script>document.documentElement.classList.add('js');</script>
+
+<style>
+/* ==========================================================================
+   DESIGN TOKENS
+   ========================================================================== */
+:root {
+  /* Sampled from the DEO Kairo logo. Identical to css/style.css so both
+     pages render the same brand. */
+  --ink:              #141414;
+  --ink-soft:         #262626;
+  --cream:            #FAF7F1;
+  --cream-soft:       #FFFFFF;
+  --red:              #DB1F26;
+  --red-dark:         #8F1216;
+  --gold:             #FFCE03;
+  --text-on-dark:     #F5F3EF;
+  --text-on-light:    #1A1A1A;
+  --text-muted-dark:  #C9C6C0;
+  --text-muted-light: #55524D;
+  --border-light:     #E7E2D8;
+
+  /* Type */
+  --sans:  'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  /* Motion — one easing family for the whole page */
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --fast: 200ms;
+  --slow: 700ms;
+
+  --container: 1240px;
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, p, figure, ul { margin: 0; }
+ul { list-style: none; padding: 0; }
+img { display: block; max-width: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  /* The header is fixed at 76px, so anchor jumps would land with the target
+     hidden underneath it. This offsets every scroll destination. */
+  scroll-padding-top: 96px;
+}
+
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+
+/* One focus ring everywhere. Ink on cream is 15.8:1 and cream on the dark
+   hero is 16.6:1 — both far past the 3:1 minimum for focus indicators. */
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.hero :focus-visible, .site-footer :focus-visible { outline-color: var(--text-on-dark); }
+
+.skip-link {
+  position: absolute; top: -100px; left: 16px; z-index: 999;
+  background: var(--ink); color: var(--text-on-dark);
+  padding: 14px 22px; font-weight: 700;
+  border-radius: 0 0 8px 8px;
+  transition: top var(--fast) var(--ease);
+}
+.skip-link:focus { top: 0; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  transition: background var(--fast) var(--ease),
+              backdrop-filter var(--fast) var(--ease),
+              box-shadow var(--fast) var(--ease);
+}
+.header-inner {
+  display: flex; align-items: center; gap: clamp(16px, 3vw, 40px);
+  height: 76px;
+}
+.brand {
+  display: flex; align-items: center; gap: 11px;
+  font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em;
+  color: var(--text-on-dark); white-space: nowrap;
+}
+/* Real logo image — the old gradient-circle placeholder is gone */
+.brand-mark {
+  height: 32px;
+  width: auto;
+  flex: none;
+}
+.nav { display: flex; gap: clamp(14px, 2.2vw, 30px); margin-inline: auto; }
+.nav a {
+  position: relative; padding-block: 6px;
+  font-size: .93rem; font-weight: 600; color: var(--text-on-dark);
+}
+.nav a::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 2px; background: var(--gold);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform var(--fast) var(--ease);
+}
+.nav a:hover::after, .nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+/* Once scrolled past the hero, the bar goes solid and text flips to dark */
+.site-header.is-stuck {
+  background: rgba(245, 243, 239, .9);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  box-shadow: 0 6px 28px -22px rgba(20, 20, 20, .8);
+}
+.site-header.is-stuck .brand,
+.site-header.is-stuck .nav a { color: var(--ink); }
+
+.burger {
+  display: none; width: 44px; height: 44px; padding: 0;
+  flex-direction: column; justify-content: center; gap: 5px;
+  background: none; border: 1.5px solid currentColor; border-radius: 10px;
+  color: var(--text-on-dark); cursor: pointer;
+}
+.site-header.is-stuck .burger { color: var(--ink); }
+.burger i { display: block; width: 18px; height: 1.5px; background: currentColor; margin-inline: auto; }
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 19px 42px; border: none; border-radius: 999px;
+  background: var(--red); color: #fff;      /* 4.96:1 */
+  font: inherit; font-size: 1.02rem; font-weight: 700; letter-spacing: .01em;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: background var(--fast) var(--ease),
+              transform var(--fast) var(--ease),
+              box-shadow var(--fast) var(--ease);
+}
+.btn:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 34px -18px rgba(219, 31, 38, .95);
+}
+.btn:active { transform: translateY(0) scale(.985); }
+.btn .arw { transition: transform var(--fast) var(--ease); }
+.btn:hover .arw { transform: translateX(5px); }
+
+/* ==========================================================================
+   1. HERO  —  Nike: full-bleed, huge type, one loud CTA
+   ========================================================================== */
+.hero {
+  position: relative;
+  min-height: 100vh; min-height: 100svh;
+  display: grid; place-items: center;
+  padding: 120px 0 90px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--ink);
+  color: var(--text-on-dark);
+  text-align: center;
+}
+
+/* ---- SWAP IN YOUR PHOTO HERE (one line) --------------------------------
+   Set --hero-img to url("https://images.unsplash.com/photo-XXXXXXXX").
+   The gradient below is a real stage-light backdrop, so the page looks
+   finished before you do — and still works if the URL ever 404s.        */
+.hero-media {
+  --hero-img: none;
+  position: absolute; inset: 0; z-index: 1;
+  background-image:
+    var(--hero-img),
+    radial-gradient(ellipse 45% 60% at 50% -5%, rgba(255, 206, 3, .30), transparent 62%),
+    radial-gradient(ellipse 40% 55% at 12% 25%, rgba(219, 31, 38, .20), transparent 60%),
+    radial-gradient(ellipse 42% 55% at 88% 28%, rgba(219, 31, 38, .24), transparent 60%),
+    linear-gradient(178deg, #1F1F1F 0%, #141414 52%, #0D0D0D 100%);
+  background-size: cover;
+  background-position: center;
+  animation: zoom 28s var(--ease) infinite alternate;
+}
+@keyframes zoom { from { transform: scale(1); } to { transform: scale(1.1); } }
+
+/* Suggestion of stage/orchestra lighting rigged above the audience */
+.hero-beams {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: .5;
+  background:
+    linear-gradient(101deg, transparent 46%, rgba(255,206,3,.12) 49%, transparent 52%),
+    linear-gradient(79deg,  transparent 46%, rgba(219,31,38,.12) 49%, transparent 52%),
+    linear-gradient(93deg,  transparent 47%, rgba(245,243,239,.09) 50%, transparent 53%);
+}
+
+/* Dark tint — this is what guarantees the headline stays readable */
+.hero-tint {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(180deg, rgba(20,20,20,.82) 0%, rgba(20,20,20,.62) 45%, rgba(20,20,20,.90) 100%);
+}
+
+.hero-inner { position: relative; z-index: 4; max-width: 1020px; margin-inline: auto; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 26px;
+  font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold);                                   /* 12.35:1 on ink */
+}
+.eyebrow::before, .eyebrow::after { content: ""; width: 26px; height: 1px; background: currentColor; }
+
+.hero h1 {
+  font-size: clamp(2.3rem, 6.4vw, 5.1rem);
+  font-weight: 800; line-height: 1.05; letter-spacing: -.03em;
+  text-wrap: balance;
+}
+
+/* The word that swaps. min-width stops the headline jittering as it types. */
+#changing-text {
+  color: var(--gold);
+  display: inline-block;
+  min-width: 1ch;
+}
+.caret {
+  display: inline-block;
+  width: 3px; height: .88em;
+  margin-left: 4px;
+  background: var(--gold);
+  vertical-align: -.08em;
+  animation: blink 1.05s steps(1) infinite;
+}
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+.hero p {
+  max-width: 58ch; margin: 26px auto 0;
+  font-size: clamp(1rem, 1.5vw, 1.16rem);
+  color: rgba(245, 243, 239, .82);
+}
+.hero-cta { margin-top: 40px; }
+
+.hero-note {
+  margin-top: 22px; font-size: .8rem;
+  color: rgba(245, 243, 239, .6);
+}
+
+.scroll-cue {
+  position: absolute; left: 50%; bottom: 26px; z-index: 4;
+  translate: -50% 0;
+  width: 24px; height: 38px;
+  border: 1.5px solid rgba(245,243,239,.35); border-radius: 13px;
+  pointer-events: none;
+}
+.scroll-cue i {
+  position: absolute; left: 50%; top: 8px; margin-left: -2px;
+  width: 4px; height: 7px; border-radius: 2px; background: var(--gold);
+  animation: cue 2s var(--ease) infinite;
+}
+@keyframes cue {
+  0%   { opacity: 0; transform: translateY(0); }
+  35%  { opacity: 1; }
+  75%  { opacity: 0; transform: translateY(13px); }
+  100% { opacity: 0; }
+}
+
+/* ==========================================================================
+   2. SPOTLIGHT  —  Allbirds: calm, cream, one soft shape, lots of air
+   ========================================================================== */
+.spotlight {
+  background: var(--cream);
+  padding-block: clamp(80px, 12vw, 170px);
+  text-align: center;
+}
+.spotlight-head { max-width: 660px; margin: 0 auto clamp(40px, 6vw, 72px); }
+.spotlight-eyebrow {
+  font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-muted-light);                                  /* 7.27:1 on cream */
+  margin-bottom: 16px;
+}
+.spotlight h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  font-weight: 400; line-height: 1.15; letter-spacing: -.015em;
+}
+
+/* The stadium capsule */
+.capsule {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 8;
+  border-radius: 999px;                /* stadium shape */
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 40px 80px -50px rgba(20, 20, 20, .55);
+}
+
+/* The real school building. The gradient below stays as the last layer, so
+   if the file is ever missing the capsule still looks finished. */
+.capsule-media {
+  --capsule-img: url("assets/deo-building.jpg");
+  position: absolute; inset: 0; z-index: 1;
+  background-image:
+    var(--capsule-img),
+    linear-gradient(168deg, #F2EFE7 0%, #E7E2D8 46%, #D6D1C5 100%);
+  background-size: cover;              /* fills the oval, never distorts */
+  background-position: center center;  /* keeps the three flags centred */
+  background-repeat: no-repeat;
+  transition: transform var(--slow) var(--ease);
+}
+.capsule:hover .capsule-media { transform: scale(1.04); }
+
+/* Dark tint over the photo. The building's walls are bright white in full
+   sun, which would swallow the card's edge — this holds it apart. Built from
+   --ink so it tracks the palette instead of being a loose hex. */
+.capsule-veil {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: rgba(20, 20, 20, .42);                          /* fallback */
+  background: color-mix(in srgb, var(--ink) 42%, transparent);
+}
+
+/* The centred text card */
+.capsule-card {
+  position: absolute; z-index: 4;
+  top: 50%; left: 50%;
+  translate: -50% -50%;
+  width: min(620px, 74%);
+  padding: clamp(28px, 3.6vw, 52px);
+  background: rgba(245, 243, 239, .96);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  border-radius: 22px;
+  box-shadow: 0 26px 60px -34px rgba(20, 20, 20, .5);
+}
+.capsule-card p {
+  font-family: var(--serif);
+  font-size: clamp(1rem, 1.65vw, 1.32rem);
+  line-height: 1.55;
+  color: var(--ink);                                        /* 15.8:1 on cream */
+  text-wrap: pretty;
+}
+.capsule-card .lede { font-weight: 500; }
+.capsule-card .years { color: var(--red); font-style: italic; }
+
+.capsule-rule {
+  width: 46px; height: 3px; margin: 22px auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--red), var(--gold));
+}
+
+/* Three quiet facts under the capsule */
+.facts {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: clamp(28px, 6vw, 90px);
+  margin-top: clamp(48px, 7vw, 84px);
+}
+.facts div { min-width: 130px; }
+.facts b {
+  display: block;
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(2rem, 3.4vw, 2.9rem); line-height: 1;
+  color: var(--ink);
+}
+.facts span {
+  display: block; margin-top: 8px;
+  font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--text-muted-light);                                  /* 7.27:1 on cream */
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.site-footer {
+  background: var(--ink); color: var(--text-on-dark);
+  padding-block: clamp(48px, 7vw, 80px) 34px;
+}
+.footer-top {
+  display: flex; flex-wrap: wrap; justify-content: space-between;
+  gap: 28px; padding-bottom: 34px;
+  border-bottom: 1px solid rgba(245,243,239,.16);
+}
+.footer-brand { font-weight: 800; font-size: 1.3rem; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 22px; font-size: .92rem; }
+.footer-links a { color: rgba(245,243,239,.8); }
+.footer-links a:hover { color: var(--gold); }
+
+.disclaimer {
+  margin-top: 26px; padding: 16px 20px;
+  border: 1px solid rgba(219, 31, 38, .5);
+  background: rgba(219, 31, 38, .12);
+  border-radius: 10px;
+  font-size: .84rem; line-height: 1.6;
+  color: rgba(245,243,239,.94);
+}
+.disclaimer b { color: var(--gold); }
+.footer-bottom { margin-top: 22px; font-size: .8rem; color: rgba(245,243,239,.62); }
+
+/* ==========================================================================
+   REVEAL — hidden state scoped to .js, so no-JS shows everything
+   ========================================================================== */
+.js [data-reveal] {
+  opacity: 0; transform: translateY(26px);
+  transition: opacity var(--slow) var(--ease), transform var(--slow) var(--ease);
+  transition-delay: calc(var(--i, 0) * 100ms);
+}
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 860px) {
+  .burger { display: flex; }
+  .nav {
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; gap: 0;
+    padding-inline: clamp(20px, 5vw, 48px);
+    background: rgba(245, 243, 239, .98);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    max-height: 0; overflow: hidden;
+    visibility: hidden;            /* keeps links out of the tab order */
+    transition: max-height var(--fast) var(--ease), visibility var(--fast), padding var(--fast) var(--ease);
+  }
+  .nav.is-open { max-height: 300px; visibility: visible; padding-block: 8px 20px; }
+  .nav a { color: var(--ink) !important; padding: 15px 0; border-top: 1px solid rgba(20,20,20,.12); font-size: 1rem; }
+
+  /* A stadium radius squeezes text at narrow widths — ease it off */
+  .capsule { aspect-ratio: 4 / 5; border-radius: 44px; }
+  .capsule-card { width: 84%; }
+}
+
+@media (max-width: 520px) {
+  .capsule { aspect-ratio: 3 / 4; border-radius: 30px; }
+  .capsule-card { width: 88%; }
+  .hero-cta .btn { width: 100%; }
+  .facts { gap: 30px 40px; }
+}
+
+/* ==========================================================================
+   REDUCED MOTION — strip the movement, keep the design intact
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .js [data-reveal], .js [data-reveal].is-visible {
+    opacity: 1 !important; transform: none !important;
+  }
+  .hero-media { animation: none; transform: none; }
+  .scroll-cue, .caret { display: none; }
+}
+
+@media (forced-colors: active) {
+  .capsule-card, .capsule { border: 1px solid CanvasText; }
+  .hero-tint, .hero-beams, .capsule-veil { display: none; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header" id="header">
+  <div class="wrap header-inner">
+    <a class="brand" href="index.html">
+      <img src="assets/deo-logo.png" alt="DEO Kairo" class="brand-mark" width="68" height="48">
+      <span>DEO Kairo</span>
+    </a>
+    <nav class="nav" id="nav" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="about.html" aria-current="page">About Us</a>
+      <a href="index.html#path">School Path</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+      <i></i><i></i><i></i>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===================== 1. HERO (Nike) ===================== -->
+  <section class="hero">
+    <div class="hero-media"  aria-hidden="true"></div>
+    <div class="hero-beams"  aria-hidden="true"></div>
+    <div class="hero-tint"   aria-hidden="true"></div>
+
+    <div class="wrap hero-inner">
+      <p class="eyebrow">Deutsche Evangelische Oberschule Kairo</p>
+
+      <h1>
+        At DEO Kairo, every student is a
+        <!-- Screen readers get the complete, stable sentence... -->
+        <span class="sr-only">musician, athlete, leader and innovator.</span>
+        <!-- ...while the animated span is skipped, so it isn't announced
+             four times a second as the letters change. -->
+        <span id="changing-text" aria-hidden="true"></span><span class="caret" aria-hidden="true"></span>
+      </h1>
+
+      <p>
+        Music, sport, leadership and invention aren't extras bolted onto the timetable
+        here. They're where a German curriculum and Egyptian life actually meet — and
+        where students find out who they are.
+      </p>
+
+      <div class="hero-cta">
+        <a class="btn" href="https://deokairo.com" target="_blank" rel="noopener noreferrer">
+          Discover Our Events
+          <span class="arw" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+
+      <p class="hero-note">Opens deokairo.com in a new tab</p>
+    </div>
+
+    <div class="scroll-cue" aria-hidden="true"><i></i></div>
+  </section>
+
+  <!-- ===================== 2. SPOTLIGHT (Allbirds) ===================== -->
+  <section class="spotlight" id="spotlight">
+    <div class="wrap">
+
+      <div class="spotlight-head" data-reveal style="--i:0">
+        <p class="spotlight-eyebrow">Our Campus</p>
+        <h2>A place built for the long view.</h2>
+      </div>
+
+      <div class="capsule" data-reveal style="--i:1">
+        <div class="capsule-media" role="img"
+             aria-label="The DEO Kairo school building, with the German, European and Egyptian flags flying at the entrance"></div>
+        <div class="capsule-veil" aria-hidden="true"></div>
+
+        <div class="capsule-card">
+          <p class="lede">
+            We set out to create a learning environment inspired by global perspectives,
+            guided by an ethos to shape better futures. We have celebrated
+            <span class="years">over 150 years</span> of academic excellence, but we are
+            just getting started.
+          </p>
+          <div class="capsule-rule" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div class="facts" data-reveal style="--i:2">
+        <div><b>1873</b><span>Founded</span></div>
+        <div><b>3</b><span>Languages taught</span></div>
+        <div><b>KG&ndash;13</b><span>Every stage</span></div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <p class="footer-brand">DEO Kairo</p>
+      <nav class="footer-links" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="https://deokairo.com" target="_blank" rel="noopener noreferrer">Official site</a>
+      </nav>
+    </div>
+
+    
+
+    <p class="footer-bottom">&copy; 2026 Concept redesign &middot; Built as a student web project</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- Typewriter -------------------------------------------------------
+     Types a word, holds, deletes it, moves to the next, loops forever.
+     Under reduced motion it prints the first word once and stops. */
+  function typewriter() {
+    var el = document.getElementById('changing-text');
+    if (!el) return;
+
+    var words = ['Musician', 'Athlete', 'Leader', 'Innovator'];
+    var TYPE = 95, DELETE = 45, HOLD = 1500, GAP = 350;
+
+    if (REDUCE) { el.textContent = words[0]; return; }
+
+    var w = 0, i = 0, deleting = false;
+
+    (function step() {
+      var word = words[w];
+      el.textContent = word.slice(0, i);
+
+      var wait;
+      if (!deleting) {
+        if (i < word.length) { i++; wait = TYPE; }
+        else { deleting = true; wait = HOLD; }
+      } else {
+        if (i > 0) { i--; wait = DELETE; }
+        else { deleting = false; w = (w + 1) % words.length; wait = GAP; }
+      }
+      setTimeout(step, wait);
+    })();
+  }
+
+  /* ---- Sticky header state ---- */
+  function header() {
+    var h = document.getElementById('header');
+    if (!h) return;
+    var ticking = false;
+    function update() {
+      h.classList.toggle('is-stuck', window.scrollY > window.innerHeight * 0.75);
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
+
+  /* ---- Mobile menu ---- */
+  function menu() {
+    var b = document.getElementById('burger'), n = document.getElementById('nav');
+    if (!b || !n) return;
+    function set(open) {
+      n.classList.toggle('is-open', open);
+      b.setAttribute('aria-expanded', String(open));
+      b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    }
+    b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
+    n.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && b.getAttribute('aria-expanded') === 'true') { set(false); b.focus(); }
+    });
+  }
+
+  /* ---- Scroll reveal ---- */
+  function reveal() {
+    var items = document.querySelectorAll('[data-reveal]');
+    if (!items.length) return;
+    if (REDUCE || !('IntersectionObserver' in window)) {
+      Array.prototype.forEach.call(items, function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-visible');
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    Array.prototype.forEach.call(items, function (el) { io.observe(el); });
+  }
+
+  typewriter(); header(); menu(); reveal();
+})();
+</script>
+</body>
+</html>

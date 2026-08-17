@@ -126,10 +126,10 @@ a { color: inherit; }
   text-decoration: none;
   color: var(--ink);
 }
+/* Real logo image — the old gradient-circle placeholder is gone */
 .brand-mark {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  background: conic-gradient(var(--red), var(--ink), var(--gold), var(--red));
+  height: 32px;
+  width: auto;
 }
 .main-nav {
   display: flex;

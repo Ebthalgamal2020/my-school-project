@@ -26,3 +26,10 @@ dist/
 deo-background.mp4
 *.mov
 *.avi
+
+# Saved copy of the real deokairo.com WordPress site (7.8MB, ~29 vendor
+# stylesheets). It's reference material, not project code — and republishing
+# another site's theme, scripts and images from a public repo isn't ours to do.
+Homepage _ DEO Cairo_files/
+Homepage _ DEO Cairo.html
+Homepage _ DEO Cairo.png
