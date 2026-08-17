@@ -337,7 +337,7 @@ a { color: inherit; text-decoration: none; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(14px, 2.4vh, 30px);
+  gap: 0;
   padding: calc(76px + 1.5vh) 20px 2vh;
   overflow: visible;                 /* students must break the capsule */
 }
@@ -367,22 +367,34 @@ a { color: inherit; text-decoration: none; }
 
 /* ---- Small static marker above the capsule. Deliberately quiet: it is a
        full stop after the heading, not an animation. ---- */
+/* ---- Centre axis: dot on top, line beneath it ----
+   Sits on the same 50% axis as the capsule because every child of the sticky
+   column is centred by align-items. The two margins are the whole point of
+   the hierarchy: a large void after the heading, a small one before the
+   capsule. ---- */
 .deo-line-dot {
   position: relative;
   flex: none;
-  width: 1px;
-  height: clamp(26px, 4vh, 44px);
-  background: linear-gradient(180deg, transparent, rgba(20, 20, 20, .18));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: clamp(34px, 7vh, 86px);     /* the large intentional void */
+  margin-bottom: clamp(14px, 2.2vh, 26px);/* the small one, before the pill */
+}
+.deo-line-dot span {
+  display: block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  opacity: .6;
 }
 .deo-line-dot::after {
   content: "";
-  position: absolute;
-  left: 50%; bottom: -3px;
-  width: 6px; height: 6px;
-  margin-left: -3px;
-  border-radius: 50%;
-  background: var(--red);
-  opacity: .55;
+  display: block;
+  width: 1px;
+  height: clamp(46px, 8vh, 104px);
+  margin-top: 8px;
+  background: linear-gradient(180deg, rgba(20, 20, 20, .22), rgba(20, 20, 20, .04));
 }
 
 /* ---- Stage: the shared box every capsule layer is measured against ---- */
@@ -422,7 +434,7 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   z-index: 1;
   width: 100%;
-  aspect-ratio: 2.05;                /* deep capsule, not a thin pill */
+  aspect-ratio: 2.15;                /* deep capsule, not a thin pill */
   border-radius: 999px;
   overflow: hidden;
   box-shadow: 0 44px 90px -56px rgba(20, 20, 20, .5);
@@ -446,9 +458,9 @@ a { color: inherit; text-decoration: none; }
 .deo-floating-students {
   position: absolute;
   left: 50%;
-  bottom: -20%;
+  bottom: -15%;
   z-index: 5;
-  width: 62%;                        /* ~40vw on desktop */
+  width: 57%;                        /* ~37vw on desktop */
   height: auto;
   pointer-events: none;
   filter: drop-shadow(0 18px 26px rgba(20, 20, 20, .2));
@@ -501,6 +513,233 @@ a { color: inherit; text-decoration: none; }
   display: block; margin-top: 8px;
   font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
   color: var(--text-muted-light);                       /* 7.27:1 on cream */
+}
+
+
+/* ==========================================================================
+   3. HERITAGE / VISION / COMMUNITY
+   --------------------------------------------------------------------------
+   Reveal classes match the project's existing pattern. The hidden state is
+   scoped to .js (set by an inline script in <head>) so that with JavaScript
+   off nothing is stuck at opacity 0 - the sections simply render.
+   These are observed by the page's ONE reveal controller, not a second one.
+   ========================================================================== */
+.js .stat-card,
+.js .gallery-item,
+.js .event-card,
+.js .heritage-content,
+.js .vision-content,
+.js .community-content {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .7s ease-out, transform .7s ease-out;
+}
+.js .stat-card.visible,
+.js .gallery-item.visible,
+.js .event-card.visible,
+.js .heritage-content.visible,
+.js .vision-content.visible,
+.js .community-content.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Stagger siblings without needing per-element delays in the markup */
+.js .stat-card:nth-child(2), .js .event-card:nth-child(2) { transition-delay: 90ms; }
+.js .stat-card:nth-child(3), .js .event-card:nth-child(3) { transition-delay: 180ms; }
+.js .stat-card:nth-child(4), .js .event-card:nth-child(4) { transition-delay: 270ms; }
+
+/* ---- Shared section furniture ---- */
+.deo-section { background: var(--cream); padding-block: clamp(64px, 9vw, 130px); }
+.deo-section--tint { background: var(--cream-soft); }
+.deo-section--ink  { background: var(--ink); color: var(--text-on-dark); }
+
+.deo-section-head { max-width: 660px; margin: 0 0 clamp(32px, 5vw, 60px); }
+.deo-section-head--center { margin-inline: auto; text-align: center; }
+.deo-eyebrow {
+  font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-muted-light);                        /* 7.27:1 on cream */
+  margin-bottom: 12px;
+}
+.deo-section--ink .deo-eyebrow { color: var(--gold); }   /* 12.35:1 on ink   */
+.deo-section h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 3.4vw, 2.7rem);
+  font-weight: 400; line-height: 1.15; letter-spacing: -.015em;
+  margin: 0;
+}
+.deo-lead {
+  margin-top: 18px;
+  font-size: clamp(1rem, 1.4vw, 1.14rem);
+  color: var(--text-muted-light);
+  max-width: 62ch;
+}
+.deo-section--ink .deo-lead { color: var(--text-muted-dark); } /* 8.4:1 on ink */
+
+/* ---- Heritage: the 1873 anchor beside the story ---- */
+.heritage-content {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1fr);
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+}
+.heritage-year {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 1px solid var(--border-light);
+  background: var(--cream-soft);
+  box-shadow: 0 30px 60px -46px rgba(20, 20, 20, .45);
+}
+.heritage-year::before {
+  content: "";
+  position: absolute; inset: 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 20, 20, .07);
+}
+.heritage-year b {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 7vw, 5.4rem);
+  font-weight: 400; line-height: 1;
+  color: var(--red);
+}
+.heritage-year span {
+  margin-top: 10px;
+  font-size: .72rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+.heritage-text p + p { margin-top: 16px; }
+.heritage-text p { color: var(--text-muted-light); }
+
+/* ---- Vision: the five Leitbild pillars ---- */
+.vision-content { display: grid; gap: clamp(28px, 4vw, 44px); }
+.pillar-list { display: grid; gap: 0; }
+.pillar-row {
+  display: grid;
+  grid-template-columns: 2.4rem minmax(0, 15rem) minmax(0, 1fr);
+  gap: clamp(14px, 2.4vw, 32px);
+  align-items: baseline;
+  padding: clamp(18px, 2.4vw, 26px) 0;
+  border-top: 1px solid rgba(245, 243, 239, .16);
+}
+.pillar-row:last-child { border-bottom: 1px solid rgba(245, 243, 239, .16); }
+.pillar-row i {
+  font-style: normal;
+  font-family: var(--serif);
+  font-size: .95rem;
+  color: var(--gold);                                    /* 12.35:1 on ink */
+}
+.pillar-row b {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+  font-weight: 400;
+  color: var(--text-on-dark);
+}
+.pillar-row p { color: var(--text-muted-dark); font-size: .97rem; margin: 0; }
+
+/* ---- Community: stat cards ---- */
+.community-content { display: grid; gap: clamp(28px, 4vw, 48px); }
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(14px, 2vw, 22px);
+}
+.stat-card {
+  padding: clamp(24px, 3vw, 36px);
+  background: var(--cream-soft);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  text-align: left;
+}
+.stat-card b {
+  display: block;
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1;
+  color: var(--ink);
+}
+.stat-card span {
+  display: block; margin-top: 10px;
+  font-size: .74rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+.stat-card small {
+  display: block; margin-top: 12px;
+  font-size: .9rem; line-height: 1.5; color: var(--text-muted-light);
+}
+
+/* ---- Footer, in the same visual language ---- */
+.site-footer {
+  position: relative;
+  background: var(--ink);
+  color: var(--text-on-dark);
+  padding-block: clamp(56px, 8vw, 96px) 32px;
+}
+/* Brand hairline across the very top edge */
+.site-footer::before {
+  content: "";
+  position: absolute; inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--red), var(--gold) 55%, var(--red));
+}
+/* Warm glow so the block does not read as a flat slab */
+.site-footer::after {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 60% 70% at 15% 0%, rgba(219, 31, 38, .10), transparent 60%);
+}
+.site-footer > .wrap { position: relative; z-index: 1; }
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  padding-bottom: clamp(32px, 5vw, 52px);
+  border-bottom: 1px solid rgba(245, 243, 239, .16);
+}
+.footer-brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.footer-brand-row img { height: 34px; width: auto; }
+.footer-brand-row span { font-weight: 800; font-size: 1.2rem; }
+.footer-grid p { color: var(--text-muted-dark); font-size: .95rem; max-width: 40ch; }
+.footer-col h3 {
+  font-size: .72rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold); margin: 0 0 16px;
+}
+.footer-col ul { display: grid; gap: 11px; }
+.footer-col a, .footer-col li { color: var(--text-muted-dark); font-size: .95rem; }
+.footer-col a { transition: color var(--fast) var(--ease); }
+.footer-col a:hover { color: var(--gold); }
+.footer-col li { line-height: 1.5; }
+.footer-base {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 14px;
+  margin-top: clamp(24px, 3vw, 34px);
+  font-size: .82rem; color: rgba(245, 243, 239, .62);
+}
+.footer-social { display: flex; flex-wrap: wrap; gap: 22px; }
+.footer-social a {
+  position: relative;
+  color: rgba(245, 243, 239, .78);
+  transition: color var(--fast) var(--ease);
+}
+.footer-social a::after {
+  content: ""; position: absolute; left: 0; bottom: -4px;
+  width: 100%; height: 1px; background: var(--gold);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform var(--fast) var(--ease);
+}
+.footer-social a:hover { color: var(--gold); }
+.footer-social a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+@media (max-width: 860px) {
+  .heritage-content { grid-template-columns: 1fr; }
+  .heritage-year { max-width: 260px; margin-inline: auto; }
+  .pillar-row { grid-template-columns: 1.8rem 1fr; }
+  .pillar-row p { grid-column: 2; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .pillar-row { grid-template-columns: 1fr; gap: 6px; }
+  .pillar-row p { grid-column: 1; }
 }
 
 /* ==========================================================================
@@ -584,7 +823,7 @@ a { color: inherit; text-decoration: none; }
     --kid-rise: -24px; --kid-grow: 0.06;
     height: 165vh;
   }
-  .deo-story-sticky { gap: 10px; padding-top: calc(76px + 1vh); }
+  .deo-story-sticky { gap: 0; padding-top: calc(76px + 1vh); }
   /* Leaves room for both outlines each side once the capsule scales up */
   .deo-stage { width: 76vw; }
   .deo-pill { aspect-ratio: 1.15; }
@@ -701,7 +940,7 @@ a { color: inherit; text-decoration: none; }
         <h2>A place built for the future.</h2>
       </div>
 
-      <div class="deo-line-dot" aria-hidden="true"></div>
+      <div class="deo-line-dot" aria-hidden="true"><span></span></div>
 
       <div class="deo-stage">
         <div class="deo-pill-border-outer" aria-hidden="true"></div>
@@ -744,22 +983,158 @@ a { color: inherit; text-decoration: none; }
     </div>
   </section>
 
+
+  <!-- ===================== 3. OUR HERITAGE ===================== -->
+  <section class="deo-section" id="heritage">
+    <div class="wrap">
+      <div class="deo-section-head">
+        <p class="deo-eyebrow">Our Heritage</p>
+        <h2>Teaching in Cairo since 1873.</h2>
+      </div>
+
+      <div class="heritage-content">
+        <div class="heritage-year">
+          <b>1873</b>
+          <span>Founded</span>
+        </div>
+
+        <div class="heritage-text">
+          <p>
+            The Deutsche Evangelische Oberschule Kairo has been part of this city since
+            1873. More than 150 years on, it still does the thing it was founded to do:
+            teach a German curriculum inside Egyptian life, rather than beside it.
+          </p>
+          <p>
+            That continuity is the point. A school measured in generations can afford to
+            think in decades &mdash; about how children learn to read in two scripts, how
+            a timetable makes room for music and sport, and how a community keeps its
+            character while the city around it changes.
+          </p>
+          <p>
+            Today the school teaches every stage from Kindergarten through to the
+            Abitur, in German, Arabic and English.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 4. OUR VISION ===================== -->
+  <section class="deo-section deo-section--ink" id="vision">
+    <div class="wrap">
+      <div class="deo-section-head deo-section-head--center">
+        <p class="deo-eyebrow">Our Vision</p>
+        <h2>Five commitments that shape the school.</h2>
+        <p class="deo-lead" style="margin-inline:auto">
+          These are the five pillars of the school's Leitbild. The German headings are
+          the school's own; the English lines beneath are plain-language summaries.
+        </p>
+      </div>
+
+      <div class="vision-content">
+        <div class="pillar-list">
+          <div class="pillar-row">
+            <i>01</i><b>Begegnung</b>
+            <p>Encounter. German and Egyptian students share the same classroom by design, not by coincidence.</p>
+          </div>
+          <div class="pillar-row">
+            <i>02</i><b>Bildung</b>
+            <p>Formation. More than instruction &mdash; an interest in what a student becomes, not only what they can recall.</p>
+          </div>
+          <div class="pillar-row">
+            <i>03</i><b>Religion &amp; Spiritualit&auml;t</b>
+            <p>A Protestant foundation, open to every student, with room to ask difficult questions.</p>
+          </div>
+          <div class="pillar-row">
+            <i>04</i><b>Individuum &amp; Gemeinschaft</b>
+            <p>The individual and the community. Space to become yourself inside a group that notices when you are missing.</p>
+          </div>
+          <div class="pillar-row">
+            <i>05</i><b>Partizipation</b>
+            <p>Participation. Students, parents and teachers each hold a real part in how the school runs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5. OUR COMMUNITY ===================== -->
+  <section class="deo-section deo-section--tint" id="community">
+    <div class="wrap">
+      <div class="deo-section-head deo-section-head--center">
+        <p class="deo-eyebrow">Our Community</p>
+        <h2>One school, two cultures, three languages.</h2>
+      </div>
+
+      <div class="community-content">
+        <div class="stat-grid">
+          <div class="stat-card">
+            <b>1873</b><span>Founded</span>
+            <small>More than 150 years of continuous teaching in Cairo.</small>
+          </div>
+          <div class="stat-card">
+            <b>3</b><span>Languages taught</span>
+            <small>German, Arabic and English, side by side from the first year.</small>
+          </div>
+          <div class="stat-card">
+            <b>KG&ndash;13</b><span>Every stage</span>
+            <small>Kindergarten, Grundschule and Gymnasium through to the Abitur.</small>
+          </div>
+          <div class="stat-card">
+            <b>5</b><span>Guiding pillars</span>
+            <small>The Leitbild commitments that shape daily school life.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
   <div class="wrap">
-    <div class="footer-top">
-      <p class="footer-brand">DEO Kairo</p>
-      <nav class="footer-links" aria-label="Footer">
-        <a href="index.html">Home</a>
-        <a href="about.html">About Us</a>
-        <a href="index.html#contact">Contact</a>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-row">
+          <img src="assets/deo-logo.png" alt="" width="68" height="48">
+          <span>DEO Kairo</span>
+        </div>
+        <p>
+          Deutsche Evangelische Oberschule Kairo &mdash; a German-Egyptian school teaching
+          in two cultures and three languages, from Kindergarten through the Abitur.
+        </p>
+      </div>
+
+      <nav class="footer-col" aria-label="Explore">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="#heritage">Our Heritage</a></li>
+          <li><a href="#vision">Our Vision</a></li>
+          <li><a href="#community">Our Community</a></li>
+        </ul>
       </nav>
+
+      <div class="footer-col">
+        <h3>Visit</h3>
+        <ul>
+          <li>6, El Dokki St., Dokki</li>
+          <li>12612 Cairo, Egypt</li>
+          <li><a href="tel:+20237481475">+20 (0)2 3748 1475</a></li>
+          <li><a href="mailto:info@deokairo.de">info@deokairo.de</a></li>
+        </ul>
+      </div>
     </div>
 
-    
-
-    <p class="footer-bottom">&copy; 2026 Concept redesign &middot; Built as a student web project</p>
+    <div class="footer-base">
+      <span>&copy; 2026 DEO Kairo &middot; Built as a student web project</span>
+      <nav class="footer-social" aria-label="Elsewhere">
+        <a href="mailto:info@deokairo.de">Email</a>
+        <a href="tel:+20237481475">Phone</a>
+        <a href="index.html#contact">Visit us</a>
+      </nav>
+    </div>
   </div>
 </footer>
 
@@ -831,16 +1206,16 @@ a { color: inherit; text-decoration: none; }
 
   /* ---- Scroll reveal ---- */
   function reveal() {
-    var items = document.querySelectorAll('[data-reveal]');
+    var items = document.querySelectorAll('[data-reveal], .stat-card, .gallery-item, .event-card, .heritage-content, .vision-content, .community-content');
     if (!items.length) return;
     if (REDUCE || !('IntersectionObserver' in window)) {
-      Array.prototype.forEach.call(items, function (el) { el.classList.add('is-visible'); });
+      Array.prototype.forEach.call(items, function (el) { el.classList.add('is-visible', 'visible'); });
       return;
     }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         if (!en.isIntersecting) return;
-        en.target.classList.add('is-visible');
+        en.target.classList.add('is-visible', 'visible');
         io.unobserve(en.target);
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
