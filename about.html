@@ -220,7 +220,18 @@ a { color: inherit; text-decoration: none; }
   text-wrap: balance;
   color: var(--ink);
 }
-#changing-text { color: var(--red); display: inline-block; min-width: 1ch; }
+/* The hero is centre-aligned, so a word that changes length would re-centre
+   the whole line and drag the static text sideways. This wrapper reserves the
+   width of the LONGEST word (measured in JS once the webfont has loaded), so
+   the sentence's total width never changes and the fixed text cannot move.
+   The word and caret sit left-aligned inside it, so the caret still hugs the
+   last typed character. */
+.hero-word {
+  display: inline-block;
+  text-align: left;
+  white-space: nowrap;
+}
+#changing-text { color: var(--red); }
 .caret {
   display: inline-block;
   width: 2px; height: .82em;
@@ -990,7 +1001,7 @@ a { color: inherit; text-decoration: none; }
       <h1>
         At DEO Kairo, every student is a
         <span class="sr-only">musician, athlete, leader and innovator.</span>
-        <span id="changing-text" aria-hidden="true"></span><span class="caret" aria-hidden="true"></span>
+        <span class="hero-word" aria-hidden="true"><span id="changing-text"></span><span class="caret"></span></span>
       </h1>
 
       <p>
@@ -1038,8 +1049,50 @@ a { color: inherit; text-decoration: none; }
 
     </div>
   </section>
+<!-- ===================== 3. OUR VISION ===================== -->
+  <section class="deo-section deo-section--ink" id="vision">
+    <div class="wrap">
+      <div class="vision-content">
+        <p class="deo-eyebrow">Our Vision</p>
+        <h2 class="vision-statement">Education for an open and connected world.</h2>
+        <p class="deo-lead">
+          Academic results matter, and the school takes them seriously. But a school that
+          only produces good grades has done half its job. The aim here is students who
+          leave able to think for themselves, work with people unlike them, and take
+          responsibility for something beyond their own results &mdash; in a world that
+          will keep asking them to adapt.
+        </p>
+      </div>
+    </div>
+  </section>
+ 
 
-  <!-- ===================== 3. OUR HERITAGE ===================== -->
+  <!-- ===================== 4. OUR IDENTITY ===================== -->
+  <section class="deo-section deo-section--tint" id="identity">
+    <div class="wrap">
+      <div class="identity-content">
+        <div class="deo-section-head">
+          <p class="deo-eyebrow">Our Identity</p>
+          <h2>Where two cultures meet.</h2>
+        </div>
+        <div class="identity-cols">
+          <p>
+            DEO Kairo is a <em>Begegnungsschule</em> &mdash; an encounter school. The word
+            is doing real work: the school exists so that German and Egyptian ways of
+            teaching and learning meet, rather than run alongside each other in separate
+            rooms.
+          </p>
+          <p>
+            In practice that means German pedagogy and Egyptian school life shape the
+            same day. Students hear more than one language before lunch, and more than
+            one way of framing a question. Learning to hold both is not a side effect
+            here; it is the education.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+ <!-- ===================== 5. OUR HERITAGE ===================== -->
   <section class="deo-section" id="heritage">
     <div class="wrap">
       <div class="heritage-content">
@@ -1068,49 +1121,7 @@ a { color: inherit; text-decoration: none; }
       </div>
     </div>
   </section>
-
-  <!-- ===================== 4. OUR IDENTITY ===================== -->
-  <section class="deo-section deo-section--tint" id="identity">
-    <div class="wrap">
-      <div class="identity-content">
-        <div class="deo-section-head">
-          <p class="deo-eyebrow">Our Identity</p>
-          <h2>Where two cultures meet.</h2>
-        </div>
-        <div class="identity-cols">
-          <p>
-            DEO Kairo is a <em>Begegnungsschule</em> &mdash; an encounter school. The word
-            is doing real work: the school exists so that German and Egyptian ways of
-            teaching and learning meet, rather than run alongside each other in separate
-            rooms.
-          </p>
-          <p>
-            In practice that means German pedagogy and Egyptian school life shape the
-            same day. Students hear more than one language before lunch, and more than
-            one way of framing a question. Learning to hold both is not a side effect
-            here; it is the education.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== 5. OUR VISION ===================== -->
-  <section class="deo-section deo-section--ink" id="vision">
-    <div class="wrap">
-      <div class="vision-content">
-        <p class="deo-eyebrow">Our Vision</p>
-        <h2 class="vision-statement">Education for an open and connected world.</h2>
-        <p class="deo-lead">
-          Academic results matter, and the school takes them seriously. But a school that
-          only produces good grades has done half its job. The aim here is students who
-          leave able to think for themselves, work with people unlike them, and take
-          responsibility for something beyond their own results &mdash; in a world that
-          will keep asking them to adapt.
-        </p>
-      </div>
-    </div>
-  </section>
+  
 
   <!-- ===================== 6. THE LEARNING JOURNEY ===================== -->
   <section class="deo-section" id="journey">
@@ -1252,6 +1263,40 @@ a { color: inherit; text-decoration: none; }
 
     var words = ['Musician', 'Athlete', 'Leader', 'Innovator'];
     var TYPE = 95, DELETE = 45, HOLD = 1500, GAP = 350;
+
+    // Reserve the widest word's width on the wrapper so the sentence's total
+    // width is constant. Without this the centred line re-centres on every
+    // keystroke and the static text visibly shifts.
+    var wrap = el.parentNode;
+    function reserve() {
+      if (!wrap || !wrap.classList.contains('hero-word')) return;
+      var probe = document.createElement('span');
+      var cs = getComputedStyle(el);
+      probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap;left:-9999px';
+      probe.style.font = cs.font;
+      probe.style.fontFamily = cs.fontFamily;
+      probe.style.fontSize = cs.fontSize;
+      probe.style.fontWeight = cs.fontWeight;
+      probe.style.letterSpacing = cs.letterSpacing;
+      document.body.appendChild(probe);
+
+      var widest = 0;
+      for (var i = 0; i < words.length; i++) {
+        probe.textContent = words[i];
+        widest = Math.max(widest, probe.getBoundingClientRect().width);
+      }
+      probe.remove();
+
+      // Room for the caret and its margin so it never nudges the layout.
+      var caret = wrap.querySelector('.caret');
+      var caretW = caret ? caret.getBoundingClientRect().width + 6 : 8;
+      wrap.style.minWidth = Math.ceil(widest + caretW) + 'px';
+    }
+
+    reserve();
+    // Re-measure once the webfont swaps in, and when the fluid size changes.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(reserve);
+    window.addEventListener('resize', reserve, { passive: true });
 
     if (REDUCE) { el.textContent = words[0]; return; }
 
