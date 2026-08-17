@@ -181,116 +181,85 @@ a { color: inherit; text-decoration: none; }
 .btn:hover .arw { transform: translateX(5px); }
 
 /* ==========================================================================
-   1. HERO  —  Nike: full-bleed, huge type, one loud CTA
+   1. HERO - cream, editorial, same language as the rest of the page
    ========================================================================== */
 .hero {
   position: relative;
-  min-height: 100vh; min-height: 100svh;
-  display: grid; place-items: center;
-  padding: 120px 0 90px;
-  overflow: hidden;
-  isolation: isolate;
-  background: var(--ink);
-  color: var(--text-on-dark);
+  display: grid;
+  place-items: center;
+  padding: calc(76px + clamp(70px, 12vh, 150px)) 0 clamp(60px, 10vh, 120px);
+  background: var(--cream);
+  color: var(--ink);
   text-align: center;
+  overflow: hidden;
 }
-
-/* ---- SWAP IN YOUR PHOTO HERE (one line) --------------------------------
-   Set --hero-img to url("https://images.unsplash.com/photo-XXXXXXXX").
-   The gradient below is a real stage-light backdrop, so the page looks
-   finished before you do — and still works if the URL ever 404s.        */
-.hero-media {
-  --hero-img: none;
-  position: absolute; inset: 0; z-index: 1;
-  background-image:
-    var(--hero-img),
-    radial-gradient(ellipse 45% 60% at 50% -5%, rgba(255, 206, 3, .30), transparent 62%),
-    radial-gradient(ellipse 40% 55% at 12% 25%, rgba(219, 31, 38, .20), transparent 60%),
-    radial-gradient(ellipse 42% 55% at 88% 28%, rgba(219, 31, 38, .24), transparent 60%),
-    linear-gradient(178deg, #1F1F1F 0%, #141414 52%, #0D0D0D 100%);
-  background-size: cover;
-  background-position: center;
-  animation: zoom 28s var(--ease) infinite alternate;
-}
-@keyframes zoom { from { transform: scale(1); } to { transform: scale(1.1); } }
-
-/* Suggestion of stage/orchestra lighting rigged above the audience */
-.hero-beams {
-  position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: .5;
+/* One restrained accent: a wide, very soft warm wash behind the headline */
+.hero::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
   background:
-    linear-gradient(101deg, transparent 46%, rgba(255,206,3,.12) 49%, transparent 52%),
-    linear-gradient(79deg,  transparent 46%, rgba(219,31,38,.12) 49%, transparent 52%),
-    linear-gradient(93deg,  transparent 47%, rgba(245,243,239,.09) 50%, transparent 53%);
+    radial-gradient(ellipse 52% 48% at 50% 6%, rgba(255, 206, 3, .16), transparent 62%),
+    radial-gradient(ellipse 46% 44% at 50% 96%, rgba(219, 31, 38, .06), transparent 64%);
 }
-
-/* Dark tint — this is what guarantees the headline stays readable */
-.hero-tint {
-  position: absolute; inset: 0; z-index: 3; pointer-events: none;
-  background: linear-gradient(180deg, rgba(20,20,20,.82) 0%, rgba(20,20,20,.62) 45%, rgba(20,20,20,.90) 100%);
-}
-
-.hero-inner { position: relative; z-index: 4; max-width: 1020px; margin-inline: auto; }
+.hero-inner { position: relative; z-index: 2; max-width: 940px; margin-inline: auto; }
 
 .eyebrow {
-  display: inline-flex; align-items: center; gap: 10px;
+  display: inline-flex; align-items: center; gap: 12px;
   margin-bottom: 26px;
   font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
-  color: var(--gold);                                   /* 12.35:1 on ink */
+  color: var(--text-muted-light);                       /* 7.27:1 on cream */
 }
-.eyebrow::before, .eyebrow::after { content: ""; width: 26px; height: 1px; background: currentColor; }
+.eyebrow::before, .eyebrow::after {
+  content: ""; width: 28px; height: 1px; background: var(--red); opacity: .5;
+}
 
 .hero h1 {
-  font-size: clamp(2.3rem, 6.4vw, 5.1rem);
-  font-weight: 800; line-height: 1.05; letter-spacing: -.03em;
+  font-family: var(--serif);
+  font-size: clamp(2.2rem, 5.6vw, 4.4rem);
+  font-weight: 400; line-height: 1.08; letter-spacing: -.025em;
   text-wrap: balance;
+  color: var(--ink);
 }
-
-/* The word that swaps. min-width stops the headline jittering as it types. */
-#changing-text {
-  color: var(--gold);
-  display: inline-block;
-  min-width: 1ch;
-}
+#changing-text { color: var(--red); display: inline-block; min-width: 1ch; }
 .caret {
   display: inline-block;
-  width: 3px; height: .88em;
-  margin-left: 4px;
-  background: var(--gold);
-  vertical-align: -.08em;
+  width: 2px; height: .82em;
+  margin-left: 5px;
+  background: var(--red);
+  vertical-align: -.06em;
+  opacity: .7;
   animation: blink 1.05s steps(1) infinite;
 }
-@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes blink { 0%, 49% { opacity: .7; } 50%, 100% { opacity: 0; } }
 
 .hero p {
-  max-width: 58ch; margin: 26px auto 0;
+  max-width: 60ch; margin: 28px auto 0;
   font-size: clamp(1rem, 1.5vw, 1.16rem);
-  color: rgba(245, 243, 239, .82);
+  color: var(--text-muted-light);
 }
-.hero-cta { margin-top: 40px; }
-
-.hero-note {
-  margin-top: 22px; font-size: .8rem;
-  color: rgba(245, 243, 239, .6);
-}
+.hero-cta { margin-top: 38px; }
 
 .scroll-cue {
-  position: absolute; left: 50%; bottom: 26px; z-index: 4;
+  position: absolute; left: 50%; bottom: 22px; z-index: 3;
   translate: -50% 0;
-  width: 24px; height: 38px;
-  border: 1.5px solid rgba(245,243,239,.35); border-radius: 13px;
+  width: 22px; height: 34px;
+  border: 1.5px solid rgba(20, 20, 20, .18); border-radius: 12px;
   pointer-events: none;
 }
 .scroll-cue i {
-  position: absolute; left: 50%; top: 8px; margin-left: -2px;
-  width: 4px; height: 7px; border-radius: 2px; background: var(--gold);
+  position: absolute; left: 50%; top: 7px; margin-left: -2px;
+  width: 3px; height: 6px; border-radius: 2px; background: var(--red);
   animation: cue 2s var(--ease) infinite;
 }
 @keyframes cue {
   0%   { opacity: 0; transform: translateY(0); }
   35%  { opacity: 1; }
-  75%  { opacity: 0; transform: translateY(13px); }
+  75%  { opacity: 0; transform: translateY(12px); }
   100% { opacity: 0; }
 }
+
+/* The header sits on cream now, so it starts dark and stays dark */
+.brand, .nav a, .burger { color: var(--ink) !important; }
 
 /* ==========================================================================
    2. DEO STORY - sticky, scroll-driven campus scene
@@ -314,12 +283,14 @@ a { color: inherit; text-decoration: none; }
    ========================================================================== */
 .deo-story {
   /* growth budget - the three capsule layers, deliberately not identical */
-  --grow:      0.15;    /* main capsule            */
-  --grow-mid:  0.14;    /* middle outline          */
-  --grow-out:  0.13;    /* outer outline           */
+  /* Kept modest on purpose: every 1% the capsule grows pushes its lower
+     curve down, which eats into the students' overhang. */
+  --grow:      0.13;    /* main capsule            */
+  --grow-mid:  0.125;   /* middle outline          */
+  --grow-out:  0.12;    /* outer outline           */
   --zoom:      0.10;    /* building inside the pill */
   --ring-gap:  22px;    /* even step between layers */
-  --kid-rise: -46px;
+  --kid-rise: -32px;
   --kid-grow:  0.10;
   --copy-rise: -16px;
   --pill-h:    460px;   /* unscaled capsule height, set by the script */
@@ -378,8 +349,10 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: clamp(34px, 7vh, 86px);     /* the large intentional void */
-  margin-bottom: clamp(14px, 2.2vh, 26px);/* the small one, before the pill */
+  margin-top: clamp(40px, 8vh, 104px);    /* the large intentional void */
+  /* Must clear the OUTER outline (2 x --ring-gap above the pill), not the
+     pill itself - otherwise the line lands on top of the rings. */
+  margin-bottom: calc(var(--ring-gap) * 2 + clamp(20px, 3.2vh, 46px));
 }
 .deo-line-dot span {
   display: block;
@@ -392,7 +365,7 @@ a { color: inherit; text-decoration: none; }
   content: "";
   display: block;
   width: 1px;
-  height: clamp(46px, 8vh, 104px);
+  height: clamp(40px, 6.5vh, 86px);
   margin-top: 8px;
   background: linear-gradient(180deg, rgba(20, 20, 20, .22), rgba(20, 20, 20, .04));
 }
@@ -434,7 +407,7 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   z-index: 1;
   width: 100%;
-  aspect-ratio: 2.15;                /* deep capsule, not a thin pill */
+  aspect-ratio: 2.3;                 /* deep capsule, not a thin pill */
   border-radius: 999px;
   overflow: hidden;
   box-shadow: 0 44px 90px -56px rgba(20, 20, 20, .5);
@@ -458,9 +431,9 @@ a { color: inherit; text-decoration: none; }
 .deo-floating-students {
   position: absolute;
   left: 50%;
-  bottom: -15%;
+  bottom: -11%;
   z-index: 5;
-  width: 57%;                        /* ~37vw on desktop */
+  width: 54%;                        /* ~35vw on desktop */
   height: auto;
   pointer-events: none;
   filter: drop-shadow(0 18px 26px rgba(20, 20, 20, .2));
@@ -475,45 +448,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ---- Paragraph lives below the scene, in its own calm band ---- */
-.story-prose {
-  background: var(--cream);
-  padding-block: clamp(56px, 8vw, 110px) clamp(20px, 3vw, 40px);
-  text-align: center;
-}
-.story-prose blockquote {
-  margin: 0 auto;
-  max-width: 62ch;
-  font-family: var(--serif);
-  font-size: clamp(1.05rem, 1.7vw, 1.45rem);
-  line-height: 1.6;
-  color: var(--ink);                                    /* 15.8:1 on cream */
-  text-wrap: pretty;
-}
-.story-prose .years { color: var(--red); font-style: italic; }
-.story-prose-rule {
-  display: block;
-  width: 52px; height: 3px; margin: 26px auto 0;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--red), var(--gold));
-}
 
-.facts-section { background: var(--cream); padding-block: clamp(40px, 6vw, 70px) clamp(80px, 12vw, 150px); }
-.facts {
-  display: flex; flex-wrap: wrap; justify-content: center;
-  gap: clamp(28px, 6vw, 90px);
-}
-.facts div { min-width: 130px; }
-.facts b {
-  display: block;
-  font-family: var(--serif); font-weight: 400;
-  font-size: clamp(2rem, 3.4vw, 2.9rem); line-height: 1;
-  color: var(--ink);
-}
-.facts span {
-  display: block; margin-top: 8px;
-  font-size: .74rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
-  color: var(--text-muted-light);                       /* 7.27:1 on cream */
-}
 
 
 /* ==========================================================================
@@ -524,29 +459,35 @@ a { color: inherit; text-decoration: none; }
    off nothing is stuck at opacity 0 - the sections simply render.
    These are observed by the page's ONE reveal controller, not a second one.
    ========================================================================== */
-.js .stat-card,
-.js .gallery-item,
-.js .event-card,
 .js .heritage-content,
+.js .identity-content,
 .js .vision-content,
-.js .community-content {
+.js .journey-step,
+.js .pathway,
+.js .person-block,
+.js .value-block,
+.js .closing-content {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity .7s ease-out, transform .7s ease-out;
 }
-.js .stat-card.visible,
-.js .gallery-item.visible,
-.js .event-card.visible,
 .js .heritage-content.visible,
+.js .identity-content.visible,
 .js .vision-content.visible,
-.js .community-content.visible {
+.js .journey-step.visible,
+.js .pathway.visible,
+.js .person-block.visible,
+.js .value-block.visible,
+.js .closing-content.visible {
   opacity: 1;
   transform: translateY(0);
 }
-/* Stagger siblings without needing per-element delays in the markup */
-.js .stat-card:nth-child(2), .js .event-card:nth-child(2) { transition-delay: 90ms; }
-.js .stat-card:nth-child(3), .js .event-card:nth-child(3) { transition-delay: 180ms; }
-.js .stat-card:nth-child(4), .js .event-card:nth-child(4) { transition-delay: 270ms; }
+/* Sequential stagger, so the journey reveals stage by stage */
+.js .journey-step:nth-child(2), .js .person-block:nth-child(2), .js .value-block:nth-child(2) { transition-delay:  80ms; }
+.js .journey-step:nth-child(3), .js .person-block:nth-child(3), .js .value-block:nth-child(3) { transition-delay: 160ms; }
+.js .journey-step:nth-child(4), .js .person-block:nth-child(4), .js .value-block:nth-child(4) { transition-delay: 240ms; }
+.js .journey-step:nth-child(5), .js .value-block:nth-child(5) { transition-delay: 320ms; }
+.js .pathway:nth-child(2) { transition-delay: 110ms; }
 
 /* ---- Shared section furniture ---- */
 .deo-section { background: var(--cream); padding-block: clamp(64px, 9vw, 130px); }
@@ -613,59 +554,9 @@ a { color: inherit; text-decoration: none; }
 
 /* ---- Vision: the five Leitbild pillars ---- */
 .vision-content { display: grid; gap: clamp(28px, 4vw, 44px); }
-.pillar-list { display: grid; gap: 0; }
-.pillar-row {
-  display: grid;
-  grid-template-columns: 2.4rem minmax(0, 15rem) minmax(0, 1fr);
-  gap: clamp(14px, 2.4vw, 32px);
-  align-items: baseline;
-  padding: clamp(18px, 2.4vw, 26px) 0;
-  border-top: 1px solid rgba(245, 243, 239, .16);
-}
-.pillar-row:last-child { border-bottom: 1px solid rgba(245, 243, 239, .16); }
-.pillar-row i {
-  font-style: normal;
-  font-family: var(--serif);
-  font-size: .95rem;
-  color: var(--gold);                                    /* 12.35:1 on ink */
-}
-.pillar-row b {
-  font-family: var(--serif);
-  font-size: clamp(1.05rem, 1.8vw, 1.4rem);
-  font-weight: 400;
-  color: var(--text-on-dark);
-}
-.pillar-row p { color: var(--text-muted-dark); font-size: .97rem; margin: 0; }
 
 /* ---- Community: stat cards ---- */
 .community-content { display: grid; gap: clamp(28px, 4vw, 48px); }
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: clamp(14px, 2vw, 22px);
-}
-.stat-card {
-  padding: clamp(24px, 3vw, 36px);
-  background: var(--cream-soft);
-  border: 1px solid var(--border-light);
-  border-radius: 20px;
-  text-align: left;
-}
-.stat-card b {
-  display: block;
-  font-family: var(--serif); font-weight: 400;
-  font-size: clamp(2rem, 3.6vw, 3rem); line-height: 1;
-  color: var(--ink);
-}
-.stat-card span {
-  display: block; margin-top: 10px;
-  font-size: .74rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
-  color: var(--text-muted-light);
-}
-.stat-card small {
-  display: block; margin-top: 12px;
-  font-size: .9rem; line-height: 1.5; color: var(--text-muted-light);
-}
 
 /* ---- Footer, in the same visual language ---- */
 .site-footer {
@@ -732,15 +623,11 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 860px) {
   .heritage-content { grid-template-columns: 1fr; }
   .heritage-year { max-width: 260px; margin-inline: auto; }
-  .pillar-row { grid-template-columns: 1.8rem 1fr; }
-  .pillar-row p { grid-column: 2; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 560px) {
   .footer-grid { grid-template-columns: 1fr; }
-  .pillar-row { grid-template-columns: 1fr; gap: 6px; }
-  .pillar-row p { grid-column: 1; }
-}
+    }
 
 /* ==========================================================================
    FOOTER
@@ -770,6 +657,207 @@ a { color: inherit; text-decoration: none; }
 .disclaimer b { color: var(--gold); }
 .footer-bottom { margin-top: 22px; font-size: .8rem; color: rgba(245,243,239,.62); }
 
+
+/* ==========================================================================
+   PAGE SECTIONS - heritage, identity, vision, journey, pathways,
+   community, values, closing. Thin rules and whitespace rather than cards.
+   ========================================================================== */
+.heritage-content {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1fr);
+  gap: clamp(36px, 6vw, 90px);
+  align-items: center;
+}
+.heritage-year {
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  border: 1px solid var(--border-light);
+}
+.heritage-year::before {
+  content: "";
+  position: absolute; inset: 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 20, 20, .06);
+}
+.heritage-year b {
+  font-family: var(--serif);
+  font-size: clamp(2.8rem, 6.4vw, 5rem);
+  font-weight: 400; line-height: 1;
+  color: var(--red);
+}
+.heritage-year span {
+  margin-top: 12px;
+  font-size: .7rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+.heritage-text h2 { margin-bottom: 20px; }
+.heritage-text p + p { margin-top: 16px; }
+.heritage-text p { color: var(--text-muted-light); }
+
+/* ---- Identity ---- */
+.identity-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(24px, 4vw, 56px);
+}
+.identity-cols p { color: var(--text-muted-light); font-size: clamp(1rem, 1.35vw, 1.1rem); }
+.identity-cols em { font-style: italic; color: var(--ink); }
+
+/* ---- Vision: one large statement on the dark band ---- */
+.vision-content { max-width: 900px; }
+.vision-statement {
+  font-size: clamp(2rem, 5vw, 3.6rem) !important;
+  line-height: 1.08;
+  max-width: 18ch;
+  margin-bottom: 26px;
+}
+.deo-section--ink .vision-statement { color: var(--text-on-dark); }
+
+/* ---- Learning journey: a single rule with staged entries ---- */
+.journey { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.journey-step {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 12rem) minmax(0, 1fr);
+  gap: clamp(14px, 2.6vw, 36px);
+  align-items: baseline;
+  padding: clamp(20px, 2.6vw, 30px) 0;
+  border-top: 1px solid var(--border-light);
+}
+.journey-step:last-child { border-bottom: 1px solid var(--border-light); }
+.journey-step i {
+  font-style: normal; font-family: var(--serif);
+  font-size: .92rem; color: var(--red);
+}
+.journey-step b {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  color: var(--ink);
+}
+.journey-step p { margin: 0; color: var(--text-muted-light); font-size: .98rem; }
+
+/* ---- Two pathways: thin dividers, not boxes ---- */
+.pathways {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(28px, 5vw, 70px);
+}
+.pathway { padding-top: 26px; border-top: 2px solid var(--red); }
+.pathway-label {
+  font-size: .7rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted-light);
+  margin-bottom: 14px;
+}
+.pathway h3 {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.3rem, 2.3vw, 1.8rem);
+  margin: 0 0 14px;
+  color: var(--ink);
+}
+.pathway p { margin: 0; color: var(--text-muted-light); }
+
+/* ---- Community: four quiet blocks ---- */
+.people-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(24px, 3.6vw, 52px);
+}
+.person-block { padding-top: 20px; border-top: 1px solid var(--border-light); }
+.person-block b {
+  display: block;
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.15rem, 1.9vw, 1.45rem);
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+.person-block p { margin: 0; color: var(--text-muted-light); font-size: .96rem; }
+
+/* ---- Values ---- */
+.values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: clamp(22px, 3vw, 40px);
+}
+.value-block { padding-top: 18px; border-top: 1px solid var(--border-light); }
+.value-block b {
+  display: block;
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.value-block p { margin: 0; color: var(--text-muted-light); font-size: .93rem; }
+
+/* ---- Closing statement ---- */
+.deo-closing {
+  background: var(--cream);
+  padding-block: clamp(80px, 13vw, 170px);
+  text-align: center;
+  border-top: 1px solid var(--border-light);
+}
+.closing-content h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 5.2vw, 3.8rem);
+  font-weight: 400; line-height: 1.12; letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0 0 36px;
+  text-wrap: balance;
+}
+
+/* ---- Footer: cream, dark text, one brand hairline ---- */
+.site-footer {
+  position: relative;
+  background: var(--cream-soft);
+  color: var(--ink);
+  padding-block: clamp(52px, 7vw, 84px) 30px;
+  border-top: 1px solid var(--border-light);
+}
+.site-footer::before {
+  content: "";
+  position: absolute; inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--gold) 60%, var(--red));
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  padding-bottom: clamp(28px, 4vw, 44px);
+  border-bottom: 1px solid var(--border-light);
+}
+.footer-brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.footer-brand-row img { height: 32px; width: auto; }
+.footer-brand-row span { font-weight: 800; font-size: 1.15rem; color: var(--ink); }
+.footer-grid p { color: var(--text-muted-light); font-size: .95rem; max-width: 40ch; }
+.footer-col h3 {
+  font-size: .7rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--text-muted-light); margin: 0 0 16px;
+}
+.footer-col ul { display: grid; gap: 10px; }
+.footer-col a, .footer-col li { color: var(--text-muted-light); font-size: .95rem; line-height: 1.5; }
+.footer-col a { transition: color var(--fast) var(--ease); }
+.footer-col a:hover { color: var(--red); }
+.footer-base {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 14px; margin-top: clamp(20px, 3vw, 28px);
+  font-size: .8rem; color: var(--text-muted-light);
+}
+
+@media (max-width: 860px) {
+  .heritage-content { grid-template-columns: 1fr; }
+  .heritage-year { max-width: 240px; margin-inline: auto; }
+  .journey-step { grid-template-columns: 2.2rem 1fr; }
+  .journey-step p { grid-column: 2; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .journey-step { grid-template-columns: 1fr; gap: 6px; }
+  .journey-step p { grid-column: 1; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .closing-content .btn { width: 100%; }
+}
+
 /* ==========================================================================
    REVEAL — hidden state scoped to .js, so no-JS shows everything
    ========================================================================== */
@@ -794,7 +882,7 @@ a { color: inherit; text-decoration: none; }
     height: 175vh;
   }
   .deo-stage { width: 68vw; }
-  .deo-pill { aspect-ratio: 1.8; }
+  .deo-pill { aspect-ratio: 1.95; }
   .deo-floating-students { width: 62%; bottom: -14%; }
 }
 
@@ -836,8 +924,7 @@ a { color: inherit; text-decoration: none; }
   .deo-pill { aspect-ratio: 1 / 1; }
   .deo-floating-students { width: 80%; }
   .hero-cta .btn { width: 100%; }
-  .facts { gap: 30px 40px; }
-}
+  }
 
 /* ==========================================================================
    REDUCED MOTION — strip the movement, keep the design intact
@@ -850,23 +937,24 @@ a { color: inherit; text-decoration: none; }
     transition-duration: .01ms !important;
     transition-delay: 0ms !important;
   }
-  .js [data-reveal], .js [data-reveal].is-visible {
+  .js [data-reveal], .js [data-reveal].is-visible,
+  .js .heritage-content, .js .identity-content, .js .vision-content,
+  .js .journey-step, .js .pathway, .js .person-block,
+  .js .value-block, .js .closing-content {
     opacity: 1 !important; transform: none !important;
   }
-  /* The scroll-driven pair: land them at their end state immediately */
-  /* Pin the scene at a calm resting state; nothing tracks scroll. */
+  /* Pin the campus scene at a calm resting state; nothing tracks scroll. */
   .deo-story { height: auto; }
   .deo-story-sticky { position: static; height: auto; padding-block: 60px 100px; }
   .deo-pill, .deo-pill img, .deo-floating-students,
   .deo-pill-border-outer, .deo-pill-border-middle { transform: none !important; }
   .js .story-heading { opacity: 1 !important; transform: none !important; }
-  .hero-media { animation: none; transform: none; }
   .scroll-cue, .caret { display: none; }
 }
 
 @media (forced-colors: active) {
   .deo-pill { border: 1px solid CanvasText; }
-  .hero-tint, .hero-beams { display: none; }
+  .heritage-year, .pathway, .person-block, .value-block { border-color: CanvasText; }
 }
 </style>
 </head>
@@ -894,38 +982,28 @@ a { color: inherit; text-decoration: none; }
 
 <main id="main">
 
-  <!-- ===================== 1. HERO (Nike) ===================== -->
+  <!-- ===================== 1. HERO ===================== -->
   <section class="hero">
-    <div class="hero-media"  aria-hidden="true"></div>
-    <div class="hero-beams"  aria-hidden="true"></div>
-    <div class="hero-tint"   aria-hidden="true"></div>
-
     <div class="wrap hero-inner">
       <p class="eyebrow">Deutsche Evangelische Oberschule Kairo</p>
 
       <h1>
         At DEO Kairo, every student is a
-        <!-- Screen readers get the complete, stable sentence... -->
         <span class="sr-only">musician, athlete, leader and innovator.</span>
-        <!-- ...while the animated span is skipped, so it isn't announced
-             four times a second as the letters change. -->
         <span id="changing-text" aria-hidden="true"></span><span class="caret" aria-hidden="true"></span>
       </h1>
 
       <p>
-        Music, sport, leadership and invention aren't extras bolted onto the timetable
-        here. They're where a German curriculum and Egyptian life actually meet — and
-        where students find out who they are.
+        A German-Egyptian school in Cairo where two educational traditions share one
+        campus &mdash; and where students learn to move between them.
       </p>
 
       <div class="hero-cta">
-        <a class="btn" href="#spotlight">
-          Discover Our Events
+        <a class="btn" href="#heritage">
+          Read our story
           <span class="arw" aria-hidden="true">&rarr;</span>
         </a>
       </div>
-
-      
     </div>
 
     <div class="scroll-cue" aria-hidden="true"><i></i></div>
@@ -961,130 +1039,158 @@ a { color: inherit; text-decoration: none; }
     </div>
   </section>
 
-  <section class="story-prose">
-    <div class="wrap">
-      <blockquote data-reveal style="--i:0">
-        We set out to create a learning environment inspired by global perspectives,
-        guided by an ethos to shape better futures. We have celebrated
-        <span class="years">over 150 years</span> of academic excellence, but we are
-        just getting started.
-        <span class="story-prose-rule" aria-hidden="true"></span>
-      </blockquote>
-    </div>
-  </section>
-
-  <section class="facts-section">
-    <div class="wrap">
-      <div class="facts" data-reveal style="--i:0">
-        <div><b>1873</b><span>Founded</span></div>
-        <div><b>3</b><span>Languages taught</span></div>
-        <div><b>KG&ndash;13</b><span>Every stage</span></div>
-      </div>
-    </div>
-  </section>
-
-
   <!-- ===================== 3. OUR HERITAGE ===================== -->
   <section class="deo-section" id="heritage">
     <div class="wrap">
-      <div class="deo-section-head">
-        <p class="deo-eyebrow">Our Heritage</p>
-        <h2>Teaching in Cairo since 1873.</h2>
-      </div>
-
       <div class="heritage-content">
         <div class="heritage-year">
           <b>1873</b>
-          <span>Founded</span>
+          <span>Founded in Cairo</span>
         </div>
 
         <div class="heritage-text">
+          <p class="deo-eyebrow">Our Heritage</p>
+          <h2>Teaching in Cairo since 1873.</h2>
           <p>
-            The Deutsche Evangelische Oberschule Kairo has been part of this city since
-            1873. More than 150 years on, it still does the thing it was founded to do:
-            teach a German curriculum inside Egyptian life, rather than beside it.
+            The Deutsche Evangelische Oberschule Kairo opened its doors in 1873, and it
+            has been teaching in this city ever since. What began as a small German
+            school grew, over generations, into something more particular: a school that
+            belongs to Cairo as much as it belongs to the German educational tradition
+            it carries.
           </p>
           <p>
-            That continuity is the point. A school measured in generations can afford to
-            think in decades &mdash; about how children learn to read in two scripts, how
-            a timetable makes room for music and sport, and how a community keeps its
-            character while the city around it changes.
-          </p>
-          <p>
-            Today the school teaches every stage from Kindergarten through to the
-            Abitur, in German, Arabic and English.
+            That length of time changes how a school thinks. It can plan in decades
+            rather than terms &mdash; about how children learn to read in two scripts,
+            how a timetable makes room for music and sport, and how a community holds
+            its character while the city around it keeps changing.
           </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ===================== 4. OUR VISION ===================== -->
+  <!-- ===================== 4. OUR IDENTITY ===================== -->
+  <section class="deo-section deo-section--tint" id="identity">
+    <div class="wrap">
+      <div class="identity-content">
+        <div class="deo-section-head">
+          <p class="deo-eyebrow">Our Identity</p>
+          <h2>Where two cultures meet.</h2>
+        </div>
+        <div class="identity-cols">
+          <p>
+            DEO Kairo is a <em>Begegnungsschule</em> &mdash; an encounter school. The word
+            is doing real work: the school exists so that German and Egyptian ways of
+            teaching and learning meet, rather than run alongside each other in separate
+            rooms.
+          </p>
+          <p>
+            In practice that means German pedagogy and Egyptian school life shape the
+            same day. Students hear more than one language before lunch, and more than
+            one way of framing a question. Learning to hold both is not a side effect
+            here; it is the education.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== 5. OUR VISION ===================== -->
   <section class="deo-section deo-section--ink" id="vision">
     <div class="wrap">
-      <div class="deo-section-head deo-section-head--center">
-        <p class="deo-eyebrow">Our Vision</p>
-        <h2>Five commitments that shape the school.</h2>
-        <p class="deo-lead" style="margin-inline:auto">
-          These are the five pillars of the school's Leitbild. The German headings are
-          the school's own; the English lines beneath are plain-language summaries.
-        </p>
-      </div>
-
       <div class="vision-content">
-        <div class="pillar-list">
-          <div class="pillar-row">
-            <i>01</i><b>Begegnung</b>
-            <p>Encounter. German and Egyptian students share the same classroom by design, not by coincidence.</p>
-          </div>
-          <div class="pillar-row">
-            <i>02</i><b>Bildung</b>
-            <p>Formation. More than instruction &mdash; an interest in what a student becomes, not only what they can recall.</p>
-          </div>
-          <div class="pillar-row">
-            <i>03</i><b>Religion &amp; Spiritualit&auml;t</b>
-            <p>A Protestant foundation, open to every student, with room to ask difficult questions.</p>
-          </div>
-          <div class="pillar-row">
-            <i>04</i><b>Individuum &amp; Gemeinschaft</b>
-            <p>The individual and the community. Space to become yourself inside a group that notices when you are missing.</p>
-          </div>
-          <div class="pillar-row">
-            <i>05</i><b>Partizipation</b>
-            <p>Participation. Students, parents and teachers each hold a real part in how the school runs.</p>
-          </div>
-        </div>
+        <p class="deo-eyebrow">Our Vision</p>
+        <h2 class="vision-statement">Education for an open and connected world.</h2>
+        <p class="deo-lead">
+          Academic results matter, and the school takes them seriously. But a school that
+          only produces good grades has done half its job. The aim here is students who
+          leave able to think for themselves, work with people unlike them, and take
+          responsibility for something beyond their own results &mdash; in a world that
+          will keep asking them to adapt.
+        </p>
       </div>
     </div>
   </section>
 
-  <!-- ===================== 5. OUR COMMUNITY ===================== -->
-  <section class="deo-section deo-section--tint" id="community">
+  <!-- ===================== 6. THE LEARNING JOURNEY ===================== -->
+  <section class="deo-section" id="journey">
     <div class="wrap">
       <div class="deo-section-head deo-section-head--center">
-        <p class="deo-eyebrow">Our Community</p>
-        <h2>One school, two cultures, three languages.</h2>
+        <p class="deo-eyebrow">The Learning Journey</p>
+        <h2>One continuous path.</h2>
       </div>
 
-      <div class="community-content">
-        <div class="stat-grid">
-          <div class="stat-card">
-            <b>1873</b><span>Founded</span>
-            <small>More than 150 years of continuous teaching in Cairo.</small>
-          </div>
-          <div class="stat-card">
-            <b>3</b><span>Languages taught</span>
-            <small>German, Arabic and English, side by side from the first year.</small>
-          </div>
-          <div class="stat-card">
-            <b>KG&ndash;13</b><span>Every stage</span>
-            <small>Kindergarten, Grundschule and Gymnasium through to the Abitur.</small>
-          </div>
-          <div class="stat-card">
-            <b>5</b><span>Guiding pillars</span>
-            <small>The Leitbild commitments that shape daily school life.</small>
-          </div>
-        </div>
+      <ol class="journey">
+        <li class="journey-step">
+          <i>01</i>
+          <b>Kindergarten</b>
+          <p>First words in two languages, learned through play rather than drill.</p>
+        </li>
+        <li class="journey-step">
+          <i>02</i>
+          <b>Vorschule</b>
+          <p>The bridge year &mdash; routines, listening and the confidence to start school.</p>
+        </li>
+        <li class="journey-step">
+          <i>03</i>
+          <b>Grundschule</b>
+          <p>Literacy in two scripts, taught patiently and side by side.</p>
+        </li>
+        <li class="journey-step">
+          <i>04</i>
+          <b>Gymnasium</b>
+          <p>Academic depth across sciences, languages and the humanities.</p>
+        </li>
+        <li class="journey-step">
+          <i>05</i>
+          <b>Abitur</b>
+          <p>The German university-entrance qualification, earned in two languages.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================== 7. TWO EDUCATIONAL PATHWAYS ===================== -->
+  <section class="deo-section deo-section--tint" id="pathways">
+    <div class="wrap">
+      <div class="deo-section-head deo-section-head--center">
+        <p class="deo-eyebrow">Two Educational Pathways</p>
+        <h2>Two systems, one school.</h2>
+      </div>
+
+      <div class="pathways">
+        <article class="pathway">
+          <p class="pathway-label">German Programme</p>
+          <h3>The German curriculum</h3>
+          <p>
+            Taught to the German educational standard, leading through the Gymnasium
+            years to the Abitur and on to universities in Germany and beyond.
+          </p>
+        </article>
+
+        <article class="pathway">
+          <p class="pathway-label">Egyptian Programme</p>
+          <h3>The Egyptian curriculum</h3>
+          <p>
+            The Egyptian national pathway, taught inside the same bilingual, international
+            school environment &mdash; the same campus, the same community, the same days.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <!-- ===================== 10. CLOSING ===================== -->
+  <section class="deo-closing" id="closing">
+    <div class="wrap">
+      <div class="closing-content">
+        <h2>More than a school.<br>A place to meet, learn and grow.</h2>
+        <a class="btn" href="index.html">
+          Explore DEO
+          <span class="arw" aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
   </section>
@@ -1100,19 +1206,17 @@ a { color: inherit; text-decoration: none; }
           <span>DEO Kairo</span>
         </div>
         <p>
-          Deutsche Evangelische Oberschule Kairo &mdash; a German-Egyptian school teaching
-          in two cultures and three languages, from Kindergarten through the Abitur.
+          Deutsche Evangelische Oberschule Kairo &mdash; a German-Egyptian encounter
+          school, teaching from Kindergarten through the Abitur.
         </p>
       </div>
 
-      <nav class="footer-col" aria-label="Explore">
-        <h3>Explore</h3>
+      <nav class="footer-col" aria-label="Pages">
+        <h3>Pages</h3>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="#heritage">Our Heritage</a></li>
-          <li><a href="#vision">Our Vision</a></li>
-          <li><a href="#community">Our Community</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="index.html#path">School Path</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
         </ul>
       </nav>
 
@@ -1129,11 +1233,7 @@ a { color: inherit; text-decoration: none; }
 
     <div class="footer-base">
       <span>&copy; 2026 DEO Kairo &middot; Built as a student web project</span>
-      <nav class="footer-social" aria-label="Elsewhere">
-        <a href="mailto:info@deokairo.de">Email</a>
-        <a href="tel:+20237481475">Phone</a>
-        <a href="index.html#contact">Visit us</a>
-      </nav>
+      <span>Manrope &amp; Newsreader</span>
     </div>
   </div>
 </footer>
@@ -1206,7 +1306,7 @@ a { color: inherit; text-decoration: none; }
 
   /* ---- Scroll reveal ---- */
   function reveal() {
-    var items = document.querySelectorAll('[data-reveal], .stat-card, .gallery-item, .event-card, .heritage-content, .vision-content, .community-content');
+    var items = document.querySelectorAll('[data-reveal], .heritage-content, .identity-content, .vision-content, .journey-step, .pathway, .person-block, .value-block, .closing-content');
     if (!items.length) return;
     if (REDUCE || !('IntersectionObserver' in window)) {
       Array.prototype.forEach.call(items, function (el) { el.classList.add('is-visible', 'visible'); });
