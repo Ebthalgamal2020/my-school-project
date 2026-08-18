@@ -788,6 +788,28 @@ section h2 {
   color: var(--red-dark);
 }
 
+/* ---- Touch screens: the numbered stage cards stay put ----
+   On a touch device :hover latches on tap and the card is left displaced,
+   which reads as a glitch. Nothing here changes their look - only the
+   movement is removed. ---- */
+@media (hover: none), (pointer: coarse) {
+  .path-track li,
+  .path-track li:hover,
+  .path-track li:focus-within,
+  .path-track li:active {
+    transform: none !important;
+    transition: none !important;
+  }
+  .path-step,
+  .path-track li:hover .path-step,
+  .path-track li:focus-within .path-step,
+  .path-track li:active .path-step {
+    transform: none !important;
+    transition: none !important;
+    color: var(--red) !important;      /* the resting colour, unchanged */
+  }
+}
+
 /* ---- Community quote: gentle tilt that settles on reveal ---- */
 .community-quote { transition: transform var(--dur-med) var(--ease-out); }
 .community-quote:hover { transform: translateY(-5px) rotate(-0.5deg); }

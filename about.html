@@ -103,60 +103,84 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ==========================================================================
-   HEADER
+   HEADER - identical to index.html so both pages share one header system
    ========================================================================== */
 .site-header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  transition: background var(--fast) var(--ease),
-              backdrop-filter var(--fast) var(--ease),
-              box-shadow var(--fast) var(--ease);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(250, 247, 241, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-light);
 }
 .header-inner {
-  display: flex; align-items: center; gap: clamp(16px, 3vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 76px;
+  /* .header-actions uses margin-left:auto, which absorbs the free space
+     space-between would otherwise distribute - so the brand and nav need an
+     explicit gap or they sit flush against each other. */
+  gap: 32px;
 }
 .brand {
-  display: flex; align-items: center; gap: 11px;
-  font-weight: 800; font-size: 1.15rem; letter-spacing: -.01em;
-  color: var(--text-on-dark); white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-decoration: none;
+  color: var(--ink);
+  white-space: nowrap;
 }
-/* Real logo image — the old gradient-circle placeholder is gone */
-.brand-mark {
-  height: 32px;
-  width: auto;
-  flex: none;
-}
-.nav { display: flex; gap: clamp(14px, 2.2vw, 30px); margin-inline: auto; }
-.nav a {
-  position: relative; padding-block: 6px;
-  font-size: .93rem; font-weight: 600; color: var(--text-on-dark);
-}
-.nav a::after {
-  content: ""; position: absolute; left: 0; bottom: 0;
-  width: 100%; height: 2px; background: var(--gold);
-  transform: scaleX(0); transform-origin: right;
-  transition: transform var(--fast) var(--ease);
-}
-.nav a:hover::after, .nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
-.nav a[aria-current="page"]::after { transform: scaleX(1); }
+.brand-mark { height: 32px; width: auto; flex: none; }
 
-/* Once scrolled past the hero, the bar goes solid and text flips to dark */
-.site-header.is-stuck {
-  background: rgba(245, 243, 239, .9);
-  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-  box-shadow: 0 6px 28px -22px rgba(20, 20, 20, .8);
+.main-nav { display: flex; gap: 32px; }
+.main-nav a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-on-light);
 }
-.site-header.is-stuck .brand,
-.site-header.is-stuck .nav a { color: var(--ink); }
+.main-nav a:hover { color: var(--red); }
+.main-nav a[aria-current="page"] { color: var(--red); }
 
-.burger {
-  display: none; width: 44px; height: 44px; padding: 0;
-  flex-direction: column; justify-content: center; gap: 5px;
-  background: none; border: 1.5px solid currentColor; border-radius: 10px;
-  color: var(--text-on-dark); cursor: pointer;
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
-.site-header.is-stuck .burger { color: var(--ink); }
-.burger i { display: block; width: 18px; height: 1.5px; background: currentColor; margin-inline: auto; }
+.lang-toggle {
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  color: var(--ink);
+}
+.lang-toggle:hover { background: var(--ink); color: var(--text-on-dark); }
+.lang-current { text-decoration: underline; }
+.lang-other { color: var(--text-muted-light); }
+
+.nav-cta { padding: 11px 22px; font-size: 0.88rem; }
+
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 12px;
+}
+.menu-toggle span { width: 22px; height: 2px; background: var(--ink); }
 
 /* ==========================================================================
    BUTTONS
@@ -187,7 +211,7 @@ a { color: inherit; text-decoration: none; }
   position: relative;
   display: grid;
   place-items: center;
-  padding: calc(76px + clamp(70px, 12vh, 150px)) 0 clamp(60px, 10vh, 120px);
+  padding: clamp(70px, 12vh, 150px) 0 clamp(60px, 10vh, 120px);
   background: var(--cream);
   color: var(--ink);
   text-align: center;
@@ -269,8 +293,6 @@ a { color: inherit; text-decoration: none; }
   100% { opacity: 0; }
 }
 
-/* The header sits on cream now, so it starts dark and stays dark */
-.brand, .nav a, .burger { color: var(--ink) !important; }
 
 /* ==========================================================================
    2. DEO STORY - sticky, scroll-driven campus scene
@@ -912,19 +934,21 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 860px) {
-  .burger { display: flex; }
-  .nav {
-    position: absolute; top: 100%; left: 0; right: 0;
-    flex-direction: column; gap: 0;
-    padding-inline: clamp(20px, 5vw, 48px);
-    background: rgba(245, 243, 239, .98);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    max-height: 0; overflow: hidden;
-    visibility: hidden;            /* keeps links out of the tab order */
-    transition: max-height var(--fast) var(--ease), visibility var(--fast), padding var(--fast) var(--ease);
+  .menu-toggle { display: flex; }
+  .nav-cta { display: none; }
+  .main-nav {
+    position: absolute;
+    top: 76px; left: 0; right: 0;
+    background: var(--cream-soft);
+    flex-direction: column;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-light);
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: max-height 0.25s ease;
   }
-  .nav.is-open { max-height: 300px; visibility: visible; padding-block: 8px 20px; }
-  .nav a { color: var(--ink) !important; padding: 15px 0; border-top: 1px solid rgba(20,20,20,.12); font-size: 1rem; }
+  .js .main-nav.open { max-height: 320px; visibility: visible; }
 
   /* Mobile: same idea, a squarer capsule so the building still reads */
   .deo-story { height: 240vh; --ring-gap: 9px; }
@@ -990,20 +1014,28 @@ a { color: inherit; text-decoration: none; }
 <body>
 <a class="skip-link" href="#main">Skip to main content</a>
 
-<header class="site-header" id="header">
+<header class="site-header" id="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href="index.html">
+    <a href="index.html" class="brand">
       <img src="assets/deo-logo.png" alt="DEO Kairo" class="brand-mark" width="68" height="48">
-      <span>DEO Kairo</span>
+      <span data-en="DEO Kairo" data-de="DEO Kairo">DEO Kairo</span>
     </a>
-    <nav class="nav" id="nav" aria-label="Main">
-      <a href="index.html">Home</a>
-      <a href="about.html" aria-current="page">About Us</a>
-      <a href="index.html#path">School Path</a>
-      <a href="index.html#contact">Contact</a>
+    <nav class="main-nav" id="main-nav">
+      <a href="about.html" aria-current="page" data-en="About Us" data-de="Über uns">About Us</a>
+      <a href="index.html#pillars" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="index.html#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="index.html#community" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="index.html#contact" data-en="Contact" data-de="Kontakt">Contact</a>
     </nav>
-    <button class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
-      <i></i><i></i><i></i>
+    <div class="header-actions">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
+        <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
+      </button>
+      <a href="index.html#contact" class="btn btn-primary nav-cta" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+      <span class="sr-only">Menu</span>
     </button>
   </div>
 </header>
@@ -1340,34 +1372,42 @@ a { color: inherit; text-decoration: none; }
     })();
   }
 
-  /* ---- Sticky header state ---- */
-  function header() {
-    var h = document.getElementById('header');
-    if (!h) return;
-    var ticking = false;
-    function update() {
-      h.classList.toggle('is-stuck', window.scrollY > window.innerHeight * 0.75);
-      ticking = false;
-    }
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    update();
-  }
 
-  /* ---- Mobile menu ---- */
+  /* ---- Mobile menu - same ids and behaviour as index.html ---- */
   function menu() {
-    var b = document.getElementById('burger'), n = document.getElementById('nav');
+    var b = document.getElementById('menu-toggle'), n = document.getElementById('main-nav');
     if (!b || !n) return;
     function set(open) {
-      n.classList.toggle('is-open', open);
+      n.classList.toggle('open', open);
       b.setAttribute('aria-expanded', String(open));
-      b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     }
     b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
     n.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && b.getAttribute('aria-expanded') === 'true') { set(false); b.focus(); }
+    });
+    window.matchMedia('(min-width:861px)').addEventListener('change', function (e) {
+      if (e.matches) set(false);
+    });
+  }
+
+  /* ---- Language toggle - same control as index.html ---- */
+  function lang() {
+    var btn = document.getElementById('lang-toggle');
+    if (!btn) return;
+    var nodes = document.querySelectorAll('[data-en]'), cur = 'en';
+
+    btn.addEventListener('click', function () {
+      cur = cur === 'en' ? 'de' : 'en';
+      Array.prototype.forEach.call(nodes, function (el) {
+        var v = el.getAttribute('data-' + cur);
+        if (v !== null) el.innerHTML = v;
+      });
+      document.documentElement.setAttribute('lang', cur);
+      btn.querySelector('.lang-current').textContent = cur.toUpperCase();
+      btn.querySelector('.lang-other').textContent = cur === 'en' ? 'DE' : 'EN';
+      btn.setAttribute('aria-label', cur === 'en'
+        ? 'Switch language to German' : 'Zur englischen Sprache wechseln');
     });
   }
 
@@ -1457,7 +1497,7 @@ a { color: inherit; text-decoration: none; }
     update();
   }
 
-  typewriter(); header(); menu(); reveal(); storyScene();
+  typewriter(); menu(); lang(); reveal(); storyScene();
 })();
 </script>
 </body>
