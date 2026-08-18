@@ -29,16 +29,17 @@
       <a href="#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
       <a href="#community" data-en="Community" data-de="Gemeinschaft">Community</a>
       <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
-      <!-- The Contact tab opens the dedicated contact page (V2). The #contact
-           section further down this page is still reachable from the CTAs in
-           the body, and V1 is reachable from V2's switcher chip. -->
+      <!-- Every contact CTA on this page now opens the dedicated contact page;
+           V1 is reachable from the switcher chip there. The #contact section
+           further down is no longer linked from anywhere - kept only so the
+           page still reads as a whole. -->
       <a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a>
     </nav>
     <div class="header-actions">
       <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
         <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
       </button>
-      <a href="#contact" class="btn btn-primary nav-cta" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
+      <a href="contact-v2.html" class="btn btn-primary nav-cta" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
     </div>
     <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
       <span></span><span></span><span></span>
@@ -74,7 +75,7 @@
         DEO Kairo is a bilingual school built on encounter, not separation — German curriculum and Egyptian life, taught side by side from Kindergarten through the Abitur.
       </p>
       <div class="hero-actions hero-anim" style="--i:3">
-        <a href="#contact" class="btn btn-primary" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
+        <a href="contact-v2.html" class="btn btn-primary" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
         <a href="#path" class="btn btn-ghost" data-en="See the School Path" data-de="Schulaufbau ansehen">See the School Path</a>
       </div>
       <dl class="hero-stats hero-anim" style="--i:4">
@@ -146,7 +147,7 @@
           <div><b>100%</b><span data-en="Pupils in a club" data-de="Schüler in einer AG">Pupils in a club</span></div>
         </div>
 
-        <a class="btn-arrow-cta" href="#contact" data-reveal style="--i:6">
+        <a class="btn-arrow-cta" href="contact-v2.html" data-reveal style="--i:6">
           <span data-en="Explore school life" data-de="Schulleben entdecken">Explore school life</span>
           <span class="circle" aria-hidden="true">→</span>
         </a>
@@ -224,7 +225,7 @@
         <p class="section-eyebrow" data-reveal style="--i:0" data-en="Who teaches here" data-de="Wer hier unterrichtet">Who teaches here</p>
         <h2 data-reveal style="--i:1" data-en="Teachers who stay long enough to know your child's name — and use it." data-de="Lehrkräfte, die lange genug bleiben, um den Namen Ihres Kindes zu kennen — und ihn zu benutzen.">Teachers who stay long enough to know your child's name — and use it.</h2>
         <p data-reveal style="--i:2" data-en="Our faculty mixes German-trained educators with long-standing local staff, many teaching here for over a decade. That continuity is deliberate: children learn better from people who remember them from one year to the next." data-de="Unser Kollegium besteht aus deutsch ausgebildeten Lehrkräften und langjährigem lokalen Personal, viele seit über zehn Jahren im Haus. Diese Kontinuität ist bewusst gewählt: Kinder lernen besser bei Menschen, die sie von Jahr zu Jahr kennen.">Our faculty mixes German-trained educators with long-standing local staff, many teaching here for over a decade. That continuity is deliberate: children learn better from people who remember them from one year to the next.</p>
-        <a href="#contact" class="btn btn-ghost" data-reveal style="--i:3" data-en="Meet the school" data-de="Schule kennenlernen">Meet the school</a>
+        <a href="contact-v2.html" class="btn btn-ghost" data-reveal style="--i:3" data-en="Meet the school" data-de="Schule kennenlernen">Meet the school</a>
       </div>
       <div class="community-quote" data-reveal style="--i:2">
         <blockquote data-en="&quot;We didn't want a school that felt like two schools sharing a building. We wanted one school with two languages in its bones.&quot;" data-de="&quot;Wir wollten keine Schule, die sich wie zwei Schulen unter einem Dach anfühlt. Wir wollten eine Schule mit zwei Sprachen in ihrem Kern.&quot;">
@@ -274,9 +275,19 @@
 </main>
 
 <footer class="site-footer">
-  <div class="wrap footer-inner">
-    <p data-en="© 2026 DEO Kairo concept site. Built as a student web project." data-de="© 2026 DEO Kairo Konzeptseite. Erstellt als Studierendenprojekt.">© 2026 DEO Kairo concept site. Built as a student web project.</p>
-    <p class="footer-note" data-en="Unofficial redesign concept — not affiliated with or endorsed by DEO Kairo. Official site: deokairo.com" data-de="Inoffizielles Redesign-Konzept — nicht verbunden mit oder autorisiert von der DEO Kairo. Offizielle Seite: deokairo.com">Unofficial redesign concept — not affiliated with or endorsed by DEO Kairo. Official site: deokairo.com</p>
+  <div class="wrap">
+    <!-- The other three pages carry a footer nav; this one had none, so the
+         home page was the only page you could not leave from the bottom. -->
+    <nav class="footer-links" aria-label="Pages">
+      <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
+      <a href="#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="#community" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a>
+    </nav>
+    <div class="footer-inner">
+      <p data-en="© 2026 DEO Kairo concept site. Built as a student web project." data-de="© 2026 DEO Kairo Konzeptseite. Erstellt als Studierendenprojekt.">© 2026 DEO Kairo concept site. Built as a student web project.</p>
+      <p class="footer-note" data-en="Unofficial redesign concept — not affiliated with or endorsed by DEO Kairo. Official site: deokairo.com" data-de="Inoffizielles Redesign-Konzept — nicht verbunden mit oder autorisiert von der DEO Kairo. Offizielle Seite: deokairo.com">Unofficial redesign concept — not affiliated with or endorsed by DEO Kairo. Official site: deokairo.com</p>
+    </div>
   </div>
 </footer>
 
