@@ -788,11 +788,30 @@ section h2 {
   color: var(--red-dark);
 }
 
+/* ---- The stage numbers bounce in as each card reveals ----
+   Driven by the card's .is-visible class, so it lands in step with the rule
+   drawing beside it and staggers with --i. It plays once and settles, rather
+   than looping - a number bobbing forever would pull the eye off the copy. */
+@keyframes path-step-bounce {
+    0% { transform: translateY(0)     scale(1);    }
+   26% { transform: translateY(-11px) scale(1.10); }
+   46% { transform: translateY(0)     scale(0.96); }
+   64% { transform: translateY(-5px)  scale(1.03); }
+   80% { transform: translateY(0)     scale(0.99); }
+  100% { transform: translateY(0)     scale(1);    }
+}
+.js .path-track li.is-visible .path-step {
+  animation: path-step-bounce 900ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * var(--stagger) + 280ms);
+}
+
 /* ---- Touch screens: the numbered stage cards stay put ----
    On a touch device :hover latches on tap and the card is left displaced,
    which reads as a glitch. Nothing here changes their look - only the
    movement is removed. ---- */
 @media (hover: none), (pointer: coarse) {
+  /* Only the HOVER states are neutralised. The base selectors are left alone
+     so the reveal bounce still plays on touch devices. */
   .path-track li,
   .path-track li:hover,
   .path-track li:focus-within,
@@ -800,13 +819,19 @@ section h2 {
     transform: none !important;
     transition: none !important;
   }
-  .path-step,
   .path-track li:hover .path-step,
   .path-track li:focus-within .path-step,
   .path-track li:active .path-step {
-    transform: none !important;
-    transition: none !important;
     color: var(--red) !important;      /* the resting colour, unchanged */
+  }
+  /* Once the bounce has finished the number must sit perfectly still, so a
+     latched :hover after a tap cannot scale it. */
+  .path-track li:hover .path-step { animation-play-state: running; }
+}
+@media (hover: none), (pointer: coarse) {
+  .path-track li.is-visible:hover .path-step,
+  .path-track li.is-visible:active .path-step {
+    transform: none;
   }
 }
 
@@ -1096,6 +1121,9 @@ html:not(.js) .scroll-progress { display: none; }
     animation: none !important;
   }
   .path-track li::before { transform: scaleY(1) !important; }
+  .js .path-track li.is-visible .path-step {
+    animation: none !important; transform: none !important;
+  }
 
   /* Collage layers hold still */
   .collage:hover .collage-base,
