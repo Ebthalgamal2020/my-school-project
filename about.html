@@ -324,16 +324,20 @@ a { color: inherit; text-decoration: none; }
   --axis-len:  clamp(34px, 5vh, 64px);  /* line length = dot travel */
   --zoom:      0.10;    /* building drift inside the pill       */
   --copy-rise: -16px;
+  /* Slow, even growth - no snap at either end */
+  --grow-ease: cubic-bezier(0.34, 0.05, 0.22, 1);
 
   position: relative;
-  height: 280vh;
+  /* Was 280vh of scroll-scrub. The animation is now time-based, so the
+     section only needs room for the composition itself. */
+  min-height: 100vh;
   background: var(--cream);
 }
 
 .deo-story-sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  /* No longer pinned - nothing is being scrubbed. */
+  position: relative;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -385,8 +389,9 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   border-radius: 2px;
   background: linear-gradient(180deg, rgba(20, 20, 20, .30), rgba(20, 20, 20, .08));
-  transform: scaleY(var(--pg, 1));
+  transform: scaleY(0);
   transform-origin: 50% 0;
+  transition: transform 2500ms var(--grow-ease);
   will-change: transform;
 }
 .axis-dot {
@@ -396,7 +401,8 @@ a { color: inherit; text-decoration: none; }
   border-radius: 50%;
   background: var(--red);
   box-shadow: 0 0 0 4px rgba(219, 31, 38, .14);
-  translate: -50% calc(var(--pg, 1) * var(--axis-len) - 4px);
+  translate: -50% -4px;
+  transition: translate 2500ms var(--grow-ease);
   will-change: translate;
 }
 
@@ -416,7 +422,8 @@ a { color: inherit; text-decoration: none; }
 .deo-stage {
   position: relative;
   flex: none;
-  opacity: var(--fade, 1);
+  opacity: 0;
+  transition: opacity 900ms ease;
   /* Final composition is deliberately dominant: ~80vw x ~61vh at full size */
   width: min(80vw, 1400px);
   z-index: 5;
@@ -438,12 +445,14 @@ a { color: inherit; text-decoration: none; }
 .deo-pill-border-middle {
   inset: calc(var(--ring-gap) * -1);
   color: rgba(20, 20, 20, .12);
-  transform: scale(calc(0.06 + var(--pg, 1) * 0.94));
+  transform: scale(0.06);
+  transition: transform 2500ms var(--grow-ease);
 }
 .deo-pill-border-outer {
   inset: calc(var(--ring-gap) * -2);
   color: rgba(20, 20, 20, .07);
-  transform: scale(calc(0.08 + var(--pg, 1) * 0.92));
+  transform: scale(0.08);
+  transition: transform 2500ms var(--grow-ease);
 }
 
 /* The capsule: contains the building and nothing else */
@@ -456,7 +465,8 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   box-shadow: 0 44px 90px -56px rgba(20, 20, 20, .5);
   /* Starts small, reaches full size at 65% of the section */
-  transform: scale(calc(0.04 + var(--pg, 1) * 0.96));
+  transform: scale(0.02);
+  transition: transform 2500ms var(--grow-ease);
   will-change: transform;
 }
 .deo-pill img {
@@ -464,7 +474,8 @@ a { color: inherit; text-decoration: none; }
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: scale(calc(1.02 + var(--pg, 1) * var(--zoom)));
+  transform: scale(1.02);
+  transition: transform 2500ms var(--grow-ease);
   will-change: transform;
 }
 /* No dark overlay: the building stays bright and the orange architecture
@@ -486,13 +497,42 @@ a { color: inherit; text-decoration: none; }
   translate: -50% 0;
   /* Phase two only. The pill is already static by the time this runs, so no
      tracking maths is needed - they simply rise and grow into place. */
-  opacity: var(--sg, 1);
-  transform:
-    translate3d(0, calc((1 - var(--sg, 1)) * 42px), 0)
-    scale(calc(0.70 + var(--sg, 1) * 0.30));
+  opacity: 0;
+  transform: translate3d(0, 46px, 0) scale(0.72);
+  /* Held back until the pill is fully grown at 2.5s, then eased up over 1s */
+  transition: opacity 1000ms ease 2500ms,
+              transform 1000ms cubic-bezier(0.22, 0.6, 0.24, 1) 2500ms;
   transform-origin: 50% 100%;
   will-change: transform, opacity;
 }
+
+
+/* ---- Played state: one class drives the whole sequence -------------------
+   Added once by an IntersectionObserver at 50% visibility, then never
+   removed - so the composition stays put and never replays or reverses.
+   Total run: pill / rings / axis grow over 2.5s, then the students ease up
+   over 1s from 2.5s - about 3.5s end to end. */
+.deo-story-sticky.is-live .deo-stage { opacity: 1; }
+.deo-story-sticky.is-live .deo-pill { transform: scale(1); }
+.deo-story-sticky.is-live .deo-pill img { transform: scale(calc(1.02 + var(--zoom))); }
+.deo-story-sticky.is-live .deo-pill-border-middle { transform: scale(1); }
+.deo-story-sticky.is-live .deo-pill-border-outer { transform: scale(1); }
+.deo-story-sticky.is-live .axis-line { transform: scaleY(1); }
+.deo-story-sticky.is-live .axis-dot { translate: -50% calc(var(--axis-len) - 4px); }
+.deo-story-sticky.is-live .deo-floating-students {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* Without JavaScript the class never arrives, so show the finished state. */
+html:not(.js) .deo-stage { opacity: 1; }
+html:not(.js) .deo-pill { transform: scale(1); }
+html:not(.js) .deo-pill img { transform: scale(calc(1.02 + var(--zoom))); }
+html:not(.js) .deo-pill-border-middle,
+html:not(.js) .deo-pill-border-outer { transform: scale(1); }
+html:not(.js) .axis-line { transform: scaleY(1); }
+html:not(.js) .axis-dot { translate: -50% calc(var(--axis-len) - 4px); }
+html:not(.js) .deo-floating-students { opacity: 1; transform: none; }
 
 /* ---- Paragraph lives below the scene, in its own calm band ---- */
 
@@ -536,6 +576,12 @@ a { color: inherit; text-decoration: none; }
    same specificity. ---- */
 .js .journey-step { transform: translateX(60px); }
 .js .journey-step.visible { transform: translateX(0); }
+/* 60px would push the un-revealed rows past a narrow viewport, so the offset
+   shrinks with the screen. Same movement, same direction. */
+@media (max-width: 700px) {
+  .js .journey-step { transform: translateX(16px); }
+  .js .journey-step.visible { transform: translateX(0); }
+}
 
 .js .journey-step:nth-child(2), .js .person-block:nth-child(2), .js .value-block:nth-child(2) { transition-delay:  80ms; }
 .js .journey-step:nth-child(3), .js .person-block:nth-child(3), .js .value-block:nth-child(3) { transition-delay: 160ms; }
@@ -927,7 +973,7 @@ a { color: inherit; text-decoration: none; }
    ========================================================================== */
 @media (max-width: 1100px) and (min-width: 769px) {
   /* Tablet: same two-phase choreography, slightly less section height */
-  .deo-story { height: 260vh; --ring-gap: 13px; }
+  .deo-story { --ring-gap: 13px; }
   .deo-stage { width: 84vw; }
   .deo-pill { aspect-ratio: 1.95; }
   .deo-floating-students { width: 47%; bottom: -4%; }
@@ -951,7 +997,7 @@ a { color: inherit; text-decoration: none; }
   .js .main-nav.open { max-height: 320px; visibility: visible; }
 
   /* Mobile: same idea, a squarer capsule so the building still reads */
-  .deo-story { height: 240vh; --ring-gap: 9px; }
+  .deo-story { --ring-gap: 9px; }
   .deo-story-sticky { gap: 0; padding-top: calc(76px + 1vh); }
   .deo-stage { width: 82vw; }
   .deo-pill { aspect-ratio: 1.3; }
@@ -993,9 +1039,15 @@ a { color: inherit; text-decoration: none; }
   .js .value-block, .js .closing-content {
     opacity: 1 !important; transform: none !important;
   }
-  /* Pin the campus scene at its finished composition; nothing tracks scroll. */
-  .deo-story { height: auto; }
-  .deo-story-sticky { position: static; height: auto; padding-block: 60px 100px; }
+  /* Campus lands on its finished composition with no movement at all. */
+  .deo-story-sticky .deo-stage,
+  .deo-story-sticky .deo-pill,
+  .deo-story-sticky .deo-pill img,
+  .deo-story-sticky .deo-pill-border-middle,
+  .deo-story-sticky .deo-pill-border-outer,
+  .deo-story-sticky .axis-line,
+  .deo-story-sticky .axis-dot,
+  .deo-story-sticky .deo-floating-students { transition: none !important; }
   .js .story-heading { opacity: 1 !important; transform: none !important; }
   .js .deo-story-sticky .deo-stage,
   .js .deo-story-sticky .deo-line-dot {
@@ -1436,65 +1488,30 @@ a { color: inherit; text-decoration: none; }
      runs in reverse. Only two custom properties are written; the CSS turns
      them into transforms, so nothing here touches layout.
      ------------------------------------------------------------------------ */
+  /* ---- Campus: scroll only TRIGGERS it; the animation then plays itself ----
+     One IntersectionObserver, fired once at 50% visibility, adds a class and
+     disconnects. Everything after that is plain CSS transitions, so the page
+     scrolls normally and the sequence never scrubs, reverses or replays. */
   function storyScene() {
+    var sticky = document.getElementById('deo-story-sticky');
     var section = document.getElementById('deo-story');
-    var sticky  = document.getElementById('deo-story-sticky');
-    if (!section || !sticky) return;
+    if (!sticky || !section) return;
 
-    var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
-
-    function paint(pg, sg, fade, text) {
-      sticky.style.setProperty('--pg', pg.toFixed(4));
-      sticky.style.setProperty('--sg', sg.toFixed(4));
-      sticky.style.setProperty('--fade', fade.toFixed(4));
-      sticky.style.setProperty('--text', text.toFixed(4));
+    // Motion off, or no observer support: show the finished composition.
+    if (REDUCE || !('IntersectionObserver' in window)) {
+      sticky.classList.add('is-live', 'no-anim');
+      return;
     }
 
-    if (REDUCE) { sticky.classList.add('is-live'); paint(1, 1, 1, 1); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        sticky.classList.add('is-live');
+        io.disconnect();               // play once, never again
+      });
+    }, { threshold: 0.5 });
 
-    var SPLIT = 0.65;
-    var FADE_IN = 0.10;
-    var ticking = false;
-
-    // Ratchet: visuals follow `peak`, never raw scroll position, so scrolling
-    // back up cannot walk the reveal backwards. Locked once complete.
-    var peak = 0;
-    var campusAnimationComplete = false;
-
-    function update() {
-      ticking = false;
-      if (campusAnimationComplete) return;
-
-      var vh = window.innerHeight || document.documentElement.clientHeight;
-      var r  = section.getBoundingClientRect();
-      var travel = r.height - vh;
-      var p = travel > 0 ? clamp(-r.top / travel) : 0;
-
-      if (p <= peak) return;
-      peak = p;
-
-      if (peak > 0) sticky.classList.add('is-live');
-
-      var pg = clamp(peak / SPLIT);
-      var sg = clamp((peak - SPLIT) / (1 - SPLIT));
-      var fade = clamp(pg / FADE_IN);
-      var text = peak <= 0.86 ? 1 : 1 - ((peak - 0.86) / 0.14) * 0.35;
-
-      paint(pg, sg, fade, text);
-
-      if (peak >= 0.999) {
-        paint(1, 1, 1, text);
-        campusAnimationComplete = true;
-      }
-    }
-
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    window.addEventListener('resize', update, { passive: true });
-
-    paint(0, 0, 0, 1);
-    update();
+    io.observe(section);
   }
 
   typewriter(); menu(); lang(); reveal(); storyScene();
