@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — DEO Kairo</title>
+<meta name="description" content="Come closer. Visit DEO Kairo — the Deutsche Evangelische Oberschule Kairo in Dokki, Cairo. Plan a visit, ask a question, or start a conversation.">
+<meta name="theme-color" content="#FAF7F1">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+<!-- Set before first paint so CSS only hides things when JS is confirmed alive -->
+<script>document.documentElement.classList.add('js');</script>
+
+<style>
+/* ==========================================================================
+   DESIGN TOKENS — identical to css/style.css and about.html, so all three
+   pages render one brand. Nothing here is page-specific except --rail.
+   ========================================================================== */
+:root {
+  --ink:              #141414;
+  --ink-soft:         #262626;
+  --cream:            #FAF7F1;
+  --cream-soft:       #FFFFFF;
+  --red:              #DB1F26;
+  --red-dark:         #8F1216;
+  --gold:             #FFCE03;
+  --text-on-dark:     #F5F3EF;
+  --text-on-light:    #1A1A1A;
+  --text-muted-dark:  #C9C6C0;
+  --text-muted-light: #55524D;
+  --border-light:     #E7E2D8;
+
+  --sans:  'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --fast: 200ms;
+  --slow: 700ms;
+
+  --container: 1240px;
+
+  /* How far the journey sections are pushed off the rail the line runs on.
+     One value, so the path and the copy can never drift apart. */
+  --rail: 0px;
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, p, figure, ul, ol, fieldset { margin: 0; }
+ul, ol { list-style: none; padding: 0; }
+fieldset { border: 0; padding: 0; min-width: 0; }
+legend { padding: 0; }   /* UA gives it 2px inline padding, which breaks the rail */
+img { display: block; max-width: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 96px;   /* the header is sticky at 76px */
+}
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;   /* NOT hidden: that makes body a scroll container */
+}
+a { color: inherit; text-decoration: none; }
+
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+.final :focus-visible, .site-footer :focus-visible { outline-color: var(--gold); }
+
+.skip-link {
+  position: absolute; top: -100px; left: 16px; z-index: 999;
+  background: var(--ink); color: var(--text-on-dark);
+  padding: 14px 22px; font-weight: 700;
+  border-radius: 0 0 8px 8px;
+  transition: top var(--fast) var(--ease);
+}
+.skip-link:focus { top: 0; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ==========================================================================
+   HEADER — same markup, ids and behaviour as index.html / about.html
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(250, 247, 241, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-light);
+}
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 76px;
+  gap: 32px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--serif); font-weight: 600; font-size: 1.2rem;
+  color: var(--ink); white-space: nowrap;
+}
+.brand-mark { height: 32px; width: auto; flex: none; }
+
+.main-nav { display: flex; gap: 32px; }
+.main-nav a {
+  position: relative;
+  padding-bottom: 3px;
+  font-weight: 500; font-size: 0.95rem;
+  color: var(--text-on-light);
+}
+/* Underline grows from the left — carried over from css/style.css */
+.main-nav a::after {
+  content: "";
+  position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 320ms var(--ease);
+}
+.main-nav a:hover::after,
+.main-nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.main-nav a:hover { color: var(--red); }
+.main-nav a[aria-current="page"] { color: var(--red); }
+.main-nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+.header-actions { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.lang-toggle {
+  background: transparent;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.85rem; font-weight: 700; letter-spacing: 0.03em;
+  cursor: pointer; color: var(--ink);
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.lang-toggle:hover { background: var(--ink); color: var(--text-on-dark); }
+.lang-current { text-decoration: underline; }
+.lang-other { color: var(--text-muted-light); }
+
+.nav-cta { padding: 11px 22px; font-size: 0.88rem; }
+
+.menu-toggle {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer;
+  padding: 8px; margin-left: 12px;
+}
+.menu-toggle span { width: 22px; height: 2px; background: var(--ink); }
+.ver-switch {
+  position: fixed;
+  left: clamp(14px, 2vw, 24px);
+  bottom: clamp(14px, 2vw, 24px);
+  z-index: 60;
+  display: inline-flex; align-items: stretch;
+  background: var(--cream-soft);
+  border: 1.5px solid var(--ink); border-radius: 999px; overflow: hidden;
+  box-shadow: 0 14px 34px -16px rgba(20, 20, 20, .6);
+  font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+}
+
+
+/* ==========================================================================
+   BUTTONS — same shape and motion as about.html
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 19px 42px; border: none; border-radius: 999px;
+  background: var(--red); color: #fff;            /* 4.96:1 */
+  font: inherit; font-size: 1.02rem; font-weight: 700; letter-spacing: .01em;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: background var(--fast) var(--ease),
+              transform var(--fast) var(--ease),
+              box-shadow var(--fast) var(--ease);
+}
+.btn:hover {
+  background: var(--red-dark);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 34px -18px rgba(219, 31, 38, .95);
+}
+.btn:active { transform: translateY(0) scale(.985); }
+.btn .arw { transition: transform var(--fast) var(--ease); }
+.btn:hover .arw { transform: translateX(5px); }
+.btn[disabled] { opacity: .55; pointer-events: none; }
+
+/* ==========================================================================
+   REVEAL SYSTEM
+   --------------------------------------------------------------------------
+   Three named reveals, not one fade-up on everything. Each has a job:
+     mask  headlines arrive from behind an edge
+     fade  supporting copy, no movement at all
+     up    grouped items that should feel like a set
+   Hidden states are scoped to .js so the page renders fully without it.
+   ========================================================================== */
+.js [data-reveal] {
+  transition-duration: var(--slow);
+  transition-timing-function: var(--ease);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.js [data-reveal="mask"] {
+  clip-path: inset(0 0 102% 0);
+  transform: translateY(14px);
+  transition-property: clip-path, transform;
+  transition-duration: 900ms;
+}
+.js [data-reveal="mask"].is-visible { clip-path: inset(-25% -8% -25% -8%); transform: none; }
+
+.js [data-reveal="fade"] { opacity: 0; transition-property: opacity; }
+.js [data-reveal="fade"].is-visible { opacity: 1; }
+
+.js [data-reveal="up"] {
+  opacity: 0; transform: translateY(20px);
+  transition-property: opacity, transform;
+}
+.js [data-reveal="up"].is-visible { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   THE JOURNEY WRAPPER
+   --------------------------------------------------------------------------
+   Everything from "Come closer" to the address lives inside #journey, which
+   is the coordinate space for the drawn path. The SVG is absolutely
+   positioned across the whole wrapper at z-index 0; every section inside sits
+   at z-index 1 with NO opaque background, so the line reads continuously
+   behind the type without ever crossing over it.
+
+   The tonal drift down the page is one gradient on the wrapper rather than
+   per-section fills — a solid band would cut the line in half.
+   ========================================================================== */
+#journey {
+  position: relative;
+  background:
+    radial-gradient(ellipse 60% 34% at 50% 2%,  rgba(255, 206, 3, .13), transparent 66%),
+    radial-gradient(ellipse 48% 22% at 88% 30%, rgba(219, 31, 38, .05), transparent 70%),
+    linear-gradient(180deg,
+      var(--cream) 0%,
+      var(--cream-soft) 26%,
+      var(--cream) 48%,
+      var(--cream-soft) 72%,
+      var(--cream) 100%);
+}
+#journey > section { position: relative; z-index: 1; background: none; }
+
+.spine {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.spine-base {
+  fill: none;
+  stroke: rgba(20, 20, 20, .13);
+  stroke-width: 1;
+}
+.spine-draw {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: .78;
+}
+.spine-dot {
+  fill: var(--red);
+  opacity: 0;
+  transition: opacity 400ms var(--ease);
+}
+.spine-halo {
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 1;
+  opacity: 0;
+  transition: opacity 400ms var(--ease);
+}
+/* Stations: quiet until the line reaches them, then they hold the moment */
+.spine-node {
+  fill: var(--cream);
+  stroke: rgba(20, 20, 20, .22);
+  stroke-width: 1;
+  transition: fill 500ms var(--ease), stroke 500ms var(--ease);
+}
+.spine-node.lit { fill: var(--red); stroke: var(--red); }
+
+/* Zero-size markers. They contribute nothing to layout — the path controller
+   only reads their vertical centre and their .wrap ancestor's box. */
+.spine-a { display: block; width: 0; height: 0; }
+.spine-a[data-abs] { position: absolute; left: 0; }
+
+/* ==========================================================================
+   1. HERO — "Come closer."
+   ========================================================================== */
+.hero {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: clamp(76px, 13vh, 156px) 0 clamp(52px, 9vh, 104px);
+}
+.hero-inner { max-width: 900px; margin-inline: auto; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  margin-bottom: 28px;
+  font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-muted-light);                  /* 7.27:1 on cream */
+}
+.eyebrow::before, .eyebrow::after {
+  content: ""; width: 28px; height: 1px; background: var(--red); opacity: .5;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(3rem, 11vw, 7.4rem);
+  font-weight: 400; line-height: .96; letter-spacing: -.035em;
+  color: var(--ink);
+}
+.hero-sub {
+  max-width: 34ch;
+  margin: clamp(26px, 4vh, 40px) auto 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.12rem, 2.2vw, 1.6rem);
+  line-height: 1.45;
+  color: var(--text-muted-light);
+}
+
+/* The invitation — the exact point the path is born from */
+.hero-invite {
+  display: inline-flex; flex-direction: column; align-items: center; gap: 14px;
+  margin-top: clamp(38px, 6vh, 62px);
+  font-size: .78rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink);
+}
+.hero-invite span { position: relative; padding-bottom: 6px; }
+.hero-invite span::after {
+  content: "";
+  position: absolute; left: 0; bottom: 0; width: 100%; height: 1px;
+  background: var(--ink);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform 420ms var(--ease);
+}
+.hero-invite:hover span::after,
+.hero-invite:focus-visible span::after { transform: scaleX(1); transform-origin: left; }
+.hero-invite i {
+  font-style: normal; font-size: 1rem; color: var(--red);
+  animation: invite-drop 2.6s var(--ease) infinite;
+}
+@keyframes invite-drop {
+  0%, 100% { transform: translateY(0);   opacity: .45; }
+  45%      { transform: translateY(7px); opacity: 1; }
+}
+
+/* ==========================================================================
+   2. THE ARRIVAL — the path leads to a door
+   --------------------------------------------------------------------------
+   The building is masked into an ARCH, not a rectangle: a doorway is the
+   whole point of "step inside it". Reveal is a floor-to-crown wipe with a
+   slow settle on the photograph, plus two outline arches that arrive after
+   the image has landed. Nothing scales up from nothing — this is a door
+   opening, not a shape growing.
+   ========================================================================== */
+.arrival { padding: clamp(40px, 8vh, 92px) 0 clamp(72px, 12vh, 150px); }
+.arrival-head { max-width: 640px; margin: 0 auto clamp(44px, 7vh, 84px); text-align: center; }
+.section-eyebrow {
+  font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-muted-light);
+  margin-bottom: 14px;
+}
+.arrival-head h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 400; line-height: 1.1; letter-spacing: -.02em;
+  text-wrap: balance;
+}
+
+.arrival-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding-block: clamp(18px, 3vh, 34px);
+}
+
+.arch {
+  position: relative;
+  width: min(540px, 66vw);
+  aspect-ratio: 3 / 4;
+}
+/* A semicircular crown: the horizontal radius is half the width, so the
+   vertical radius must be the same distance expressed against the height —
+   (W/2) / (4W/3) = 37.5%. Kept in sync with the aspect-ratio above. */
+.arch-frame {
+  position: relative;
+  z-index: 2;
+  width: 100%; height: 100%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 50% 50% 5px 5px / 37.5% 37.5% 5px 5px;
+  box-shadow: 0 50px 90px -60px rgba(20, 20, 20, .62);
+  /* Closed door: clipped away from the floor upward */
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1500ms cubic-bezier(.32, .06, .18, 1);
+}
+.arch-frame img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 50% 58%;
+  transform: scale(1.16);
+  transition: transform 2600ms cubic-bezier(.24, .5, .2, 1);
+}
+/* Outline arches, offset outward. Same radii: at these offsets the deviation
+   from a true semicircle is under a pixel. */
+.arch-ring {
+  position: absolute;
+  z-index: 1;
+  border: 1px solid currentColor;
+  border-radius: 50% 50% 5px 5px / 37.5% 37.5% 5px 5px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 900ms var(--ease), transform 900ms var(--ease);
+}
+.arch-ring-1 { inset: -18px -18px -1px; color: rgba(20, 20, 20, .16); transition-delay: 1150ms; }
+.arch-ring-2 { inset: -38px -38px -1px; color: rgba(20, 20, 20, .08); transition-delay: 1300ms; }
+
+/* Nameplate breaking the arch's base line */
+.arch-plate {
+  position: absolute;
+  left: 50%; bottom: -19px;
+  z-index: 3;
+  translate: -50% 0;
+  white-space: nowrap;
+  padding: 9px 20px;
+  background: var(--cream-soft);
+  border: 1px solid var(--border-light);
+  border-radius: 999px;
+  font-size: .66rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--text-muted-light);
+  box-shadow: 0 12px 26px -18px rgba(20, 20, 20, .5);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 700ms var(--ease) 1500ms, transform 700ms var(--ease) 1500ms;
+}
+
+.arrival-caption {
+  margin: clamp(52px, 8vh, 92px) auto 0;
+  max-width: 46ch;
+  text-align: center;
+  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  color: var(--text-muted-light);
+}
+.arrival-caption b {
+  display: block;
+  font-family: var(--serif); font-weight: 400; font-style: italic;
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  color: var(--ink);
+  margin-bottom: 10px;
+}
+
+/* Opened state — one class, added once, never removed */
+.arch.is-open .arch-frame { clip-path: inset(0 0 0 0); }
+.arch.is-open .arch-frame img { transform: scale(1); }
+.arch.is-open .arch-ring { opacity: 1; transform: none; }
+.arch.is-open .arch-plate { opacity: 1; transform: translateY(0); }
+
+/* Without JS the class never arrives, so render the finished composition */
+html:not(.js) .arch-frame { clip-path: none; }
+html:not(.js) .arch-frame img { transform: none; }
+html:not(.js) .arch-ring,
+html:not(.js) .arch-plate { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   3. HOW CAN WE HELP — an editorial list, not three boxes
+   ========================================================================== */
+.help { padding: clamp(64px, 10vh, 120px) 0; }
+.help-inner { padding-left: var(--rail); }
+.help-head { max-width: 620px; margin-bottom: clamp(36px, 6vh, 64px); }
+.help-head h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 4.4vw, 3.2rem);
+  font-weight: 400; line-height: 1.08; letter-spacing: -.02em;
+}
+
+/* The wrapper is the positioning context for the cursor-borne preview; the
+   rows themselves stay a plain list. */
+.help-list { position: relative; }
+.help-item {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) 3rem;
+  align-items: center;
+  gap: clamp(14px, 3vw, 40px);
+  padding: clamp(26px, 4vw, 44px) 0;
+  border-top: 1px solid var(--border-light);
+  color: var(--ink);
+  transition: opacity 420ms var(--ease), padding-left 520ms var(--ease);
+}
+.help-rows > li:last-child .help-item { border-bottom: 1px solid var(--border-light); }
+
+.help-num {
+  font-family: var(--serif);
+  font-size: clamp(.9rem, 1.3vw, 1.05rem);
+  color: var(--text-muted-light);
+  transition: color 420ms var(--ease);
+}
+.help-title {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.5rem, 3.6vw, 2.6rem);
+  line-height: 1.12; letter-spacing: -.015em;
+  display: block;
+}
+.help-note {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(.9rem, 1.2vw, 1rem);
+  color: var(--text-muted-light);
+}
+.help-arrow {
+  justify-self: end;
+  font-size: 1.35rem;
+  color: var(--red);
+  opacity: 0;
+  transform: translateX(-14px);
+  transition: opacity 420ms var(--ease), transform 520ms var(--ease);
+}
+
+/* Desktop hover: the chosen line steps forward, the rest step back.
+   Guarded behind a real pointer so a tap on a phone can never latch it. */
+@media (hover: hover) and (pointer: fine) {
+  .help-list:hover .help-item { opacity: .38; }
+  .help-list .help-item:hover,
+  .help-list .help-item:focus-visible {
+    opacity: 1;
+    padding-left: clamp(10px, 1.6vw, 26px);
+  }
+  .help-item:hover .help-num,
+  .help-item:focus-visible .help-num { color: var(--red); }
+  .help-item:hover .help-arrow,
+  .help-item:focus-visible .help-arrow { opacity: 1; transform: translateX(0); }
+}
+
+/* The image that follows the cursor. Desktop only, and only while a row is
+   actually hovered — it is a supporting visual, not a permanent object. */
+.help-preview {
+  position: absolute;
+  left: 0; top: 0;
+  z-index: 4;
+  width: clamp(210px, 20vw, 290px);
+  aspect-ratio: 4 / 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms var(--ease);
+  will-change: transform;
+}
+.help-preview.is-on { opacity: 1; }
+.help-preview img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: 0 36px 60px -40px rgba(20, 20, 20, .7);
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 450ms var(--ease), transform 700ms var(--ease);
+}
+.help-preview img.is-active { opacity: 1; transform: scale(1); }
+@media (hover: none), (pointer: coarse) { .help-preview { display: none; } }
+
+/* ==========================================================================
+   4. THE CONVERSATION — a form written as sentences
+   ========================================================================== */
+.conversation { padding: clamp(64px, 10vh, 120px) 0 clamp(70px, 11vh, 132px); }
+.conversation-inner { padding-left: var(--rail); max-width: 820px; }
+.conversation h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 4.4vw, 3.2rem);
+  font-weight: 400; line-height: 1.08; letter-spacing: -.02em;
+  margin-bottom: clamp(36px, 6vh, 68px);
+}
+
+.conv-step { margin-bottom: clamp(38px, 6vh, 66px); }
+.conv-q {
+  font-size: .74rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted-light);
+  margin-bottom: 16px;
+}
+.conv-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 3.2vw, 2.3rem);
+  line-height: 1.35;
+  color: var(--ink);
+  cursor: text;
+}
+.conv-lead { white-space: nowrap; }
+
+/* Inline field: a ruled blank in a sentence, not a boxed input */
+.line-input {
+  flex: 0 1 auto;
+  min-width: 12ch;
+  max-width: 100%;
+  padding: 0 4px 6px;
+  font: inherit;
+  color: var(--red);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(20, 20, 20, .3);
+  border-radius: 0;
+  outline: none;
+  transition: border-color var(--fast) var(--ease);
+}
+.line-input::placeholder { color: rgba(20, 20, 20, .22); font-style: italic; }
+.line-input:focus { border-color: var(--red); }
+.line-input[aria-invalid="true"] { border-color: var(--red); border-bottom-width: 2px; }
+
+/* The message field keeps the same ruled language, just taller */
+.line-area {
+  display: block;
+  width: 100%;
+  min-height: 8.5rem;
+  margin-top: 4px;
+  padding: 10px 4px 14px;
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 2.2vw, 1.55rem);
+  line-height: 1.5;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(20, 20, 20, .3);
+  border-radius: 0;
+  outline: none;
+  resize: vertical;
+  transition: border-color var(--fast) var(--ease);
+}
+.line-area::placeholder { color: rgba(20, 20, 20, .22); font-style: italic; }
+.line-area:focus { border-color: var(--red); }
+.line-area[aria-invalid="true"] { border-color: var(--red); border-bottom-width: 2px; }
+
+/* Intent — real radios, styled as words in the sentence. `position:relative`
+   is load-bearing: it keeps the visually-hidden inputs inside this group
+   instead of anchoring them to the page, which would throw the scroll
+   position on focus. */
+.conv-choices { position: relative; display: flex; flex-wrap: wrap; gap: 10px 12px; }
+.conv-choices input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.conv-choices label {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 1px solid var(--border-light);
+  border-radius: 999px;
+  background: var(--cream-soft);
+  font-size: .95rem; font-weight: 600;
+  color: var(--text-muted-light);
+  cursor: pointer;
+  transition: border-color var(--fast) var(--ease),
+              color var(--fast) var(--ease),
+              background var(--fast) var(--ease);
+}
+.conv-choices label:hover { border-color: var(--ink); color: var(--ink); }
+.conv-choices input:checked + label {
+  background: var(--ink); border-color: var(--ink); color: var(--text-on-dark);
+}
+.conv-choices input:focus-visible + label { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+.field-error {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--sans);
+  font-size: .85rem; font-weight: 600;
+  color: var(--red-dark);
+  min-height: 1.1em;
+}
+.conv-send {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 22px;
+  margin-top: clamp(30px, 5vh, 52px);
+}
+.conv-note { font-size: .88rem; color: var(--text-muted-light); max-width: 30ch; }
+
+/* Containing block for the honeypot below, so its -9999px offset is measured
+   from the form rather than from whatever happens to be positioned above it. */
+.conv-form { position: relative; }
+
+/* Honeypot — a real field bots fill in and people never see */
+.hp-field {
+  position: absolute; left: -9999px;
+  width: 1px; height: 1px; overflow: hidden;
+}
+
+/* Sent state: the form is replaced by the last beat of the story */
+.conv-done {
+  display: none;
+  padding: clamp(34px, 6vw, 60px) 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+.conv-done b {
+  display: block;
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  line-height: 1.1; letter-spacing: -.02em;
+  margin-bottom: 12px;
+}
+.conv-done p { color: var(--text-muted-light); max-width: 46ch; }
+.conversation.is-sent .conv-form { display: none; }
+.conversation.is-sent .conv-done { display: block; }
+
+/* ==========================================================================
+   5. CONTACT INFORMATION — typography and hairlines, no cards
+   ========================================================================== */
+.info { padding: clamp(60px, 9vh, 110px) 0 clamp(80px, 13vh, 160px); }
+.info-inner { padding-left: var(--rail); }
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(26px, 4vw, 64px);
+  border-top: 1px solid var(--border-light);
+  padding-top: clamp(30px, 4vw, 48px);
+}
+.info-block h3 {
+  font-size: .72rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted-light);
+  margin: 0 0 18px;
+}
+.info-block p, .info-block a {
+  font-family: var(--serif);
+  font-size: clamp(1.12rem, 1.9vw, 1.45rem);
+  line-height: 1.4;
+  color: var(--ink);
+}
+.info-block a { position: relative; display: inline-block; }
+.info-block a::after {
+  content: "";
+  position: absolute; left: 0; bottom: 1px; width: 100%; height: 1px;
+  background: var(--red);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform 380ms var(--ease);
+}
+.info-block a:hover { color: var(--red); }
+.info-block a:hover::after, .info-block a:focus-visible::after {
+  transform: scaleX(1); transform-origin: left;
+}
+/* Inherits the serif from its parent <p>; a direct rule beats inheritance, so
+   no !important is needed to bring it back to the sans. */
+.info-sub {
+  display: block; margin-top: 10px;
+  font-family: var(--sans); font-size: .88rem; line-height: 1.5;
+  color: var(--text-muted-light);
+}
+
+.info-directions {
+  display: inline-flex; align-items: center; gap: 14px;
+  margin-top: clamp(34px, 5vw, 56px);
+  padding-top: clamp(24px, 3vw, 34px);
+  border-top: 1px solid var(--border-light);
+  width: 100%;
+  font-size: .78rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink);
+  transition: color var(--fast) var(--ease);
+}
+.info-directions .arw {
+  display: inline-block;
+  transition: transform 380ms var(--ease);
+}
+.info-directions:hover { color: var(--red); }
+.info-directions:hover .arw { transform: translateX(8px); }
+
+/* ==========================================================================
+   6. FINAL CTA — the end of the journey
+   ========================================================================== */
+.final {
+  position: relative;
+  background: var(--ink);
+  color: var(--text-on-dark);
+  padding: clamp(96px, 17vh, 210px) 0 clamp(84px, 14vh, 180px);
+  text-align: center;
+  overflow: hidden;
+}
+.final::before {
+  content: "";
+  position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 62% 58% at 50% 0%, rgba(219, 31, 38, .18), transparent 64%);
+}
+/* The path continues past the fold — a short hairline dropping in from the
+   journey above, so the dark band reads as the destination, not a new page. */
+.final-tail {
+  position: absolute;
+  left: 50%; top: 0; z-index: 2;
+  width: 1px; height: clamp(48px, 8vh, 92px);
+  translate: -50% 0;
+  background: linear-gradient(180deg, var(--red), rgba(219, 31, 38, 0));
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 900ms var(--ease);
+}
+.final.is-visible .final-tail { transform: scaleY(1); }
+
+.final-inner { position: relative; z-index: 3; max-width: 940px; margin-inline: auto; }
+.final h2 {
+  font-family: var(--serif);
+  font-size: clamp(2.1rem, 6vw, 4.6rem);
+  font-weight: 400; line-height: 1.06; letter-spacing: -.03em;
+  text-wrap: balance;
+  margin-bottom: clamp(38px, 6vh, 62px);
+}
+.final-close {
+  margin-top: clamp(34px, 5vh, 54px);
+  font-size: .74rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+  color: rgba(245, 243, 239, .58);
+}
+
+/* ==========================================================================
+   FOOTER — the same footer as about.html
+   ========================================================================== */
+.site-footer {
+  position: relative;
+  background: var(--cream-soft);
+  color: var(--ink);
+  padding-block: clamp(52px, 7vw, 84px) 30px;
+  border-top: 1px solid var(--border-light);
+}
+.site-footer::before {
+  content: "";
+  position: absolute; inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--gold) 60%, var(--red));
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  padding-bottom: clamp(28px, 4vw, 44px);
+  border-bottom: 1px solid var(--border-light);
+}
+.footer-brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.footer-brand-row img { height: 32px; width: auto; }
+.footer-brand-row span { font-weight: 800; font-size: 1.15rem; color: var(--ink); }
+.footer-grid p { color: var(--text-muted-light); font-size: .95rem; max-width: 40ch; }
+.footer-col h3 {
+  font-size: .7rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--text-muted-light); margin: 0 0 16px;
+}
+.footer-col ul { display: grid; gap: 10px; }
+.footer-col a, .footer-col li { color: var(--text-muted-light); font-size: .95rem; line-height: 1.5; }
+.footer-col a { transition: color var(--fast) var(--ease); }
+.footer-col a:hover { color: var(--red); }
+.footer-base {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 14px; margin-top: clamp(20px, 3vw, 28px);
+  font-size: .8rem; color: var(--text-muted-light);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   --------------------------------------------------------------------------
+   Mobile is not the desktop layout squeezed: the path moves to a left rail
+   the content is indented off, the arch changes proportion so the building
+   still reads, the help rows drop their hover machinery entirely, and the
+   conversation's inline blanks become full-width lines.
+   ========================================================================== */
+@media (max-width: 1040px) {
+  .arch { width: min(480px, 72vw); }
+}
+
+@media (max-width: 860px) {
+  .menu-toggle { display: flex; }
+  .nav-cta { display: none; }
+  .main-nav {
+    position: absolute;
+    top: 76px; left: 0; right: 0;
+    background: var(--cream-soft);
+    flex-direction: column;
+    padding: 20px 24px;
+    gap: 18px;
+    border-bottom: 1px solid var(--border-light);
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: max-height 0.25s ease;
+  }
+  .js .main-nav.open { max-height: 340px; visibility: visible; }
+
+  /* The rail: content steps in so the drawn line has its own column */
+  :root { --rail: 26px; }
+
+  .help-item { grid-template-columns: 2.6rem minmax(0, 1fr); row-gap: 4px; }
+  .help-arrow { display: none; }
+  .help-item { opacity: 1 !important; padding-left: 0 !important; }
+
+  .info-grid { grid-template-columns: 1fr; gap: 30px; }
+  .info-block + .info-block { border-top: 1px solid var(--border-light); padding-top: 30px; }
+
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 700px) {
+  /* An arch this tall would push the caption off a phone screen */
+  .arch { width: min(400px, 78vw); aspect-ratio: 4 / 5; }
+  .arch-frame, .arch-ring { border-radius: 50% 50% 5px 5px / 40% 40% 5px 5px; }
+  .arch-ring-1 { inset: -12px -12px -1px; }
+  .arch-ring-2 { inset: -26px -26px -1px; }
+
+  /* Inline blanks become their own lines — no cramped mid-sentence fields */
+  .conv-line { display: block; }
+  .conv-lead { display: block; margin-bottom: 8px; font-size: .92em; }
+  .line-input {
+    display: block;
+    width: 100% !important;
+    min-width: 0;
+    max-width: none;
+    padding-left: 0;
+  }
+  .conv-send { flex-direction: column; align-items: stretch; }
+  .conv-send .btn { width: 100%; }
+  .conv-note { max-width: none; }
+}
+
+@media (max-width: 560px) {
+  .hero h1 { font-size: clamp(2.7rem, 15vw, 4rem); }
+  .help-item { grid-template-columns: 1fr; }
+  .help-num { font-size: .8rem; letter-spacing: .12em; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .final .btn { width: 100%; }
+  .info-directions { justify-content: space-between; }
+}
+
+/* ==========================================================================
+   REDUCED MOTION — strip the movement, keep every design decision
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0ms !important;
+  }
+  /* Nothing may stay hidden once the transitions are gone */
+  .js [data-reveal],
+  .js [data-reveal].is-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+  .arch-frame { clip-path: none !important; }
+  .arch-frame img { transform: none !important; }
+  .arch-ring, .arch-plate { opacity: 1 !important; transform: none !important; }
+  .final-tail { transform: scaleY(1) !important; }
+  .help-preview { display: none; }
+  .hero-invite i { animation: none; opacity: .8; }
+  /* The path is drawn in full and the travelling dot never appears */
+  .spine-dot, .spine-halo { display: none; }
+}
+
+@media (forced-colors: active) {
+  .arch-frame, .conv-choices label, .help-item { border-color: CanvasText; }
+  .line-input, .line-area { border-bottom-color: CanvasText; }
+  .spine-base, .spine-draw { stroke: CanvasText; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/deo-logo.png" alt="DEO Kairo" class="brand-mark" width="68" height="48">
+      <span data-en="DEO Kairo" data-de="DEO Kairo">DEO Kairo</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <!-- Same tabs and order as index.html and about.html. The first three
+           sections live on the home page, so they need the full path. -->
+      <a href="index.html#pillars" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="index.html#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="index.html#community" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
+      <a href="contact.html" aria-current="page" data-en="Contact" data-de="Kontakt">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
+        <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
+      </button>
+      <a href="#conversation" class="btn btn-primary nav-cta" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+      <span class="sr-only">Menu</span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ======================================================================
+       THE JOURNEY
+       One coordinate space, one drawn path. Every section inside is
+       transparent so the line never gets cut in half by a background.
+       ====================================================================== -->
+  <div id="journey">
+
+    <svg class="spine" id="spine" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+      <path class="spine-base" d=""></path>
+      <path class="spine-draw" d=""></path>
+      <g class="spine-nodes"></g>
+      <circle class="spine-halo" cx="0" cy="0" r="9"></circle>
+      <circle class="spine-dot"  cx="0" cy="0" r="4.5"></circle>
+    </svg>
+
+    <!-- ===================== 1. HERO ===================== -->
+    <section class="hero" id="hero">
+      <div class="wrap hero-inner">
+        <p class="eyebrow" data-reveal="fade" style="--i:0"
+           data-en="Contact · DEO Kairo" data-de="Kontakt · DEO Kairo">Contact · DEO Kairo</p>
+
+        <h1 data-reveal="mask" style="--i:1"
+            data-en="Come closer." data-de="Kommen Sie näher.">Come closer.</h1>
+
+        <p class="hero-sub" data-reveal="fade" style="--i:3"
+           data-en="Some places are better experienced than explained."
+           data-de="Manche Orte erlebt man besser, als dass man sie erklärt.">
+          Some places are better experienced than explained.
+        </p>
+
+        <a class="hero-invite" href="#arrival" data-reveal="fade" style="--i:4">
+          <span data-en="Visit DEO Kairo" data-de="Besuchen Sie die DEO Kairo">Visit DEO Kairo</span>
+          <i aria-hidden="true">&darr;</i>
+        </a>
+
+        <!-- The path is born here, directly under the invitation -->
+        <div class="spine-a" data-spine-x="0.5" data-spine-x-sm="0.5" data-spine-node aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===================== 2. THE ARRIVAL ===================== -->
+    <section class="arrival" id="arrival">
+      <div class="wrap">
+        <div class="arrival-head">
+          <p class="section-eyebrow" data-reveal="fade" style="--i:0"
+             data-en="Follow the path" data-de="Folgen Sie dem Weg">Follow the path</p>
+          <h2 data-reveal="mask" style="--i:1"
+              data-en="It ends at a door on El Dokki Street."
+              data-de="Er endet an einer Tür in der El-Dokki-Straße.">
+            It ends at a door on El&nbsp;Dokki Street.
+          </h2>
+        </div>
+
+        <!-- Line arrives at the crown of the arch, then sweeps around it -->
+        <div class="spine-a" data-spine-x="0.5" data-spine-x-sm="0.5" data-spine-node aria-hidden="true"></div>
+
+        <div class="arrival-stage">
+          <div class="arch" id="arch">
+            <div class="arch-ring arch-ring-2" aria-hidden="true"></div>
+            <div class="arch-ring arch-ring-1" aria-hidden="true"></div>
+
+            <figure class="arch-frame">
+              <img src="assets/deo-building.jpg"
+                   alt="The entrance of the DEO Kairo school building, with the German, European and Egyptian flags flying above the doorway"
+                   width="3072" height="2048" decoding="async">
+            </figure>
+
+            <span class="arch-plate" data-en="DEO Kairo · Dokki, Cairo" data-de="DEO Kairo · Dokki, Kairo">DEO Kairo · Dokki, Cairo</span>
+          </div>
+
+          <!-- Absolute: it only marks a height, so the line can bow around
+               the arch instead of being drawn across the photograph. -->
+          <div class="spine-a" data-abs style="top:44%" data-spine-x="0.03" data-spine-x-sm="0.035" aria-hidden="true"></div>
+        </div>
+
+        <p class="arrival-caption" data-reveal="fade">
+          <b data-en="You have arrived." data-de="Sie sind angekommen.">You have arrived.</b>
+          <span data-en="Six El Dokki Street, in the middle of Dokki — a school that has been teaching in this city since 1873."
+                data-de="El-Dokki-Straße 6, mitten in Dokki — eine Schule, die seit 1873 in dieser Stadt unterrichtet.">
+            Six El Dokki Street, in the middle of Dokki — a school that has been teaching
+            in this city since 1873.
+          </span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== 3. HOW CAN WE HELP ===================== -->
+    <section class="help" id="help">
+      <div class="wrap help-inner">
+        <div class="spine-a" data-spine-x="0.015" data-spine-x-sm="0.035" data-spine-node aria-hidden="true"></div>
+
+        <div class="help-head">
+          <p class="section-eyebrow" data-reveal="fade"
+             data-en="Choose your way in" data-de="Wählen Sie Ihren Weg">Choose your way in</p>
+          <h2 data-reveal="mask" style="--i:1"
+              data-en="How can we help?" data-de="Wie können wir helfen?">How can we help?</h2>
+        </div>
+
+        <div class="help-list" id="help-list">
+        <ul class="help-rows">
+          <li>
+            <a class="help-item" href="about.html" data-preview="0">
+              <span class="help-num">01</span>
+              <span>
+                <span class="help-title" data-en="Discover DEO" data-de="DEO entdecken">Discover DEO</span>
+                <span class="help-note"
+                      data-en="I want to learn more about the school."
+                      data-de="Ich möchte mehr über die Schule erfahren.">I want to learn more about the school.</span>
+              </span>
+              <span class="help-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </li>
+          <li>
+            <a class="help-item" href="#conversation" data-preview="1" data-intent="visit">
+              <span class="help-num">02</span>
+              <span>
+                <span class="help-title" data-en="Plan a visit" data-de="Einen Besuch planen">Plan a visit</span>
+                <span class="help-note"
+                      data-en="I want to come and experience the campus."
+                      data-de="Ich möchte den Campus erleben.">I want to come and experience the campus.</span>
+              </span>
+              <span class="help-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </li>
+          <li>
+            <a class="help-item" href="#conversation" data-preview="2" data-intent="question">
+              <span class="help-num">03</span>
+              <span>
+                <span class="help-title" data-en="Get in touch" data-de="Kontakt aufnehmen">Get in touch</span>
+                <span class="help-note"
+                      data-en="I have a question."
+                      data-de="Ich habe eine Frage.">I have a question.</span>
+              </span>
+              <span class="help-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          </li>
+
+        </ul>
+
+          <!-- Supporting visuals, in the DOM up front so a hover never waits
+               on the network. Decorative: hidden from assistive tech. -->
+          <div class="help-preview" id="help-preview" aria-hidden="true">
+            <img src="assets/campus-building.jpg" alt="" width="1600" height="1067" loading="lazy" decoding="async">
+            <img src="assets/deo-building.jpg" alt="" width="3072" height="2048" loading="lazy" decoding="async">
+            <img src="assets/student-portrait.jpg" alt="" width="1920" height="1780" loading="lazy" decoding="async">
+          </div>
+        </div>
+
+        <div class="spine-a" data-spine-x="0.015" data-spine-x-sm="0.035" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===================== 4. THE CONVERSATION ===================== -->
+    <section class="conversation" id="conversation">
+      <div class="wrap conversation-inner">
+        <div class="spine-a" data-spine-x="0.015" data-spine-x-sm="0.035" data-spine-node aria-hidden="true"></div>
+
+        <p class="section-eyebrow" data-reveal="fade"
+           data-en="Start a conversation" data-de="Beginnen Sie ein Gespräch">Start a conversation</p>
+        <h2 data-reveal="mask" style="--i:1"
+            data-en="Tell us who you are." data-de="Sagen Sie uns, wer Sie sind.">Tell us who you are.</h2>
+
+        <!--
+          BACKEND INTEGRATION
+          -------------------
+          The markup is already a complete, valid POST form. To wire it up:
+            1. set action="/your-endpoint" and remove data-demo below;
+            2. the script posts nothing while data-demo is present — it only
+               validates and shows the sent state.
+          Field names: name, email, intent, message, _page, plus the honeypot
+          "company", which must be empty for a submission to be genuine.
+        -->
+        <form class="conv-form" id="conv-form" method="post" action="#" novalidate data-demo>
+          <input type="hidden" name="_page" value="contact">
+
+          <div class="hp-field" aria-hidden="true">
+            <label for="c-company">Company</label>
+            <input type="text" id="c-company" name="company" tabindex="-1" autocomplete="off">
+          </div>
+
+          <div class="conv-step">
+            <p class="conv-q" data-en="Let's start with your name."
+               data-de="Beginnen wir mit Ihrem Namen.">Let's start with your name.</p>
+            <label class="conv-line" for="c-name">
+              <span class="conv-lead" data-en="My name is" data-de="Mein Name ist">My name is</span>
+              <input class="line-input" id="c-name" name="name" type="text"
+                     autocomplete="name" required
+                     placeholder="…" data-ph-en="…" data-ph-de="…"
+                     aria-describedby="c-name-error">
+            </label>
+            <span class="field-error" id="c-name-error" role="alert"></span>
+          </div>
+
+          <div class="conv-step">
+            <p class="conv-q" data-en="And how can we reach you?"
+               data-de="Und wie erreichen wir Sie?">And how can we reach you?</p>
+            <label class="conv-line" for="c-email">
+              <span class="conv-lead" data-en="You can email me at" data-de="Sie erreichen mich unter">You can email me at</span>
+              <input class="line-input" id="c-email" name="email" type="email"
+                     autocomplete="email" required inputmode="email"
+                     placeholder="…" data-ph-en="…" data-ph-de="…"
+                     aria-describedby="c-email-error">
+            </label>
+            <span class="field-error" id="c-email-error" role="alert"></span>
+          </div>
+
+          <div class="conv-step">
+            <fieldset>
+              <legend class="conv-q" data-en="What brings you to us?"
+                      data-de="Was führt Sie zu uns?">What brings you to us?</legend>
+              <div class="conv-choices">
+                <input type="radio" id="i-discover" name="intent" value="discover" checked>
+                <label for="i-discover" data-en="Learning about the school" data-de="Die Schule kennenlernen">Learning about the school</label>
+
+                <input type="radio" id="i-visit" name="intent" value="visit">
+                <label for="i-visit" data-en="Planning a visit" data-de="Einen Besuch planen">Planning a visit</label>
+
+                <input type="radio" id="i-question" name="intent" value="question">
+                <label for="i-question" data-en="A question" data-de="Eine Frage">A question</label>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="conv-step">
+            <p class="conv-q" data-en="What would you like to know?"
+               data-de="Was möchten Sie wissen?">What would you like to know?</p>
+            <label class="sr-only" for="c-message">Your message</label>
+            <textarea class="line-area" id="c-message" name="message" rows="4" required
+                      placeholder="Write as much or as little as you like."
+                      data-ph-en="Write as much or as little as you like."
+                      data-ph-de="Schreiben Sie so viel oder so wenig, wie Sie möchten."
+                      aria-describedby="c-message-error"></textarea>
+            <span class="field-error" id="c-message-error" role="alert"></span>
+          </div>
+
+          <div class="conv-send">
+            <button type="submit" class="btn">
+              <span data-en="Send it to DEO" data-de="An die DEO senden">Send it to DEO</span>
+              <span class="arw" aria-hidden="true">&rarr;</span>
+            </button>
+            <p class="conv-note"
+               data-en="We answer within one working day. Tours run on weekday mornings."
+               data-de="Wir antworten innerhalb eines Arbeitstages. Führungen finden werktags vormittags statt.">
+              We answer within one working day. Tours run on weekday mornings.
+            </p>
+          </div>
+        </form>
+
+        <div class="conv-done" id="conv-done" role="status" tabindex="-1">
+          <b data-en="We'll take it from here." data-de="Den Rest übernehmen wir.">We'll take it from here.</b>
+          <p data-en="Thank you — your message is on its way. Someone from the school will write back within one working day."
+             data-de="Vielen Dank — Ihre Nachricht ist unterwegs. Jemand aus der Schule meldet sich innerhalb eines Arbeitstages.">
+            Thank you — your message is on its way. Someone from the school will write
+            back within one working day.
+          </p>
+        </div>
+
+        <div class="spine-a" data-spine-x="0.015" data-spine-x-sm="0.035" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===================== 5. CONTACT INFORMATION ===================== -->
+    <section class="info" id="info">
+      <div class="wrap info-inner">
+        <div class="spine-a" data-spine-x="0.015" data-spine-x-sm="0.035" data-spine-node aria-hidden="true"></div>
+
+        <p class="section-eyebrow" data-reveal="fade"
+           data-en="In person, by phone, in writing" data-de="Persönlich, telefonisch, schriftlich">In person, by phone, in writing</p>
+
+        <div class="info-grid">
+          <div class="info-block" data-reveal="up" style="--i:0">
+            <h3 data-en="Find us" data-de="Finden Sie uns">Find us</h3>
+            <p>
+              DEO Kairo<br>
+              6 El Dokki St., Dokki<br>
+              12612 Cairo, Egypt
+              <span class="info-sub"
+                    data-en="Deutsche Evangelische Oberschule Kairo"
+                    data-de="Deutsche Evangelische Oberschule Kairo">Deutsche Evangelische Oberschule Kairo</span>
+            </p>
+          </div>
+
+          <div class="info-block" data-reveal="up" style="--i:1">
+            <h3 data-en="Talk to us" data-de="Sprechen Sie mit uns">Talk to us</h3>
+            <p><a href="tel:+20237481475">+20 (0)2 3748 1475</a>
+              <span class="info-sub"
+                    data-en="The main school line"
+                    data-de="Der Hauptanschluss der Schule">The main school line</span>
+            </p>
+          </div>
+
+          <div class="info-block" data-reveal="up" style="--i:2">
+            <h3 data-en="Write to us" data-de="Schreiben Sie uns">Write to us</h3>
+            <p><a href="mailto:info@deokairo.de">info@deokairo.de</a>
+              <span class="info-sub"
+                    data-en="Official school site: deokairo.com"
+                    data-de="Offizielle Schulseite: deokairo.com">Official school site: deokairo.com</span>
+            </p>
+          </div>
+        </div>
+
+        <a class="info-directions"
+           href="https://www.google.com/maps/search/?api=1&amp;query=Deutsche+Evangelische+Oberschule+Kairo%2C+6+El+Dokki+St%2C+Dokki%2C+Cairo"
+           target="_blank" rel="noopener noreferrer">
+          <span data-en="Get directions" data-de="Route planen">Get directions</span>
+          <span class="arw" aria-hidden="true">&rarr;</span>
+        </a>
+
+        <!-- Terminus: the line returns to centre and points into the finale -->
+        <div class="spine-a" data-spine-x="0.5" data-spine-x-sm="0.5" data-spine-node aria-hidden="true"></div>
+      </div>
+    </section>
+
+  </div><!-- /#journey -->
+
+  <!-- ===================== 6. FINAL CTA ===================== -->
+  <section class="final" id="final">
+    <span class="final-tail" aria-hidden="true"></span>
+    <div class="wrap final-inner">
+      <h2 data-reveal="mask">
+        <span data-en="The best way to understand DEO&lt;br&gt;is to step inside it."
+              data-de="Am besten versteht man die DEO,&lt;br&gt;indem man sie betritt.">The best way to understand DEO<br>is to step inside it.</span>
+      </h2>
+      <a class="btn" href="#conversation">
+        <span data-en="Plan your visit" data-de="Besuch planen">Plan your visit</span>
+        <span class="arw" aria-hidden="true">&rarr;</span>
+      </a>
+      <p class="final-close" data-reveal="fade"
+         data-en="We'll take it from here." data-de="Den Rest übernehmen wir.">We'll take it from here.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-row">
+          <img src="assets/deo-logo.png" alt="" width="68" height="48">
+          <span>DEO Kairo</span>
+        </div>
+        <p>
+          Deutsche Evangelische Oberschule Kairo &mdash; a German-Egyptian encounter
+          school, teaching from Kindergarten through the Abitur.
+        </p>
+      </div>
+
+      <nav class="footer-col" aria-label="Pages">
+        <h3>Pages</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="index.html#path">School Path</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="footer-col">
+        <h3>Visit</h3>
+        <ul>
+          <li>6, El Dokki St., Dokki</li>
+          <li>12612 Cairo, Egypt</li>
+          <li><a href="tel:+20237481475">+20 (0)2 3748 1475</a></li>
+          <li><a href="mailto:info@deokairo.de">info@deokairo.de</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-base">
+      <span>&copy; 2026 DEO Kairo &middot; Built as a student web project</span>
+      <span>Manrope &amp; Newsreader</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SVGNS  = 'http://www.w3.org/2000/svg';
+
+  /* ---- Mobile menu — same ids and behaviour as index.html / about.html --- */
+  function menu() {
+    var b = document.getElementById('menu-toggle'),
+        n = document.getElementById('main-nav');
+    if (!b || !n) return;
+
+    function set(open) {
+      n.classList.toggle('open', open);
+      b.setAttribute('aria-expanded', String(open));
+    }
+    b.addEventListener('click', function () {
+      set(b.getAttribute('aria-expanded') !== 'true');
+    });
+    n.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && b.getAttribute('aria-expanded') === 'true') { set(false); b.focus(); }
+    });
+    window.matchMedia('(min-width:861px)').addEventListener('change', function (e) {
+      if (e.matches) set(false);
+    });
+  }
+
+  /* ---- Language toggle — same control as the other two pages -------------
+     Also swaps placeholders, which the shared version does not need to.
+     No [data-en] is ever placed on an element containing a form control, so
+     the innerHTML swap can never destroy a field or its value. */
+  function lang() {
+    var btn = document.getElementById('lang-toggle');
+    if (!btn) return;
+
+    var nodes = document.querySelectorAll('[data-en]');
+    var fields = document.querySelectorAll('[data-ph-en]');
+    var cur = 'en';
+
+    btn.addEventListener('click', function () {
+      cur = cur === 'en' ? 'de' : 'en';
+
+      Array.prototype.forEach.call(nodes, function (el) {
+        var v = el.getAttribute('data-' + cur);
+        if (v !== null) el.innerHTML = v;
+      });
+      Array.prototype.forEach.call(fields, function (el) {
+        var v = el.getAttribute('data-ph-' + cur);
+        if (v !== null) el.setAttribute('placeholder', v);
+      });
+
+      document.documentElement.setAttribute('lang', cur);
+      btn.querySelector('.lang-current').textContent = cur.toUpperCase();
+      btn.querySelector('.lang-other').textContent = cur === 'en' ? 'DE' : 'EN';
+      btn.setAttribute('aria-label', cur === 'en'
+        ? 'Switch language to German' : 'Zur englischen Sprache wechseln');
+
+      // Type width changes with the language, so the path must be re-measured.
+      window.dispatchEvent(new Event('resize'));
+    });
+  }
+
+  /* ---- Scroll reveal ----------------------------------------------------
+     One observer for every [data-reveal] and for the final band. Each element
+     names its own reveal in the attribute; the CSS owns what that means. */
+  function reveal() {
+    var items = document.querySelectorAll('[data-reveal], .final');
+    if (!items.length) return;
+
+    if (REDUCE || !('IntersectionObserver' in window)) {
+      Array.prototype.forEach.call(items, function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+
+    /* A "mask" reveal hides its element with clip-path, and a clipped element
+       reports NO intersection area — so it can never trigger its own reveal
+       and the headline stays invisible forever. Masked items are therefore
+       watched through their unclipped parent, and the class is handed back to
+       the element itself. Everything else is observed directly. */
+    var groups = [];
+    function probeFor(el) {
+      return (el.getAttribute('data-reveal') === 'mask' && el.parentElement)
+        ? el.parentElement : el;
+    }
+    Array.prototype.forEach.call(items, function (el) {
+      var probe = probeFor(el), g = null, i;
+      for (i = 0; i < groups.length; i++) if (groups[i].probe === probe) g = groups[i];
+      if (!g) { g = { probe: probe, targets: [] }; groups.push(g); }
+      g.targets.push(el);
+    });
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        for (var i = 0; i < groups.length; i++) {
+          if (groups[i].probe !== en.target) continue;
+          groups[i].targets.forEach(function (t) { t.classList.add('is-visible'); });
+        }
+        io.unobserve(en.target);          // reveal once, then stop watching
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+    groups.forEach(function (g) { io.observe(g.probe); });
+  }
+
+  /* ---- The arch opens ---------------------------------------------------
+     Scroll only TRIGGERS it; the rest is CSS. Deliberately unlike the About
+     page's capsule: nothing grows from a point — a doorway is wiped open from
+     the floor upward while the photograph settles out of its own zoom. */
+  function arch() {
+    var el = document.getElementById('arch');
+    if (!el) return;
+
+    if (REDUCE || !('IntersectionObserver' in window)) { el.classList.add('is-open'); return; }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        el.classList.add('is-open');
+        io.disconnect();                  // play once, never again
+      });
+    }, { threshold: 0.32 });
+    io.observe(el);
+  }
+
+  /* =======================================================================
+     THE PATH — the signature of this page
+     -----------------------------------------------------------------------
+     A single SVG polyline threaded through marker elements placed in the
+     layout. Because the markers are real DOM nodes, the path follows the
+     actual composition at any viewport size instead of guessing at it.
+
+       build()   measure the markers, fit the viewBox 1:1 to CSS pixels
+                 (so no stroke distortion and no elliptical dots), convert
+                 the points to one smooth Catmull-Rom curve, then find how
+                 far along that curve each station sits.
+       update()  turn scroll position into 0..1 and spend it on
+                 stroke-dashoffset — the line draws as you descend and
+                 un-draws as you come back up.
+
+     Only stroke-dashoffset and two attributes are written per frame, so
+     nothing here triggers layout.
+     ======================================================================= */
+  function spine() {
+    var wrap = document.getElementById('journey');
+    var svg  = document.getElementById('spine');
+    if (!wrap || !svg) return;
+
+    var base  = svg.querySelector('.spine-base');
+    var draw  = svg.querySelector('.spine-draw');
+    var dot   = svg.querySelector('.spine-dot');
+    var halo  = svg.querySelector('.spine-halo');
+    var layer = svg.querySelector('.spine-nodes');
+    var marks = Array.prototype.slice.call(wrap.querySelectorAll('[data-spine-x]'));
+    if (marks.length < 2) return;
+
+    var small = window.matchMedia('(max-width: 860px)');
+    var LEN = 0, stations = [], ready = false;
+
+    function r2(n) { return Math.round(n * 100) / 100; }
+
+    /* Catmull-Rom through the points, emitted as cubic Béziers. With the
+       points ordered top to bottom this stays monotonic vertically, so the
+       line never doubles back on itself. */
+    function curve(p) {
+      if (p.length < 2) return '';
+      var d = 'M' + r2(p[0].x) + ' ' + r2(p[0].y);
+      for (var i = 0; i < p.length - 1; i++) {
+        var p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p[i + 1];
+        d += 'C' + r2(p1.x + (p2.x - p0.x) / 6) + ' ' + r2(p1.y + (p2.y - p0.y) / 6) +
+             ',' + r2(p2.x - (p3.x - p1.x) / 6) + ' ' + r2(p2.y - (p3.y - p1.y) / 6) +
+             ',' + r2(p2.x) + ' ' + r2(p2.y);
+      }
+      return d;
+    }
+
+    function build() {
+      var wr = wrap.getBoundingClientRect();
+      var sy = window.scrollY || window.pageYOffset;
+      var top = wr.top + sy;
+      if (!wr.width || !wr.height) return;
+
+      var isSmall = small.matches;
+      var pts = marks.map(function (el) {
+        var r  = el.getBoundingClientRect();
+        // Horizontal position is a fraction of the CONTENT column, not the
+        // viewport, so the rail keeps its relationship to the type.
+        var host = el.closest('.wrap') || wrap;
+        var hr = host.getBoundingClientRect();
+        var raw = isSmall ? (el.dataset.spineXSm || el.dataset.spineX) : el.dataset.spineX;
+        var f = parseFloat(raw);
+        if (isNaN(f)) f = 0.5;
+        return {
+          x: (hr.left - wr.left) + f * hr.width,
+          y: (r.top + sy - top) + r.height / 2,
+          node: el.hasAttribute('data-spine-node')
+        };
+      }).sort(function (a, b) { return a.y - b.y; });
+
+      svg.setAttribute('viewBox', '0 0 ' + r2(wr.width) + ' ' + r2(wr.height));
+
+      var d = curve(pts);
+      if (!d) return;
+      base.setAttribute('d', d);
+      draw.setAttribute('d', d);
+
+      LEN = draw.getTotalLength();
+      if (!LEN) return;
+      draw.style.strokeDasharray  = LEN;
+      draw.style.strokeDashoffset = LEN;
+
+      // Sample once, then let every station find its own distance in it.
+      var STEPS = 260, sample = [], i;
+      for (i = 0; i <= STEPS; i++) {
+        var q = draw.getPointAtLength(LEN * i / STEPS);
+        sample.push({ x: q.x, y: q.y, l: LEN * i / STEPS });
+      }
+
+      layer.textContent = '';
+      stations = [];
+      pts.forEach(function (p) {
+        if (!p.node) return;
+        var best = 0, bd = Infinity;
+        for (var j = 0; j < sample.length; j++) {
+          var dx = sample[j].x - p.x, dy = sample[j].y - p.y, dd = dx * dx + dy * dy;
+          if (dd < bd) { bd = dd; best = sample[j].l; }
+        }
+        var c = document.createElementNS(SVGNS, 'circle');
+        c.setAttribute('cx', r2(p.x));
+        c.setAttribute('cy', r2(p.y));
+        c.setAttribute('r', '4');
+        c.setAttribute('class', 'spine-node');
+        layer.appendChild(c);
+        stations.push({ el: c, at: best });
+      });
+
+      ready = true;
+      update();
+    }
+
+    function update() {
+      if (!ready || !LEN) return;
+      var r = wrap.getBoundingClientRect();
+
+      // The drawing point sits a little below the middle of the screen, so
+      // the line always reads as arriving just ahead of what you are reading.
+      var focus = window.innerHeight * 0.68;
+      var p = (focus - r.top) / r.height;
+      if (REDUCE) p = 1;
+      p = p < 0 ? 0 : (p > 1 ? 1 : p);
+
+      draw.style.strokeDashoffset = LEN * (1 - p);
+
+      var q = draw.getPointAtLength(LEN * p);
+      var live = !REDUCE && p > 0.004 && p < 0.997;
+      dot.setAttribute('cx', r2(q.x));  dot.setAttribute('cy', r2(q.y));
+      halo.setAttribute('cx', r2(q.x)); halo.setAttribute('cy', r2(q.y));
+      dot.style.opacity  = live ? '1' : '0';
+      halo.style.opacity = live ? '.28' : '0';
+
+      for (var i = 0; i < stations.length; i++) {
+        stations[i].el.classList.toggle('lit', LEN * p >= stations[i].at - 2);
+      }
+    }
+
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { update(); ticking = false; });
+    }
+
+    var t = 0;
+    function rebuild() { clearTimeout(t); t = setTimeout(build, 120); }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', rebuild, { passive: true });
+    small.addEventListener('change', rebuild);
+
+    // The wrapper's height changes as images decode and webfonts swap in;
+    // both would leave the path measured against a page that no longer exists.
+    if ('ResizeObserver' in window) new ResizeObserver(rebuild).observe(wrap);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    window.addEventListener('load', build);
+
+    build();
+  }
+
+  /* ---- How can we help: the cursor-borne preview -------------------------
+     Desktop pointers only. The image eases toward the cursor rather than
+     snapping to it, so it reads as following rather than tracking. */
+  function helpPreview() {
+    var list = document.getElementById('help-list');
+    var box  = document.getElementById('help-preview');
+    if (!list || !box) return;
+    if (REDUCE || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    var imgs = box.querySelectorAll('img');
+    var tx = 0, ty = 0, cx = 0, cy = 0, on = false, raf = 0;
+
+    function loop() {
+      cx += (tx - cx) * 0.14;
+      cy += (ty - cy) * 0.14;
+      box.style.transform = 'translate3d(' + cx.toFixed(1) + 'px,' + cy.toFixed(1) + 'px,0) translate(-50%,-50%)';
+      // Keep easing after the pointer leaves until it has actually settled,
+      // otherwise the image freezes mid-travel as it fades out.
+      if (on || Math.abs(tx - cx) > 0.5 || Math.abs(ty - cy) > 0.5) raf = requestAnimationFrame(loop);
+      else raf = 0;
+    }
+
+    function aim(e, snap) {
+      var r = list.getBoundingClientRect();
+      tx = e.clientX - r.left;
+      ty = e.clientY - r.top;
+      if (snap) { cx = tx; cy = ty; }
+      if (!raf) raf = requestAnimationFrame(loop);
+    }
+
+    list.addEventListener('pointermove', function (e) { aim(e, !raf); });
+
+    Array.prototype.forEach.call(list.querySelectorAll('[data-preview]'), function (item) {
+      item.addEventListener('pointerenter', function (e) {
+        var i = Number(item.dataset.preview) || 0;
+        Array.prototype.forEach.call(imgs, function (im, n) { im.classList.toggle('is-active', n === i); });
+        on = true;
+        // Place it under the cursor BEFORE it becomes visible, or the first
+        // frame of the fade-in shows it wherever it was last left.
+        aim(e, !box.classList.contains('is-on'));
+        box.classList.add('is-on');
+      });
+      item.addEventListener('pointerleave', function () {
+        on = false;
+        box.classList.remove('is-on');
+      });
+    });
+
+    list.addEventListener('pointerleave', function () {
+      on = false;
+      box.classList.remove('is-on');
+    });
+  }
+
+  /* ---- Section 3 hands the choice to section 4 --------------------------
+     Choosing "Plan a visit" or "Get in touch" pre-selects the matching intent
+     in the conversation, so the two sections are one continuous decision
+     rather than two unrelated lists. */
+  function intentLink() {
+    var items = document.querySelectorAll('[data-intent]');
+    Array.prototype.forEach.call(items, function (a) {
+      a.addEventListener('click', function () {
+        var radio = document.querySelector('input[name="intent"][value="' + a.dataset.intent + '"]');
+        if (radio) radio.checked = true;
+      });
+    });
+  }
+
+  /* ---- Inline blanks grow with what is typed ----------------------------
+     Measured against a hidden probe that copies the field's own computed
+     font, so the sentence never reflows unexpectedly. Off below 700px, where
+     the CSS gives each field its own full-width line instead. */
+  function autoGrow() {
+    var fields = document.querySelectorAll('.line-input');
+    if (!fields.length) return;
+
+    var wide = window.matchMedia('(min-width: 701px)');
+    var probe = document.createElement('span');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = 'position:absolute;left:-9999px;top:0;white-space:pre;visibility:hidden';
+    document.body.appendChild(probe);
+
+    function fit(el) {
+      if (!wide.matches) { el.style.width = ''; return; }
+      var cs = getComputedStyle(el);
+      probe.style.font = cs.font;
+      probe.style.fontFamily = cs.fontFamily;
+      probe.style.fontSize = cs.fontSize;
+      probe.style.fontWeight = cs.fontWeight;
+      probe.style.letterSpacing = cs.letterSpacing;
+      probe.textContent = el.value || el.getAttribute('placeholder') || '';
+      var w = probe.getBoundingClientRect().width + 18;
+      el.style.width = Math.max(w, 150) + 'px';
+    }
+
+    Array.prototype.forEach.call(fields, function (el) {
+      fit(el);
+      el.addEventListener('input', function () { fit(el); });
+    });
+    window.addEventListener('resize', function () {
+      Array.prototype.forEach.call(fields, fit);
+    }, { passive: true });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { Array.prototype.forEach.call(fields, fit); });
+    }
+  }
+
+  /* ---- The conversation ------------------------------------------------
+     Validates in place, then swaps the form for the closing beat of the
+     page's story. Nothing is transmitted while the form carries data-demo —
+     see the comment above the markup for wiring a real endpoint. */
+  function conversation() {
+    var section = document.getElementById('conversation');
+    var form    = document.getElementById('conv-form');
+    var done    = document.getElementById('conv-done');
+    if (!section || !form || !done) return;
+
+    var checks = [
+      { el: form.querySelector('#c-name'),    err: 'c-name-error',
+        test: function (v) { return v.length > 1; },
+        msg: 'Please tell us your name.' },
+      { el: form.querySelector('#c-email'),   err: 'c-email-error',
+        test: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); },
+        msg: 'Please enter an email address we can reply to.' },
+      { el: form.querySelector('#c-message'), err: 'c-message-error',
+        test: function (v) { return v.length > 3; },
+        msg: 'Let us know what you would like to ask.' }
+    ];
+
+    function clear(c) {
+      c.el.removeAttribute('aria-invalid');
+      document.getElementById(c.err).textContent = '';
+    }
+
+    checks.forEach(function (c) {
+      if (!c.el) return;
+      c.el.addEventListener('input', function () {
+        if (c.el.getAttribute('aria-invalid') === 'true') clear(c);
+      });
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // A filled honeypot is a bot. Behave exactly as if it worked.
+      var hp = form.querySelector('#c-company');
+      if (hp && hp.value) { section.classList.add('is-sent'); return; }
+
+      var first = null;
+      checks.forEach(function (c) {
+        if (!c.el) return;
+        if (c.test(c.el.value.trim())) { clear(c); return; }
+        c.el.setAttribute('aria-invalid', 'true');
+        document.getElementById(c.err).textContent = c.msg;
+        if (!first) first = c.el;
+      });
+
+      if (first) { first.focus(); return; }
+
+      // ---- Replace this block with a real submit once a backend exists ----
+      // if (!form.hasAttribute('data-demo')) { form.submit(); return; }
+      section.classList.add('is-sent');
+      done.focus();
+      window.dispatchEvent(new Event('resize'));   // the page just got shorter
+    });
+  }
+
+  menu();
+  lang();
+  reveal();
+  arch();
+  spine();
+  helpPreview();
+  intentLink();
+  autoGrow();
+  conversation();
+})();
+</script>
+</body>
+</html>

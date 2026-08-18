@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact V2 — DEO Kairo</title>
+<meta name="description" content="One continuous line travels from Discover DEO to Plan a Visit to Get in Touch, reveals the DEO Kairo building, and finally draws itself into the DEO mark.">
+<meta name="theme-color" content="#FAF7F1">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+<script>document.documentElement.classList.add('js');</script>
+
+<style>
+/* ==========================================================================
+   DESIGN TOKENS — identical to css/style.css, about.html and contact.html
+   ========================================================================== */
+:root {
+  --ink:              #141414;
+  --ink-soft:         #262626;
+  --cream:            #FAF7F1;
+  --cream-soft:       #FFFFFF;
+  --red:              #DB1F26;
+  --red-dark:         #8F1216;
+  --gold:             #FFCE03;
+  --text-on-dark:     #F5F3EF;
+  --text-on-light:    #1A1A1A;
+  --text-muted-dark:  #C9C6C0;
+  --text-muted-light: #55524D;
+  --border-light:     #E7E2D8;
+
+  --sans:  'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --fast: 200ms;
+  --slow: 700ms;
+
+  --container: 1240px;
+  --rail: 0px;         /* how far chapter copy steps off the drawn line */
+}
+
+/* ==========================================================================
+   RESET & BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, p, figure, ul, ol, fieldset { margin: 0; }
+ul, ol { list-style: none; padding: 0; }
+fieldset { border: 0; padding: 0; min-width: 0; }
+legend { padding: 0; }
+img { display: block; max-width: 100%; }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 96px;
+}
+body {
+  font-family: var(--sans);
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+a { color: inherit; text-decoration: none; }
+
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 3px; }
+.v2-close :focus-visible, .site-footer :focus-visible { outline-color: var(--gold); }
+
+.skip-link {
+  position: absolute; top: -100px; left: 16px; z-index: 999;
+  background: var(--ink); color: var(--text-on-dark);
+  padding: 14px 22px; font-weight: 700; border-radius: 0 0 8px 8px;
+  transition: top var(--fast) var(--ease);
+}
+.skip-link:focus { top: 0; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* ==========================================================================
+   HEADER — unchanged from the rest of the site
+   ========================================================================== */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(250, 247, 241, 0.9);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border-light);
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 76px; gap: 32px;
+}
+.brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--serif); font-weight: 600; font-size: 1.2rem;
+  color: var(--ink); white-space: nowrap;
+}
+.brand-mark { height: 32px; width: auto; flex: none; }
+
+.main-nav { display: flex; gap: 32px; }
+.main-nav a {
+  position: relative; padding-bottom: 3px;
+  font-weight: 500; font-size: 0.95rem; color: var(--text-on-light);
+}
+.main-nav a::after {
+  content: ""; position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 2px; background: var(--red);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform 320ms var(--ease);
+}
+.main-nav a:hover::after, .main-nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.main-nav a:hover { color: var(--red); }
+.main-nav a[aria-current="page"] { color: var(--red); }
+.main-nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+.header-actions { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.lang-toggle {
+  background: transparent; border: 1.5px solid var(--ink); border-radius: 999px;
+  padding: 8px 14px; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.03em;
+  cursor: pointer; color: var(--ink);
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.lang-toggle:hover { background: var(--ink); color: var(--text-on-dark); }
+.lang-current { text-decoration: underline; }
+.lang-other { color: var(--text-muted-light); }
+
+.menu-toggle {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: none; cursor: pointer; padding: 8px; margin-left: 12px;
+}
+.menu-toggle span { width: 22px; height: 2px; background: var(--ink); }
+
+/* ---- TEMPORARY: version switcher, for comparing V1 against V2 ------------
+   Deliberately a floating chip rather than a header item, and deliberately
+   OUTSIDE <header>: .site-header carries a backdrop-filter, which makes it
+   the containing block for any position:fixed descendant — a switcher placed
+   inside it would anchor to the header instead of the viewport. Delete this
+   rule and its markup block together when a version has been chosen. */
+.ver-switch {
+  position: fixed;
+  left: clamp(14px, 2vw, 24px);
+  bottom: clamp(14px, 2vw, 24px);
+  z-index: 60;
+  display: inline-flex; align-items: stretch;
+  background: var(--cream-soft);
+  border: 1.5px solid var(--ink); border-radius: 999px; overflow: hidden;
+  box-shadow: 0 14px 34px -16px rgba(20, 20, 20, .6);
+  font-size: .74rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+}
+.ver-switch a { padding: 8px 13px; color: var(--ink); transition: background var(--fast) var(--ease), color var(--fast) var(--ease); }
+.ver-switch a + a { border-left: 1.5px solid var(--ink); }
+.ver-switch a:hover { background: rgba(20, 20, 20, .08); }
+.ver-switch a[aria-current="page"] { background: var(--ink); color: var(--text-on-dark); }
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 19px 42px; border: none; border-radius: 999px;
+  background: var(--red); color: #fff;
+  font: inherit; font-size: 1.02rem; font-weight: 700; letter-spacing: .01em;
+  cursor: pointer; position: relative; overflow: hidden;
+  transition: background var(--fast) var(--ease), transform var(--fast) var(--ease),
+              box-shadow var(--fast) var(--ease);
+}
+.btn:hover {
+  background: var(--red-dark); transform: translateY(-3px);
+  box-shadow: 0 18px 34px -18px rgba(219, 31, 38, .95);
+}
+.btn:active { transform: translateY(0) scale(.985); }
+.btn .arw { transition: transform var(--fast) var(--ease); }
+.btn:hover .arw { transform: translateX(5px); }
+
+.link-arrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  margin-top: 26px;
+  font-size: .76rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink);
+  transition: color var(--fast) var(--ease);
+}
+.link-arrow .arw { display: inline-block; transition: transform 380ms var(--ease); }
+.link-arrow:hover { color: var(--red); }
+.link-arrow:hover .arw { transform: translateX(8px); }
+
+/* ==========================================================================
+   REVEALS
+   Two kinds only, so nothing competes with the line for attention.
+   ========================================================================== */
+.js [data-reveal] {
+  opacity: 0;
+  transition: opacity var(--slow) var(--ease), transform var(--slow) var(--ease);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.js [data-reveal="up"] { transform: translateY(20px); }
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ==========================================================================
+   THE JOURNEY CANVAS
+   --------------------------------------------------------------------------
+   #v2-journey is the coordinate space for ONE <svg> that spans the whole
+   experience. Every section inside is transparent and sits above the svg, so
+   the line runs continuously behind the type from the first screen to the
+   last, and is never cut in half by a section background.
+   ========================================================================== */
+#v2-journey {
+  position: relative;
+  background:
+    radial-gradient(ellipse 58% 30% at 50% 1%, rgba(255, 206, 3, .12), transparent 68%),
+    linear-gradient(180deg, var(--cream) 0%, var(--cream-soft) 34%, var(--cream) 62%, var(--cream-soft) 100%);
+}
+#v2-journey > section { position: relative; z-index: 1; background: none; }
+
+.v2-svg {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  z-index: 0; overflow: visible; pointer-events: none;
+}
+/* The road ahead: only ever the route, never the logo — the mark must be
+   built by the line itself, not traced over a visible template. */
+.v2-ghost { fill: none; stroke: rgba(20, 20, 20, .10); stroke-width: 1; }
+
+/* The line. One stroke, one gradient: DEO red for the journey, resolving to
+   the mark's ink as it starts to draw the logo. */
+.v2-line {
+  fill: none;
+  stroke: url(#v2-grad);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.v2-logo-red  { fill: none; stroke: var(--red);  stroke-width: 1.6; stroke-linecap: round; }
+.v2-logo-gold { fill: none; stroke: var(--gold); stroke-width: 1.6; stroke-linecap: round; }
+
+.v2-dot { fill: var(--red); opacity: 0; transition: opacity 400ms var(--ease); }
+.v2-halo { fill: none; stroke: var(--red); stroke-width: 1; opacity: 0; transition: opacity 400ms var(--ease); }
+
+.v2-node {
+  fill: var(--cream); stroke: rgba(20, 20, 20, .22); stroke-width: 1;
+  transition: fill 500ms var(--ease), stroke 500ms var(--ease);
+}
+.v2-node.lit { fill: var(--red); stroke: var(--red); }
+
+/* Zero-size markers: they contribute nothing to layout and only tell the
+   controller where the line should pass. */
+.v2-a { display: block; width: 0; height: 0; }
+.v2-a[data-abs] { position: absolute; left: 0; }
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+.v2-hero {
+  display: grid; place-items: center; text-align: center;
+  padding: clamp(76px, 13vh, 150px) 0 clamp(56px, 10vh, 120px);
+}
+.v2-hero-inner { max-width: 880px; margin-inline: auto; }
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 12px; margin-bottom: 28px;
+  font-size: .72rem; font-weight: 800; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+.eyebrow::before, .eyebrow::after { content: ""; width: 28px; height: 1px; background: var(--red); opacity: .5; }
+.v2-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.8rem, 10vw, 6.6rem);
+  font-weight: 400; line-height: .98; letter-spacing: -.035em;
+}
+.v2-hero p {
+  max-width: 36ch; margin: clamp(24px, 4vh, 38px) auto 0;
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(1.1rem, 2.1vw, 1.55rem); line-height: 1.45;
+  color: var(--text-muted-light);
+}
+
+/* ==========================================================================
+   CHAPTERS 01 / 02 / 03
+   Editorial blocks that the line threads through, alternating sides so the
+   route has a reason to move rather than running straight down.
+   ========================================================================== */
+.v2-chapter { padding: clamp(66px, 11vh, 132px) 0; }
+.v2-chapter-inner { max-width: 660px; padding-left: var(--rail); }
+.v2-chapter--right .v2-chapter-inner { margin-left: auto; padding-left: 0; padding-right: var(--rail); text-align: right; }
+.v2-chapter--right .link-arrow { flex-direction: row-reverse; }
+
+.v2-num {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(.9rem, 1.3vw, 1.05rem);
+  letter-spacing: .1em;
+  color: var(--red);
+  margin-bottom: 14px;
+}
+.v2-chapter h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 4.6vw, 3.4rem);
+  font-weight: 400; line-height: 1.06; letter-spacing: -.025em;
+  text-wrap: balance;
+}
+.v2-chapter p {
+  margin-top: 20px;
+  font-size: clamp(1rem, 1.4vw, 1.12rem);
+  color: var(--text-muted-light);
+  max-width: 52ch;
+}
+.v2-chapter--right p { margin-left: auto; }
+
+/* ==========================================================================
+   THE BUILDING — painted into view by the line itself
+   --------------------------------------------------------------------------
+   The photograph lives INSIDE the page-spanning svg and is masked by a very
+   thick copy of the same path. Because the mask stroke shares the line's
+   dash offset, the picture can only exist where the line has already been:
+   the line is literally the brush. Nothing fades.
+   ========================================================================== */
+.v2-canvas-wrap { padding: clamp(20px, 4vh, 56px) 0 clamp(40px, 7vh, 92px); }
+.v2-canvas {
+  position: relative;
+  height: clamp(420px, 78vh, 760px);
+}
+.v2-canvas-label {
+  position: absolute; left: 0; bottom: -34px; z-index: 2;
+  font-size: .68rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+/* Without JS the svg <image> is never positioned, so show a plain picture. */
+.v2-canvas-fallback { display: none; }
+html:not(.js) .v2-canvas { height: auto; }
+html:not(.js) .v2-canvas-fallback { display: block; }
+html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
+
+/* ==========================================================================
+   THE CONVERSATION (inside chapter 03)
+   ========================================================================== */
+.v2-form { margin-top: clamp(34px, 5vh, 56px); max-width: 560px; position: relative; }
+.v2-field + .v2-field { margin-top: 26px; }
+.v2-field label {
+  display: block; margin-bottom: 8px;
+  font-size: .72rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+.v2-field input, .v2-field textarea {
+  display: block; width: 100%;
+  padding: 8px 2px 12px;
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  line-height: 1.4; color: var(--ink);
+  background: transparent; border: 0;
+  border-bottom: 1px solid rgba(20, 20, 20, .3);
+  border-radius: 0; outline: none;
+  transition: border-color var(--fast) var(--ease);
+}
+.v2-field textarea { resize: vertical; min-height: 6.5rem; }
+.v2-field input::placeholder, .v2-field textarea::placeholder {
+  color: rgba(20, 20, 20, .22); font-style: italic;
+}
+.v2-field input:focus, .v2-field textarea:focus { border-color: var(--red); }
+.v2-field input[aria-invalid="true"], .v2-field textarea[aria-invalid="true"] {
+  border-color: var(--red); border-bottom-width: 2px;
+}
+.v2-error {
+  display: block; margin-top: 8px;
+  font-size: .84rem; font-weight: 600; color: var(--red-dark); min-height: 1.1em;
+}
+.v2-send { margin-top: clamp(28px, 4vh, 42px); }
+.v2-note { margin-top: 18px; font-size: .88rem; color: var(--text-muted-light); }
+
+.v2-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+.v2-done { display: none; margin-top: clamp(34px, 5vh, 56px); }
+.v2-done b {
+  display: block; font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.6rem, 3.6vw, 2.4rem); line-height: 1.12; margin-bottom: 12px;
+}
+.v2-done p { color: var(--text-muted-light); max-width: 44ch; }
+.is-sent .v2-form { display: none; }
+.is-sent .v2-done { display: block; }
+
+/* ==========================================================================
+   CONTACT DETAILS — a quiet editorial row before the finale
+   ========================================================================== */
+.v2-details { padding: clamp(50px, 8vh, 96px) 0 clamp(40px, 7vh, 80px); }
+.v2-details-grid {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(24px, 4vw, 60px);
+  border-top: 1px solid var(--border-light);
+  padding-top: clamp(28px, 4vw, 44px);
+  padding-left: var(--rail);
+}
+.v2-details h3 {
+  font-size: .7rem; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted-light); margin: 0 0 14px;
+}
+.v2-details p, .v2-details a {
+  font-family: var(--serif); font-size: clamp(1.05rem, 1.7vw, 1.3rem); line-height: 1.45;
+  color: var(--ink);
+}
+.v2-details a { position: relative; display: inline-block; }
+.v2-details a::after {
+  content: ""; position: absolute; left: 0; bottom: 1px; width: 100%; height: 1px;
+  background: var(--red); transform: scaleX(0); transform-origin: right;
+  transition: transform 380ms var(--ease);
+}
+.v2-details a:hover { color: var(--red); }
+.v2-details a:hover::after, .v2-details a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+
+/* ==========================================================================
+   THE MARK — where the line closes into the DEO logo
+   --------------------------------------------------------------------------
+   No element lives here. The block is empty space whose only job is to give
+   the lemniscate room and to give the scroll enough distance to draw it.
+   ========================================================================== */
+.v2-mark {
+  padding: clamp(40px, 8vh, 90px) 0 clamp(70px, 12vh, 150px);
+}
+.v2-mark-stage {
+  position: relative;
+  height: clamp(210px, 30vh, 330px);
+}
+.v2-mark-caption {
+  margin-top: clamp(34px, 5vh, 60px);
+  text-align: center;
+  font-size: .72rem; font-weight: 800; letter-spacing: .24em; text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+
+/* ==========================================================================
+   CLOSING
+   ========================================================================== */
+.v2-close {
+  position: relative;
+  background: var(--ink); color: var(--text-on-dark);
+  padding: clamp(88px, 15vh, 180px) 0 clamp(80px, 13vh, 160px);
+  text-align: center; overflow: hidden;
+}
+.v2-close::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 60% 56% at 50% 0%, rgba(219, 31, 38, .17), transparent 64%);
+}
+.v2-close-inner { position: relative; z-index: 2; max-width: 900px; margin-inline: auto; }
+.v2-close h2 {
+  font-family: var(--serif);
+  font-size: clamp(2rem, 5.6vw, 4.2rem);
+  font-weight: 400; line-height: 1.07; letter-spacing: -.03em;
+  text-wrap: balance; margin-bottom: clamp(36px, 6vh, 58px);
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.site-footer {
+  position: relative; background: var(--cream-soft); color: var(--ink);
+  padding-block: clamp(52px, 7vw, 84px) 30px; border-top: 1px solid var(--border-light);
+}
+.site-footer::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, var(--red), var(--gold) 60%, var(--red));
+}
+.footer-grid {
+  display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 64px);
+  padding-bottom: clamp(28px, 4vw, 44px);
+  border-bottom: 1px solid var(--border-light);
+}
+.footer-brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.footer-brand-row img { height: 32px; width: auto; }
+.footer-brand-row span { font-weight: 800; font-size: 1.15rem; }
+.footer-grid p { color: var(--text-muted-light); font-size: .95rem; max-width: 40ch; }
+.footer-col h3 {
+  font-size: .7rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--text-muted-light); margin: 0 0 16px;
+}
+.footer-col ul { display: grid; gap: 10px; }
+.footer-col a, .footer-col li { color: var(--text-muted-light); font-size: .95rem; line-height: 1.5; }
+.footer-col a:hover { color: var(--red); }
+.footer-base {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 14px; margin-top: clamp(20px, 3vw, 28px);
+  font-size: .8rem; color: var(--text-muted-light);
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 940px) {
+  .v2-chapter--right .v2-chapter-inner { text-align: left; margin-left: 0; padding-left: var(--rail); padding-right: 0; }
+  .v2-chapter--right .link-arrow { flex-direction: row; }
+  .v2-chapter--right p { margin-left: 0; }
+}
+
+@media (max-width: 860px) {
+  .menu-toggle { display: flex; }
+  .main-nav {
+    position: absolute; top: 76px; left: 0; right: 0;
+    background: var(--cream-soft); flex-direction: column;
+    padding: 20px 24px; gap: 18px;
+    border-bottom: 1px solid var(--border-light);
+    max-height: 0; overflow: hidden; visibility: hidden;
+    transition: max-height .25s ease;
+  }
+  .js .main-nav.open { max-height: 340px; visibility: visible; }
+
+  /* Mobile keeps its own rail so the line never runs under the type */
+  :root { --rail: 26px; }
+
+  .v2-canvas { height: clamp(300px, 52vh, 460px); }
+  .v2-details-grid { grid-template-columns: 1fr; gap: 28px; }
+  .v2-details-grid > div + div { border-top: 1px solid var(--border-light); padding-top: 28px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 560px) {
+  .header-inner { gap: 14px; }
+  /* Keeps the eyebrow on one line between its two rules */
+  .eyebrow { font-size: .66rem; letter-spacing: .14em; }
+  .eyebrow::before, .eyebrow::after { width: 18px; }
+  .v2-hero h1 { font-size: clamp(2.5rem, 14vw, 3.6rem); }
+  .v2-mark-stage { height: clamp(150px, 24vh, 220px); }
+  .footer-grid { grid-template-columns: 1fr; }
+  .v2-close .btn, .v2-send .btn { width: 100%; }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   The line is drawn complete, the building is fully revealed, the mark is
+   already closed — the same composition, arrived at without movement.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important; transition-delay: 0ms !important;
+  }
+  .js [data-reveal], .js [data-reveal].is-visible { opacity: 1 !important; transform: none !important; }
+  .v2-dot, .v2-halo { display: none; }
+}
+
+@media (forced-colors: active) {
+  .v2-ghost, .v2-line, .v2-logo-red, .v2-logo-gold { stroke: CanvasText; }
+  .v2-field input, .v2-field textarea { border-bottom-color: CanvasText; }
+}
+</style>
+</head>
+
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<!-- TEMPORARY: side-by-side comparison switcher. Delete this block and the
+     .ver-switch rule in the stylesheet once a version has been chosen. -->
+<nav class="ver-switch" aria-label="Contact page version">
+  <a href="contact.html">V1</a>
+  <a href="contact-v2.html" aria-current="page">V2</a>
+</nav>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/deo-logo.png" alt="DEO Kairo" class="brand-mark" width="68" height="48">
+      <span data-en="DEO Kairo" data-de="DEO Kairo">DEO Kairo</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="index.html#pillars" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="index.html#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="index.html#community" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
+      <a href="contact-v2.html" aria-current="page" data-en="Contact" data-de="Kontakt">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
+        <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
+      </button>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+      <span class="sr-only">Menu</span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <div id="v2-journey">
+
+    <svg class="v2-svg" id="v2-svg" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+      <defs>
+        <!-- DEO red for the journey, resolving to the mark's ink exactly where
+             the line stops travelling and starts drawing the logo. Both stops
+             are positioned from JS once the page height is known. -->
+        <linearGradient id="v2-grad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000">
+          <stop offset="0" stop-color="#DB1F26"></stop>
+          <stop id="v2-stop-a" offset="0.9" stop-color="#DB1F26"></stop>
+          <stop id="v2-stop-b" offset="0.97" stop-color="#141414"></stop>
+          <stop offset="1" stop-color="#141414"></stop>
+        </linearGradient>
+
+        <!-- The brush. Same path, same dash offset as the visible line, just
+             enormously thicker — so the photograph can only appear where the
+             line has already travelled. -->
+        <mask id="v2-mask">
+          <path id="v2-brush" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"></path>
+        </mask>
+      </defs>
+
+      <image id="v2-photo" mask="url(#v2-mask)" preserveAspectRatio="xMidYMid slice"
+             href="assets/deo-building.jpg" x="0" y="0" width="0" height="0"></image>
+
+      <path class="v2-ghost" id="v2-ghost" d=""></path>
+      <path class="v2-line"  id="v2-line"  d=""></path>
+      <path class="v2-logo-red"  id="v2-logo-red"  d=""></path>
+      <path class="v2-logo-gold" id="v2-logo-gold" d=""></path>
+      <g id="v2-nodes"></g>
+      <circle class="v2-halo" id="v2-halo" cx="0" cy="0" r="9"></circle>
+      <circle class="v2-dot"  id="v2-dot"  cx="0" cy="0" r="4.5"></circle>
+    </svg>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="v2-hero" id="v2-hero">
+      <div class="wrap v2-hero-inner">
+        <p class="eyebrow" data-reveal style="--i:0"
+           data-en="Contact · DEO Kairo" data-de="Kontakt · DEO Kairo">Contact · DEO Kairo</p>
+        <h1 data-reveal style="--i:1" data-en="Come closer." data-de="Kommen Sie näher.">Come closer.</h1>
+        <p data-reveal style="--i:2"
+           data-en="One line, from here to our front door."
+           data-de="Eine Linie, von hier bis zu unserer Tür.">One line, from here to our front door.</p>
+      </div>
+      <div class="wrap"><div class="v2-a" data-x="0.5" data-x-sm="0.5" data-node aria-hidden="true"></div></div>
+    </section>
+
+    <!-- ===================== 01 — DISCOVER DEO ===================== -->
+    <section class="v2-chapter" id="discover">
+      <div class="wrap">
+        <div class="v2-a" data-x="0.02" data-x-sm="0.035" data-node aria-hidden="true"></div>
+        <div class="v2-chapter-inner">
+          <span class="v2-num" data-reveal>01</span>
+          <h2 data-reveal style="--i:1"
+              data-en="Discover DEO" data-de="DEO entdecken">Discover DEO</h2>
+          <p data-reveal style="--i:2"
+             data-en="A German-Egyptian school that has been teaching in Cairo since 1873 — one campus where two educational traditions share the same day, from Kindergarten through the Abitur."
+             data-de="Eine deutsch-ägyptische Schule, die seit 1873 in Kairo unterrichtet — ein Campus, auf dem zwei Bildungstraditionen denselben Tag teilen, vom Kindergarten bis zum Abitur.">
+            A German-Egyptian school that has been teaching in Cairo since 1873 — one campus
+            where two educational traditions share the same day, from Kindergarten through
+            the Abitur.
+          </p>
+          <a class="link-arrow" href="about.html" data-reveal style="--i:3">
+            <span data-en="Read our story" data-de="Unsere Geschichte lesen">Read our story</span>
+            <span class="arw" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+        <div class="v2-a" data-x="0.02" data-x-sm="0.035" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===================== THE BUILDING ===================== -->
+    <section class="v2-canvas-wrap" id="v2-canvas-section">
+      <div class="wrap">
+        <div class="v2-canvas" id="v2-canvas">
+          <!-- Six sweeps. The line crosses the frame, and the picture exists
+               only in its wake. -->
+          <div class="v2-a" data-abs style="top:4%"  data-x="0.07" data-x-sm="0.07" aria-hidden="true"></div>
+          <div class="v2-a" data-abs style="top:22%" data-x="0.93" data-x-sm="0.93" aria-hidden="true"></div>
+          <div class="v2-a" data-abs style="top:40%" data-x="0.07" data-x-sm="0.07" aria-hidden="true"></div>
+          <div class="v2-a" data-abs style="top:58%" data-x="0.93" data-x-sm="0.93" aria-hidden="true"></div>
+          <div class="v2-a" data-abs style="top:76%" data-x="0.07" data-x-sm="0.07" aria-hidden="true"></div>
+          <div class="v2-a" data-abs style="top:96%" data-x="0.93" data-x-sm="0.93" aria-hidden="true"></div>
+
+          <p class="v2-canvas-label" data-reveal
+             data-en="6 El Dokki St., Dokki — Cairo"
+             data-de="El-Dokki-Straße 6, Dokki — Kairo">6 El Dokki St., Dokki — Cairo</p>
+
+          <figure class="v2-canvas-fallback">
+            <img src="assets/deo-building.jpg"
+                 alt="The DEO Kairo school building, with the German, European and Egyptian flags flying at the entrance"
+                 width="3072" height="2048">
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 02 — PLAN A VISIT ===================== -->
+    <section class="v2-chapter v2-chapter--right" id="visit">
+      <div class="wrap">
+        <div class="v2-a" data-x="0.98" data-x-sm="0.035" data-node aria-hidden="true"></div>
+        <div class="v2-chapter-inner">
+          <span class="v2-num" data-reveal>02</span>
+          <h2 data-reveal style="--i:1"
+              data-en="Plan a visit" data-de="Einen Besuch planen">Plan a visit</h2>
+          <p data-reveal style="--i:2"
+             data-en="The campus explains itself better than any brochure can. Tours run on weekday mornings; tell us which one suits you and we will confirm a time."
+             data-de="Der Campus erklärt sich besser als jede Broschüre. Führungen finden werktags vormittags statt; sagen Sie uns, welcher Termin passt, und wir bestätigen ihn.">
+            The campus explains itself better than any brochure can. Tours run on weekday
+            mornings; tell us which one suits you and we will confirm a time.
+          </p>
+          <a class="link-arrow" href="#talk" data-reveal style="--i:3">
+            <span data-en="Choose a morning" data-de="Einen Vormittag wählen">Choose a morning</span>
+            <span class="arw" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+        <div class="v2-a" data-x="0.98" data-x-sm="0.035" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===================== 03 — GET IN TOUCH ===================== -->
+    <section class="v2-chapter" id="talk">
+      <div class="wrap">
+        <div class="v2-a" data-x="0.02" data-x-sm="0.035" data-node aria-hidden="true"></div>
+        <div class="v2-chapter-inner">
+          <span class="v2-num" data-reveal>03</span>
+          <h2 data-reveal style="--i:1"
+              data-en="Get in touch" data-de="Kontakt aufnehmen">Get in touch</h2>
+          <p data-reveal style="--i:2"
+             data-en="Write to us and someone from the school will answer within one working day."
+             data-de="Schreiben Sie uns, und jemand aus der Schule antwortet innerhalb eines Arbeitstages.">
+            Write to us and someone from the school will answer within one working day.
+          </p>
+
+          <!--
+            BACKEND INTEGRATION
+            Set action="/your-endpoint" and remove data-demo. Field names:
+            name, email, message, _page, plus the honeypot "company", which
+            must be empty for a submission to be genuine.
+          -->
+          <form class="v2-form" id="v2-form" method="post" action="#" novalidate data-demo data-reveal style="--i:3">
+            <input type="hidden" name="_page" value="contact-v2">
+            <div class="v2-hp" aria-hidden="true">
+              <label for="v2-company">Company</label>
+              <input type="text" id="v2-company" name="company" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="v2-field">
+              <label for="v2-name" data-en="Your name" data-de="Ihr Name">Your name</label>
+              <input type="text" id="v2-name" name="name" autocomplete="name" required
+                     aria-describedby="v2-name-error">
+              <span class="v2-error" id="v2-name-error" role="alert"></span>
+            </div>
+
+            <div class="v2-field">
+              <label for="v2-email" data-en="Email" data-de="E-Mail">Email</label>
+              <input type="email" id="v2-email" name="email" autocomplete="email" inputmode="email" required
+                     aria-describedby="v2-email-error">
+              <span class="v2-error" id="v2-email-error" role="alert"></span>
+            </div>
+
+            <div class="v2-field">
+              <label for="v2-message" data-en="What would you like to know?"
+                     data-de="Was möchten Sie wissen?">What would you like to know?</label>
+              <textarea id="v2-message" name="message" rows="4" required
+                        aria-describedby="v2-message-error"></textarea>
+              <span class="v2-error" id="v2-message-error" role="alert"></span>
+            </div>
+
+            <div class="v2-send">
+              <button type="submit" class="btn">
+                <span data-en="Send it to DEO" data-de="An die DEO senden">Send it to DEO</span>
+                <span class="arw" aria-hidden="true">&rarr;</span>
+              </button>
+              <p class="v2-note"
+                 data-en="We answer within one working day."
+                 data-de="Wir antworten innerhalb eines Arbeitstages.">We answer within one working day.</p>
+            </div>
+          </form>
+
+          <div class="v2-done" id="v2-done" role="status" tabindex="-1">
+            <b data-en="We'll take it from here." data-de="Den Rest übernehmen wir.">We'll take it from here.</b>
+            <p data-en="Thank you — your message is on its way."
+               data-de="Vielen Dank — Ihre Nachricht ist unterwegs.">Thank you — your message is on its way.</p>
+          </div>
+        </div>
+        <div class="v2-a" data-x="0.02" data-x-sm="0.035" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- ===================== DETAILS ===================== -->
+    <section class="v2-details" id="v2-details">
+      <div class="wrap">
+        <div class="v2-a" data-x="0.02" data-x-sm="0.035" aria-hidden="true"></div>
+        <div class="v2-details-grid">
+          <div data-reveal="up" style="--i:0">
+            <h3 data-en="Find us" data-de="Finden Sie uns">Find us</h3>
+            <p>DEO Kairo<br>6 El Dokki St., Dokki<br>12612 Cairo, Egypt</p>
+          </div>
+          <div data-reveal="up" style="--i:1">
+            <h3 data-en="Talk to us" data-de="Sprechen Sie mit uns">Talk to us</h3>
+            <p><a href="tel:+20237481475">+20 (0)2 3748 1475</a></p>
+          </div>
+          <div data-reveal="up" style="--i:2">
+            <h3 data-en="Write to us" data-de="Schreiben Sie uns">Write to us</h3>
+            <p><a href="mailto:info@deokairo.de">info@deokairo.de</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== THE MARK ===================== -->
+    <section class="v2-mark" id="v2-mark">
+      <div class="wrap">
+        <!-- Empty on purpose. The lemniscate is drawn into this space by the
+             same path that has been travelling since the first screen — the
+             centre marker below is where it crosses itself. -->
+        <div class="v2-mark-stage" id="v2-mark-stage">
+          <div class="v2-a" data-abs style="top:50%" data-x="0.5" data-x-sm="0.5" data-logo aria-hidden="true"></div>
+        </div>
+        <p class="v2-mark-caption" data-reveal
+           data-en="Deutsche Evangelische Oberschule Kairo · Seit 1873"
+           data-de="Deutsche Evangelische Oberschule Kairo · Seit 1873">Deutsche Evangelische Oberschule Kairo · Seit 1873</p>
+      </div>
+    </section>
+
+  </div><!-- /#v2-journey -->
+
+  <!-- ===================== CLOSING ===================== -->
+  <section class="v2-close" id="v2-close">
+    <div class="wrap v2-close-inner">
+      <h2 data-reveal
+          data-en="The best way to understand DEO&lt;br&gt;is to step inside it."
+          data-de="Am besten versteht man die DEO,&lt;br&gt;indem man sie betritt.">The best way to understand DEO<br>is to step inside it.</h2>
+      <a class="btn" href="#talk" data-reveal style="--i:1">
+        <span data-en="Plan your visit" data-de="Besuch planen">Plan your visit</span>
+        <span class="arw" aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-row">
+          <img src="assets/deo-logo.png" alt="" width="68" height="48">
+          <span>DEO Kairo</span>
+        </div>
+        <p>
+          Deutsche Evangelische Oberschule Kairo &mdash; a German-Egyptian encounter
+          school, teaching from Kindergarten through the Abitur.
+        </p>
+      </div>
+      <nav class="footer-col" aria-label="Pages">
+        <h3>Pages</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact V1</a></li>
+          <li><a href="contact-v2.html">Contact V2</a></li>
+        </ul>
+      </nav>
+      <div class="footer-col">
+        <h3>Visit</h3>
+        <ul>
+          <li>6, El Dokki St., Dokki</li>
+          <li>12612 Cairo, Egypt</li>
+          <li><a href="tel:+20237481475">+20 (0)2 3748 1475</a></li>
+          <li><a href="mailto:info@deokairo.de">info@deokairo.de</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>&copy; 2026 DEO Kairo &middot; Built as a student web project</span>
+      <span>Manrope &amp; Newsreader</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var SVGNS  = 'http://www.w3.org/2000/svg';
+
+  /* ---- Header controls, identical to the rest of the site ---------------- */
+  function menu() {
+    var b = document.getElementById('menu-toggle'), n = document.getElementById('main-nav');
+    if (!b || !n) return;
+    function set(open) { n.classList.toggle('open', open); b.setAttribute('aria-expanded', String(open)); }
+    b.addEventListener('click', function () { set(b.getAttribute('aria-expanded') !== 'true'); });
+    n.addEventListener('click', function (e) { if (e.target.closest('a')) set(false); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && b.getAttribute('aria-expanded') === 'true') { set(false); b.focus(); }
+    });
+    window.matchMedia('(min-width:861px)').addEventListener('change', function (e) { if (e.matches) set(false); });
+  }
+
+  function lang() {
+    var btn = document.getElementById('lang-toggle');
+    if (!btn) return;
+    var nodes = document.querySelectorAll('[data-en]');
+    var cur = 'en';
+    btn.addEventListener('click', function () {
+      cur = cur === 'en' ? 'de' : 'en';
+      Array.prototype.forEach.call(nodes, function (el) {
+        var v = el.getAttribute('data-' + cur);
+        if (v !== null) el.innerHTML = v;
+      });
+      document.documentElement.setAttribute('lang', cur);
+      btn.querySelector('.lang-current').textContent = cur.toUpperCase();
+      btn.querySelector('.lang-other').textContent = cur === 'en' ? 'DE' : 'EN';
+      btn.setAttribute('aria-label', cur === 'en'
+        ? 'Switch language to German' : 'Zur englischen Sprache wechseln');
+      window.dispatchEvent(new Event('resize'));   // copy length changed the page
+    });
+  }
+
+  function reveal() {
+    var items = document.querySelectorAll('[data-reveal]');
+    if (!items.length) return;
+    if (REDUCE || !('IntersectionObserver' in window)) {
+      Array.prototype.forEach.call(items, function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('is-visible');
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+    Array.prototype.forEach.call(items, function (el) { io.observe(el); });
+  }
+
+  /* =======================================================================
+     THE LINE
+     -----------------------------------------------------------------------
+     One <path> carries the entire experience:
+
+       route   measured from marker elements placed in the layout, so the
+               line follows the real composition at any viewport size
+       brush   the same path stroked hundreds of pixels thick inside an SVG
+               <mask>, sharing the route's dash offset — which is why the
+               building can only appear where the line has already been
+       mark    the route's final gesture is a lemniscate, appended to the
+               SAME d attribute. The DEO logo is therefore not revealed, not
+               faded in and not swapped for an image: it is the last stretch
+               of the one line, drawn by the same stroke-dashoffset.
+
+     The mark's two companion strokes (red, gold) are separate short paths
+     that draw during the last part of the same scroll, reproducing how the
+     real logo's black and red strokes swap sides as they cross.
+     ======================================================================= */
+  function line() {
+    var wrap  = document.getElementById('v2-journey');
+    var svg   = document.getElementById('v2-svg');
+    if (!wrap || !svg) return;
+
+    var ghost = document.getElementById('v2-ghost');
+    var main  = document.getElementById('v2-line');
+    var brush = document.getElementById('v2-brush');
+    var lRed  = document.getElementById('v2-logo-red');
+    var lGold = document.getElementById('v2-logo-gold');
+    var photo = document.getElementById('v2-photo');
+    var dot   = document.getElementById('v2-dot');
+    var halo  = document.getElementById('v2-halo');
+    var nodeG = document.getElementById('v2-nodes');
+    var grad  = document.getElementById('v2-grad');
+    var stopA = document.getElementById('v2-stop-a');
+    var stopB = document.getElementById('v2-stop-b');
+    var canvas = document.getElementById('v2-canvas');
+
+    var marks = Array.prototype.slice.call(wrap.querySelectorAll('[data-x]'));
+    if (marks.length < 2) return;
+
+    var small = window.matchMedia('(max-width: 860px)');
+    var LEN = 0, ROUTE_LEN = 0, RED_LEN = 0, GOLD_LEN = 0;
+    var stations = [], ready = false;
+    /* Scroll window the drawing is spent over. `endScroll` is set so the mark
+       is finished at the moment it sits centred in the viewport — otherwise
+       the last loop would still be drawing after the logo had scrolled up
+       under the header. SPLIT is the share of that window given to the route,
+       leaving the rest for the mark. */
+    var startScroll = 0, endScroll = 1, SPLIT = 0.85;
+
+    function r2(n) { return Math.round(n * 100) / 100; }
+    function clamp01(n) { return n < 0 ? 0 : (n > 1 ? 1 : n); }
+
+    /* ---- The DEO mark -------------------------------------------------
+       A lemniscate: r = a·cos(t)/(1+sin²t), the one curve that is a single
+       continuous stroke crossing itself exactly once — which is what the DEO
+       logo is. `mod` reproduces the logo's defining detail: the black stroke
+       runs OUTSIDE the right loop and INSIDE the left one, and the red does
+       the opposite, the two swapping as they pass through the crossing.
+       Because the modulation is driven by cos(t), it vanishes at the crossing
+       (cos = 0), so every stroke meets exactly at the centre point. */
+    function lemniscate(cx, cy, a, opt) {
+      var pts = [], i, t, s, den, x, y;
+      var steps = opt.steps || 240;
+      var yScale = 1.6;                  // rounds the lobes to the logo's 1.77 aspect
+      for (i = 0; i <= steps; i++) {
+        t = opt.t0 + (opt.t1 - opt.t0) * (i / steps);
+        s = (opt.fixed != null) ? opt.fixed : (1 + (opt.mod || 0) * 0.095 * Math.cos(t));
+        den = 1 + Math.sin(t) * Math.sin(t);
+        x = s * a * Math.cos(t) / den;
+        y = s * a * yScale * Math.sin(t) * Math.cos(t) / den;
+        pts.push({ x: cx + x, y: cy + y });
+      }
+      return pts;
+    }
+
+    function poly(pts) {
+      var d = '', i;
+      for (i = 0; i < pts.length; i++) d += (i ? 'L' : 'M') + r2(pts[i].x) + ' ' + r2(pts[i].y);
+      return d;
+    }
+
+    /* Catmull-Rom through the measured route points, emitted as cubics. */
+    function curve(p) {
+      if (p.length < 2) return '';
+      var d = 'M' + r2(p[0].x) + ' ' + r2(p[0].y);
+      for (var i = 0; i < p.length - 1; i++) {
+        var p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p[i + 1];
+        d += 'C' + r2(p1.x + (p2.x - p0.x) / 6) + ' ' + r2(p1.y + (p2.y - p0.y) / 6) +
+             ',' + r2(p2.x - (p3.x - p1.x) / 6) + ' ' + r2(p2.y - (p3.y - p1.y) / 6) +
+             ',' + r2(p2.x) + ' ' + r2(p2.y);
+      }
+      return d;
+    }
+
+    function build() {
+      var wr = wrap.getBoundingClientRect();
+      if (!wr.width || !wr.height) return;
+      var sy = window.scrollY || window.pageYOffset;
+      var top = wr.top + sy;
+      var isSmall = small.matches;
+
+      var logoAt = null;
+      var pts = [];
+      marks.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        var host = el.closest('.wrap') || wrap;
+        var hr = host.getBoundingClientRect();
+        var f = parseFloat(isSmall ? (el.dataset.xSm || el.dataset.x) : el.dataset.x);
+        if (isNaN(f)) f = 0.5;
+        var p = {
+          x: (hr.left - wr.left) + f * hr.width,
+          y: (r.top + sy - top) + r.height / 2,
+          node: el.hasAttribute('data-node')
+        };
+        if (el.hasAttribute('data-logo')) { logoAt = p; return; }   // not a route point
+        pts.push(p);
+      });
+      pts.sort(function (a, b) { return a.y - b.y; });
+
+      svg.setAttribute('viewBox', '0 0 ' + r2(wr.width) + ' ' + r2(wr.height));
+
+      var PI = Math.PI, a = 0, halfH = 0;
+      if (logoAt) {
+        // Sized to the stage, capped so it stays a mark rather than a mural.
+        var stage = document.getElementById('v2-mark-stage');
+        var sh = stage ? stage.getBoundingClientRect().height : 240;
+        a = Math.min(sh / 1.13, wr.width * 0.30, 300);   // total height = 1.13a
+        halfH = a * 0.566;
+        /* The lemniscate is entered at its left extreme (t = π), where its
+           tangent points straight down — so the travelling line turns into
+           the loop instead of slicing across it. Two guide points stacked at
+           that same x give the route a vertical tangent on arrival: with only
+           one, Catmull-Rom would come in along the chord and leave a corner
+           where the road meets the mark. */
+        pts.push({ x: logoAt.x - a, y: logoAt.y - halfH * 3.6, node: false });
+        pts.push({ x: logoAt.x - a, y: logoAt.y - halfH * 1.7, node: false });
+      }
+
+      // ---- route ----
+      var dRoute = curve(pts);
+      if (!dRoute) return;
+      ghost.setAttribute('d', dRoute);
+      ROUTE_LEN = ghost.getTotalLength();
+
+      // ---- the mark, appended to the SAME path ----
+      var dFull = dRoute;
+      if (logoAt) {
+        /* t: π → 3π. Left extreme, down through the lower-left lobe, across
+           the crossing, around the right lobe, back through the crossing and
+           over the top of the left lobe — closing exactly where it began.
+           One stroke, one crossing: the DEO mark. */
+        dFull += poly(lemniscate(logoAt.x, logoAt.y, a, {
+          mod: 1, t0: PI, t1: PI * 3, steps: 280
+        })).replace(/^M/, 'L');
+
+        lRed.setAttribute('d', poly(lemniscate(logoAt.x, logoAt.y, a, {
+          mod: -1, t0: PI, t1: PI * 3, steps: 280
+        })));
+        /* Gold rides the right loop only, as it does in the logo. At t = 3π/2
+           and 5π/2 the curve is exactly at the crossing, so the arc begins and
+           ends there without needing to be trimmed. */
+        lGold.setAttribute('d', poly(lemniscate(logoAt.x, logoAt.y, a, {
+          fixed: 0.78, t0: PI * 1.5, t1: PI * 2.5, steps: 160
+        })));
+        RED_LEN = lRed.getTotalLength();
+        GOLD_LEN = lGold.getTotalLength();
+        lRed.style.strokeDasharray = RED_LEN;
+        lGold.style.strokeDasharray = GOLD_LEN;
+      }
+
+      main.setAttribute('d', dFull);
+      brush.setAttribute('d', dFull);
+      LEN = main.getTotalLength();
+      if (!LEN) return;
+      main.style.strokeDasharray = LEN;
+      brush.style.strokeDasharray = LEN;
+
+      // ---- the photograph, placed where the layout put its slot ----
+      if (canvas && photo) {
+        var cr = canvas.getBoundingClientRect();
+        photo.setAttribute('x', r2(cr.left - wr.left));
+        photo.setAttribute('y', r2(cr.top + sy - top));
+        photo.setAttribute('width', r2(cr.width));
+        photo.setAttribute('height', r2(cr.height));
+        // Wide enough that six sweeps cover the frame with overlap to spare.
+        brush.setAttribute('stroke-width', r2(Math.max(cr.height * 0.52, 120)));
+      }
+
+      // ---- gradient: red for the road, ink for the mark ----
+      grad.setAttribute('y2', r2(wr.height));
+      if (logoAt) {
+        var swap = clamp01((logoAt.y - halfH * 2.2) / wr.height);
+        stopA.setAttribute('offset', r2(Math.max(0, swap - 0.04)));
+        stopB.setAttribute('offset', r2(Math.min(1, swap + 0.02)));
+      }
+
+      /* ---- the scroll window ----------------------------------------
+         Start: the moment the top of the journey passes the focus line.
+         End:   the moment the mark sits centred in the viewport — so the
+                logo lands finished and framed, not half under the header.
+         SPLIT: the route gets everything except the tail needed to draw the
+                mark, sized so the mark is only just below the fold when it
+                begins and centred when it closes. */
+      var vh = window.innerHeight;
+      startScroll = Math.max(0, top - vh * 0.72);
+      if (logoAt) {
+        endScroll = Math.max(startScroll + 1, top + logoAt.y - vh * 0.5);
+        var span = endScroll - startScroll;
+        SPLIT = clamp01(1 - Math.min(vh * 0.65, span * 0.45) / span);
+      } else {
+        endScroll = Math.max(startScroll + 1, top + wr.height - vh * 0.5);
+        SPLIT = 1;
+      }
+
+      // ---- stations ----
+      var STEPS = 240, sample = [], i;
+      for (i = 0; i <= STEPS; i++) {
+        var q = main.getPointAtLength(LEN * i / STEPS);
+        sample.push({ x: q.x, y: q.y, l: LEN * i / STEPS });
+      }
+      nodeG.textContent = '';
+      stations = [];
+      pts.forEach(function (p) {
+        if (!p.node) return;
+        var best = 0, bd = Infinity;
+        for (var j = 0; j < sample.length; j++) {
+          var dx = sample[j].x - p.x, dy = sample[j].y - p.y, dd = dx * dx + dy * dy;
+          if (dd < bd) { bd = dd; best = sample[j].l; }
+        }
+        var c = document.createElementNS(SVGNS, 'circle');
+        c.setAttribute('cx', r2(p.x)); c.setAttribute('cy', r2(p.y)); c.setAttribute('r', '4');
+        c.setAttribute('class', 'v2-node');
+        nodeG.appendChild(c);
+        stations.push({ el: c, at: best });
+      });
+
+      ready = true;
+      update();
+    }
+
+    function update() {
+      if (!ready || !LEN) return;
+
+      var sy = window.scrollY || window.pageYOffset;
+      var p = REDUCE ? 1 : clamp01((sy - startScroll) / (endScroll - startScroll));
+
+      /* Two stretches, one line: the route is spent over most of the scroll,
+         the mark over the tail. The tip speeds up slightly as it enters the
+         logo, which reads as the line gathering itself. */
+      var drawn;
+      if (SPLIT >= 1 || LEN === ROUTE_LEN) drawn = LEN * p;
+      else if (p <= SPLIT) drawn = ROUTE_LEN * (p / SPLIT);
+      else drawn = ROUTE_LEN + (LEN - ROUTE_LEN) * ((p - SPLIT) / (1 - SPLIT));
+
+      main.style.strokeDashoffset = LEN - drawn;
+      brush.style.strokeDashoffset = LEN - drawn;
+
+      // The mark's companion strokes ride the tail of the same progress, so
+      // the logo thickens into place as the main line closes the second loop.
+      if (RED_LEN) {
+        var pLogo = clamp01((drawn - ROUTE_LEN) / Math.max(1, LEN - ROUTE_LEN));
+        lRed.style.strokeDashoffset  = RED_LEN  * (1 - clamp01((pLogo - 0.30) / 0.55));
+        lGold.style.strokeDashoffset = GOLD_LEN * (1 - clamp01((pLogo - 0.58) / 0.40));
+      }
+
+      var q = main.getPointAtLength(drawn);
+      var live = !REDUCE && p > 0.004 && p < 0.998;
+      dot.setAttribute('cx', r2(q.x));  dot.setAttribute('cy', r2(q.y));
+      halo.setAttribute('cx', r2(q.x)); halo.setAttribute('cy', r2(q.y));
+      dot.style.opacity  = live ? '1' : '0';
+      halo.style.opacity = live ? '.28' : '0';
+
+      for (var i = 0; i < stations.length; i++) {
+        stations[i].el.classList.toggle('lit', drawn >= stations[i].at - 2);
+      }
+    }
+
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { update(); ticking = false; });
+    }
+    var t = 0;
+    function rebuild() { clearTimeout(t); t = setTimeout(build, 120); }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', rebuild, { passive: true });
+    small.addEventListener('change', rebuild);
+    if ('ResizeObserver' in window) new ResizeObserver(rebuild).observe(wrap);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    window.addEventListener('load', build);
+    build();
+  }
+
+  /* ---- The form --------------------------------------------------------- */
+  function form() {
+    var chapter = document.getElementById('talk');
+    var f = document.getElementById('v2-form');
+    var done = document.getElementById('v2-done');
+    if (!chapter || !f || !done) return;
+
+    var checks = [
+      { el: f.querySelector('#v2-name'), err: 'v2-name-error',
+        test: function (v) { return v.length > 1; }, msg: 'Please tell us your name.' },
+      { el: f.querySelector('#v2-email'), err: 'v2-email-error',
+        test: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); },
+        msg: 'Please enter an email address we can reply to.' },
+      { el: f.querySelector('#v2-message'), err: 'v2-message-error',
+        test: function (v) { return v.length > 3; }, msg: 'Let us know what you would like to ask.' }
+    ];
+
+    function clear(c) {
+      c.el.removeAttribute('aria-invalid');
+      document.getElementById(c.err).textContent = '';
+    }
+    checks.forEach(function (c) {
+      if (!c.el) return;
+      c.el.addEventListener('input', function () {
+        if (c.el.getAttribute('aria-invalid') === 'true') clear(c);
+      });
+    });
+
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var hp = f.querySelector('#v2-company');
+      if (hp && hp.value) { chapter.classList.add('is-sent'); return; }
+
+      var first = null;
+      checks.forEach(function (c) {
+        if (!c.el) return;
+        if (c.test(c.el.value.trim())) { clear(c); return; }
+        c.el.setAttribute('aria-invalid', 'true');
+        document.getElementById(c.err).textContent = c.msg;
+        if (!first) first = c.el;
+      });
+      if (first) { first.focus(); return; }
+
+      // ---- swap for a real submit once a backend exists ----
+      // if (!f.hasAttribute('data-demo')) { f.submit(); return; }
+      chapter.classList.add('is-sent');
+      done.focus();
+      window.dispatchEvent(new Event('resize'));
+    });
+  }
+
+  menu();
+  lang();
+  reveal();
+  line();
+  form();
+})();
+</script>
+</body>
+</html>
