@@ -1,0 +1,443 @@
+/* =============================================================================
+   DEO Kairo — SHARED CHROME
+   -----------------------------------------------------------------------------
+   Everything that must look identical on every page: tokens, reset, header,
+   navigation, the V1/V2 switch, buttons, footer and the reveal system.
+
+   Used by the six pages added after the Contact concepts:
+     values.html · values-v2.html
+     school-path.html · school-path-v2.html
+     community.html · community-v2.html
+
+   index.html, about.html, contact.html and contact-v2.html carry their own
+   copies of these rules inline and are deliberately left alone — this file
+   adds a shared foundation for the new work without rewriting the old.
+
+   Each page then loads exactly one concept stylesheet on top:
+     css/values.css · css/school-path.css · css/community.css
+   ============================================================================= */
+
+/* ==========================================================================
+   1. TOKENS — the same values as css/style.css and the contact pages
+   ========================================================================== */
+:root {
+  --ink:              #141414;
+  --ink-soft:         #262626;
+  --ink-deep:         #0C0C0C;
+  --cream:            #FAF7F1;
+  --cream-soft:       #FFFFFF;
+  --cream-warm:       #F4EDE0;   /* one step warmer, for section changes */
+  --red:              #DB1F26;
+  --red-dark:         #8F1216;
+  --gold:             #FFCE03;
+  --amber:            #F58220;   /* sits between red and gold in the mark */
+  --text-on-dark:     #F5F3EF;
+  --text-on-light:    #1A1A1A;
+  --text-muted-dark:  #C9C6C0;
+  --text-muted-light: #55524D;
+  --border-light:     #E7E2D8;
+  --border-dark:      rgba(245, 243, 239, 0.16);
+
+  --sans:  'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  --ease:        cubic-bezier(.22, 1, .36, 1);
+  --ease-inout:  cubic-bezier(.65, 0, .35, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --fast: 200ms;
+  --med:  360ms;
+  --slow: 700ms;
+  --stagger: 90ms;
+
+  --container: 1240px;
+  --header-h:  76px;
+  --radius:    14px;
+}
+
+/* ==========================================================================
+   2. RESET & BASE
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, h3, h4, p, figure, blockquote, ul, ol, dl, dd { margin: 0; }
+ul, ol { list-style: none; padding: 0; }
+img, svg, video { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 20px);
+}
+
+body {
+  font-family: var(--sans);
+  color: var(--text-on-light);
+  background: var(--cream);
+  line-height: 1.6;
+  /* The concept pages animate wide elements sideways. Without this a phone can
+     rubber-band horizontally even when nothing is genuinely overflowing. */
+  overflow-x: hidden;
+}
+
+h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; }
+a { color: inherit; }
+
+.wrap {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0; z-index: 300;
+  background: var(--ink); color: var(--text-on-dark);
+  padding: 12px 20px; border-radius: 0 0 8px 0; text-decoration: none;
+}
+.skip-link:focus { left: 0; }
+
+:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
+/* On ink-coloured panels the red ring all but disappears — gold reads on both. */
+.on-dark :focus-visible,
+.site-footer :focus-visible { outline-color: var(--gold); }
+
+/* ==========================================================================
+   3. EDITORIAL PRIMITIVES
+   The three concept pages share one typographic voice; only the compositions
+   differ. Keeping these here is what makes the set read as one site.
+   ========================================================================== */
+.eyebrow {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.on-dark .eyebrow { color: var(--gold); }
+
+.lede {
+  font-size: clamp(1.05rem, 1.5vw, 1.28rem);
+  color: var(--text-muted-light);
+  max-width: 54ch;
+}
+.on-dark .lede { color: var(--text-muted-dark); }
+
+/* Numerals set in the display face, used as chapter markers throughout. */
+.numeral {
+  font-family: var(--serif);
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -.02em;
+}
+
+/* ==========================================================================
+   4. BUTTONS & LINKS
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 28px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font-size: .95rem; font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--fast) var(--ease),
+              color var(--fast) var(--ease),
+              border-color var(--fast) var(--ease),
+              transform var(--fast) var(--ease);
+}
+.btn .arw { transition: transform var(--med) var(--ease); }
+.btn:hover { background: var(--ink); color: var(--text-on-dark); transform: translateY(-2px); }
+.btn:hover .arw { transform: translateX(5px); }
+
+.btn-solid { background: var(--red); border-color: var(--red); color: #fff; }
+.btn-solid:hover { background: var(--red-dark); border-color: var(--red-dark); color: #fff; }
+
+.on-dark .btn { border-color: var(--text-on-dark); color: var(--text-on-dark); }
+.on-dark .btn:hover { background: var(--text-on-dark); color: var(--ink); }
+
+/* Text link with an arrow that steps forward — used instead of a button
+   wherever a solid shape would weigh the composition down. */
+.link-arrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-weight: 600; font-size: .95rem;
+  text-decoration: none;
+  padding-bottom: 3px;
+  border-bottom: 1.5px solid currentColor;
+  transition: gap var(--med) var(--ease), color var(--fast) var(--ease);
+}
+.link-arrow:hover { gap: 16px; color: var(--red); }
+.on-dark .link-arrow:hover { color: var(--gold); }
+
+/* ==========================================================================
+   5. SCROLL PROGRESS
+   ========================================================================== */
+.scroll-progress {
+  position: fixed; inset: 0 0 auto 0;
+  height: 3px; z-index: 200; pointer-events: none;
+}
+.scroll-progress span {
+  display: block; height: 100%; width: 0;
+  /* The mark's own colour order: ink at the start, gold at the end. */
+  background: linear-gradient(90deg, var(--ink), var(--red) 55%, var(--gold));
+}
+html:not(.js) .scroll-progress { display: none; }
+
+/* ==========================================================================
+   6. HEADER — same markup, ids and behaviour as every other page
+   ========================================================================== */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(250, 247, 241, .88);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-light);
+  transition: background var(--med) var(--ease), box-shadow var(--med) var(--ease);
+}
+.site-header.is-scrolled {
+  background: rgba(250, 247, 241, .97);
+  box-shadow: 0 6px 24px -14px rgba(20, 20, 20, .5);
+}
+
+.header-inner {
+  display: flex; align-items: center; gap: clamp(18px, 3vw, 34px);
+  height: var(--header-h);
+  transition: height var(--med) var(--ease);
+}
+.site-header.is-scrolled .header-inner { height: 62px; }
+
+.brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--serif); font-size: 1.18rem; font-weight: 500;
+  text-decoration: none; color: var(--ink);
+  flex-shrink: 0;
+}
+.brand img { height: 30px; width: auto; transition: transform var(--med) var(--ease); }
+.site-header.is-scrolled .brand img { transform: scale(.86); }
+
+.main-nav { display: flex; gap: clamp(16px, 2.2vw, 30px); }
+.main-nav a {
+  position: relative;
+  font-size: .92rem; font-weight: 500;
+  text-decoration: none; color: var(--text-on-light);
+  padding-bottom: 3px;
+  transition: color var(--fast) var(--ease);
+}
+.main-nav a::after {
+  content: "";
+  position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 2px; background: var(--red);
+  transform: scaleX(0); transform-origin: right;
+  transition: transform var(--med) var(--ease);
+}
+.main-nav a:hover { color: var(--red); }
+.main-nav a:hover::after,
+.main-nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+.main-nav a[aria-current="page"] { color: var(--red); }
+.main-nav a[aria-current="page"]::after { transform: scaleX(1); }
+
+.header-actions { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+
+.lang-toggle {
+  background: transparent;
+  border: 1.5px solid var(--ink); border-radius: 999px;
+  padding: 7px 13px;
+  font-size: .78rem; font-weight: 700; letter-spacing: .04em;
+  cursor: pointer;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.lang-toggle:hover { background: var(--ink); color: var(--text-on-dark); }
+.lang-current { text-decoration: underline; }
+.lang-other { color: var(--text-muted-light); }
+.lang-toggle:hover .lang-other { color: var(--text-muted-dark); }
+
+.menu-toggle {
+  display: none; flex-direction: column; gap: 5px;
+  background: none; border: 0; cursor: pointer; padding: 10px;
+}
+.menu-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); }
+
+/* ==========================================================================
+   7. V1 / V2 SWITCH
+   Same pill, same corner and same states as the Contact pages, so the
+   comparison control behaves identically wherever it appears.
+
+   It lives OUTSIDE <header> on purpose: .site-header carries a backdrop-filter,
+   which makes it the containing block for any position:fixed child — the pill
+   would scroll away with the header instead of staying put.
+   ========================================================================== */
+.ver-switch {
+  position: fixed;
+  left: clamp(14px, 2vw, 24px);
+  bottom: clamp(14px, 2vw, 24px);
+  z-index: 60;
+  display: inline-flex; align-items: stretch;
+  background: var(--cream-soft);
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+  font-size: .74rem; font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase;
+  box-shadow: 0 14px 34px -16px rgba(20, 20, 20, .6);
+}
+.ver-switch a {
+  padding: 8px 13px;
+  color: var(--ink); text-decoration: none;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.ver-switch a + a { border-left: 1.5px solid var(--ink); }
+.ver-switch a:hover { background: rgba(20, 20, 20, .08); }
+.ver-switch a[aria-current="page"] { background: var(--ink); color: var(--text-on-dark); }
+
+/* ==========================================================================
+   8. FOOTER
+   ========================================================================== */
+.site-footer {
+  position: relative;
+  background: var(--ink);
+  color: var(--text-muted-dark);
+  padding: clamp(56px, 8vw, 92px) 0 34px;
+  font-size: .9rem;
+}
+/* A hairline in the mark's colours, tying the foot of every page to the top. */
+.site-footer::before {
+  content: "";
+  position: absolute; inset: 0 0 auto 0; height: 3px;
+  background: linear-gradient(90deg, var(--ink-deep), var(--red) 45%, var(--gold));
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: clamp(28px, 5vw, 64px);
+}
+.footer-brand-row {
+  display: flex; align-items: center; gap: 12px;
+  font-family: var(--serif); font-size: 1.15rem; color: var(--text-on-dark);
+  margin-bottom: 14px;
+}
+.footer-brand-row img { height: 30px; width: auto; }
+.footer-grid p { max-width: 42ch; }
+.footer-col h3 {
+  font-family: var(--sans);
+  font-size: .7rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+}
+.footer-col li + li { margin-top: 9px; }
+.footer-col a { text-decoration: none; transition: color var(--fast) var(--ease); }
+.footer-col a:hover { color: var(--gold); }
+
+.footer-base {
+  display: flex; flex-wrap: wrap; gap: 10px 24px;
+  justify-content: space-between;
+  margin-top: clamp(38px, 6vw, 62px);
+  padding-top: 22px;
+  border-top: 1px solid var(--border-dark);
+  font-size: .8rem;
+  color: rgba(201, 198, 192, .75);
+}
+
+/* ==========================================================================
+   9. BACK TO TOP
+   ========================================================================== */
+.to-top {
+  position: fixed; right: 22px; bottom: 22px; z-index: 60;
+  width: 46px; height: 46px;
+  display: grid; place-items: center;
+  border: 0; border-radius: 50%;
+  background: var(--red); color: #fff;
+  font-size: 1.1rem; cursor: pointer;
+  opacity: 0; visibility: hidden; transform: translateY(14px) scale(.85);
+  transition: opacity var(--med) var(--ease),
+              transform var(--med) var(--ease-spring),
+              visibility var(--med),
+              background var(--fast) var(--ease);
+}
+.to-top.is-shown { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { background: var(--red-dark); transform: translateY(-3px); }
+html:not(.js) .to-top { display: none; }
+
+/* ==========================================================================
+   10. REVEAL SYSTEM
+   [data-reveal] fades up when it enters view; --i staggers siblings.
+   Scoped to .js so the pages are fully readable with JavaScript off.
+   ========================================================================== */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity var(--slow) var(--ease), transform var(--slow) var(--ease);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* A second variant: text that wipes up from behind a hard edge. Reserved for
+   headlines, where a fade alone reads as weaker than the type deserves. */
+.js [data-reveal-mask] { overflow: hidden; }
+.js [data-reveal-mask] > * {
+  display: block;
+  transform: translateY(105%);
+  transition: transform var(--slow) var(--ease);
+  transition-delay: calc(var(--i, 0) * var(--stagger));
+}
+.js [data-reveal-mask].is-visible > * { transform: none; }
+
+/* Language crossfade, matching the other pages. */
+.js [data-en] { transition: opacity var(--fast) linear; }
+.js.lang-switching [data-en] { opacity: 0; }
+
+/* ==========================================================================
+   11. RESPONSIVE CHROME
+   ========================================================================== */
+@media (max-width: 900px) {
+  .main-nav {
+    position: absolute; top: var(--header-h); left: 0; right: 0;
+    flex-direction: column; gap: 0;
+    background: var(--cream-soft);
+    border-bottom: 1px solid var(--border-light);
+    padding: 8px clamp(20px, 5vw, 48px) 18px;
+    max-height: 0; overflow: hidden; visibility: hidden;
+    transition: max-height var(--med) var(--ease), visibility var(--med);
+  }
+  .main-nav a { padding: 13px 0; font-size: 1rem; }
+  .main-nav a::after { display: none; }
+  .js .main-nav.open { max-height: 420px; visibility: visible; }
+  .menu-toggle { display: flex; order: 3; }
+  .header-actions { margin-left: auto; }
+
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-grid > :first-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 560px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .ver-switch { font-size: .68rem; }
+  .ver-switch a { padding: 7px 11px; }
+  /* Back-to-top and the version pill share the bottom edge — lift the pill so
+     neither covers the other on a narrow screen. */
+  .to-top { width: 42px; height: 42px; }
+}
+
+/* ==========================================================================
+   12. REDUCED MOTION
+   Strip movement, keep every composition and all content.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .js [data-reveal],
+  .js [data-reveal].is-visible {
+    opacity: 1 !important; transform: none !important;
+  }
+  .js [data-reveal-mask] > * { transform: none !important; }
+}
