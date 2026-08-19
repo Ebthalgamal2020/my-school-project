@@ -74,6 +74,12 @@
     setTimeout(fireResize, 200);
   });
 
+  /* Scripts run before web fonts and images have settled, so every geometry
+     measured at that point can be a few hundred pixels out. One re-measure once
+     the page has genuinely finished loading fixes the scroll-driven effects for
+     anyone who lands mid-page and never scrolls. */
+  global.addEventListener('load', function () { setTimeout(fireResize, 0); });
+
   /* ---- Maths --------------------------------------------------------------- */
   function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
   function lerp(a, b, t) { return a + (b - a) * t; }

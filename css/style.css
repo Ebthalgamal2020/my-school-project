@@ -399,6 +399,10 @@ section h2 {
 .pillar-card h3 { font-size: 1.15rem; }
 .pillar-card p { color: var(--text-muted-light); font-size: 0.95rem; margin-bottom: 0; }
 
+/* Link out of a home-page summary section to the page that expands on it.
+   Each of these three sections now has a page of its own. */
+.section-more { margin: 36px 0 0; }
+
 /* ===== Path ===== */
 .path { background: var(--cream); }
 .path-track {
@@ -559,7 +563,8 @@ section h2 {
     transition: max-height 0.25s ease;
   }
   .js .main-nav.open {
-    max-height: 320px;
+    /* Six items since Home and the three concept pages joined the nav. */
+    max-height: 440px;
     visibility: visible;
   }
   .nav-cta { display: none; }

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Path — DEO Kairo</title>
+<meta name="description" content="The journey of DEO Kairo from 1873 to tomorrow, told as a road: a thick DEO-derived path that travels sideways through five eras and finally curls into the mark itself.">
+<meta name="theme-color" content="#141414">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/school-path.css">
+
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div class="scroll-progress" aria-hidden="true"><span id="scroll-bar"></span></div>
+
+<nav class="ver-switch" aria-label="School Path page version">
+  <a href="school-path.html" aria-current="page">V1</a>
+  <a href="school-path-v2.html">V2</a>
+</nav>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/deo-logo.png" alt="DEO Kairo" width="68" height="48">
+      <span>DEO Kairo</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="index.html" data-en="Home" data-de="Start">Home</a>
+      <a href="values.html" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="school-path.html" aria-current="page" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
+      <a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
+        <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
+      </button>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+      <span class="sr-only">Menu</span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===================== HERO =====================
+       The founding year, with the school photographed inside the numerals. -->
+  <section class="sp-hero on-dark">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal data-en="School Path · DEO Kairo" data-de="Schulaufbau · DEO Kairo">School Path · DEO Kairo</p>
+
+      <span class="sp-hero-year numeral" data-reveal style="--i:1" aria-hidden="true">1873</span>
+
+      <h1 data-reveal style="--i:2"
+          data-en="A road this school has been walking since 1873."
+          data-de="Ein Weg, den diese Schule seit 1873 geht.">A road this school has been walking since 1873.</h1>
+
+      <p class="lede" data-reveal style="--i:3"
+         data-en="Not a list of dates. Scroll, and the road travels sideways through five eras — arriving out of the monochrome of the archive and into the colour of a Tuesday morning in Dokki."
+         data-de="Keine Liste von Jahreszahlen. Scrollen Sie, und der Weg wandert seitwärts durch fünf Epochen — vom Schwarzweiß des Archivs bis in die Farbe eines Dienstagmorgens in Dokki.">
+        Not a list of dates. Scroll, and the road travels sideways through five eras —
+        arriving out of the monochrome of the archive and into the colour of a Tuesday
+        morning in Dokki.
+      </p>
+
+      <dl class="sp-hero-foot" data-reveal style="--i:4">
+        <div>
+          <dt data-en="Founded" data-de="Gegründet">Founded</dt>
+          <dd class="numeral">1873</dd>
+        </div>
+        <div>
+          <dt data-en="Eras on this page" data-de="Epochen auf dieser Seite">Eras on this page</dt>
+          <dd class="numeral">5</dd>
+        </div>
+        <div>
+          <dt data-en="Kindergarten to" data-de="Kindergarten bis">Kindergarten to</dt>
+          <dd>Abitur</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ===================== THE ROAD =====================
+       Five eras. With JavaScript on a wide screen they travel sideways past a
+       fixed frame; otherwise the same markup reads downwards with the road
+       running beside it. -->
+  <section class="sp-track" id="sp-track" aria-label="Five eras of the school">
+    <div class="sp-viewport" id="sp-viewport">
+
+      <div class="sp-rail" id="sp-rail">
+
+        <svg class="sp-road" id="sp-road" aria-hidden="true" focusable="false"
+             preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="sp-road-grad" gradientUnits="userSpaceOnUse"
+                            x1="0" y1="0" x2="1000" y2="0">
+              <stop offset="0" stop-color="#141414"></stop>
+              <stop offset="0.5" stop-color="#DB1F26"></stop>
+              <stop offset="0.8" stop-color="#F58220"></stop>
+              <stop offset="1" stop-color="#FFCE03"></stop>
+            </linearGradient>
+          </defs>
+          <path class="sp-road-bed" d=""></path>
+          <path class="sp-road-live" d=""></path>
+          <g id="sp-road-dots"></g>
+        </svg>
+
+        <!-- 01 -->
+        <article class="sp-chapter" data-era="#141414" style="--era:#141414">
+          <div class="sp-chapter-inner">
+            <div class="sp-copy">
+              <p class="sp-kicker" data-en="01 — The beginning" data-de="01 — Der Anfang">01 — The beginning</p>
+              <span class="sp-year numeral">18<em>73</em></span>
+              <h2 data-en="A few rooms, and a decision."
+                  data-de="Ein paar Räume und eine Entscheidung.">A few rooms, and a decision.</h2>
+              <p data-en="A German school opens in Cairo — and decides, from the start, that it will teach Cairo's children too. Everything on this page follows from that one sentence."
+                 data-de="Eine deutsche Schule öffnet in Kairo — und entscheidet von Anfang an, auch Kairos Kinder zu unterrichten. Alles auf dieser Seite folgt aus diesem einen Satz.">
+                A German school opens in Cairo — and decides, from the start, that it will teach
+                Cairo's children too. Everything on this page follows from that one sentence.
+              </p>
+              <ul class="sp-meta">
+                <li data-en="Deutsche Evangelische Oberschule" data-de="Deutsche Evangelische Oberschule">Deutsche Evangelische Oberschule</li>
+                <li data-en="Cairo" data-de="Kairo">Cairo</li>
+              </ul>
+            </div>
+            <figure class="sp-figure" data-age style="--age:1">
+              <img src="assets/deo-building.jpg" alt="The school building on its Dokki campus, flags at the entrance"
+                   width="2000" height="1333" loading="lazy" decoding="async" style="object-position:18% 55%">
+            </figure>
+          </div>
+        </article>
+
+        <!-- 02 -->
+        <article class="sp-chapter" data-era="#8F1216" style="--era:#8F1216">
+          <div class="sp-chapter-inner">
+            <div class="sp-copy">
+              <p class="sp-kicker" data-en="02 — A German-Egyptian connection" data-de="02 — Eine deutsch-ägyptische Verbindung">02 — A German-Egyptian connection</p>
+              <span class="sp-year numeral">19<em>00s</em></span>
+              <h2 data-en="Two traditions learn one timetable."
+                  data-de="Zwei Traditionen lernen einen Stundenplan.">Two traditions learn one timetable.</h2>
+              <p data-en="German rigour and Egyptian daily life stop being neighbours and start being colleagues. Neither is the guest of the other — that is the difference between a foreign school and an encounter school."
+                 data-de="Deutsche Gründlichkeit und ägyptischer Alltag sind nicht länger Nachbarn, sondern Kolleginnen. Keine ist bei der anderen zu Gast — das ist der Unterschied zwischen einer Auslandsschule und einer Begegnungsschule.">
+                German rigour and Egyptian daily life stop being neighbours and start being
+                colleagues. Neither is the guest of the other — that is the difference between a
+                foreign school and an encounter school.
+              </p>
+              <ul class="sp-meta">
+                <li data-en="Two languages" data-de="Zwei Sprachen">Two languages</li>
+                <li data-en="One campus" data-de="Ein Campus">One campus</li>
+              </ul>
+            </div>
+            <figure class="sp-figure" data-age style="--age:.78">
+              <img src="assets/campus-building.jpg" alt="A school team photographed together on the pitch with their coach"
+                   width="1600" height="1067" loading="lazy" decoding="async" style="object-position:50% 40%">
+            </figure>
+          </div>
+        </article>
+
+        <!-- 03 -->
+        <article class="sp-chapter" data-era="#DB1F26" style="--era:#DB1F26">
+          <div class="sp-chapter-inner">
+            <div class="sp-copy">
+              <p class="sp-kicker" data-en="03 — Growing together" data-de="03 — Gemeinsam wachsen">03 — Growing together</p>
+              <span class="sp-year numeral">19<em>70s</em></span>
+              <h2 data-en="Siblings follow siblings."
+                  data-de="Geschwister folgen Geschwistern.">Siblings follow siblings.</h2>
+              <p data-en="The school stops being a building and becomes a habit passed down. Former pupils bring their own children through the same gate, and the corridors fill with names the staff already know."
+                 data-de="Die Schule ist kein Gebäude mehr, sondern eine Gewohnheit, die weitergegeben wird. Ehemalige bringen ihre eigenen Kinder durch dasselbe Tor, und die Flure füllen sich mit Namen, die das Kollegium längst kennt.">
+                The school stops being a building and becomes a habit passed down. Former pupils
+                bring their own children through the same gate, and the corridors fill with names
+                the staff already know.
+              </p>
+              <ul class="sp-meta">
+                <li data-en="Generations" data-de="Generationen">Generations</li>
+                <li data-en="Kindergarten to Abitur" data-de="Kindergarten bis Abitur">Kindergarten to Abitur</li>
+              </ul>
+            </div>
+            <figure class="sp-figure" data-age style="--age:.42">
+              <img src="assets/student-portrait.jpg" alt="Primary pupils in costume with their teacher during a school theme day"
+                   width="1920" height="1780" loading="lazy" decoding="async" style="object-position:50% 30%">
+            </figure>
+          </div>
+        </article>
+
+        <!-- 04 -->
+        <article class="sp-chapter" data-era="#F58220" style="--era:#F58220">
+          <div class="sp-chapter-inner">
+            <div class="sp-copy">
+              <p class="sp-kicker" data-en="04 — DEO today" data-de="04 — Die DEO heute">04 — DEO today</p>
+              <span class="sp-year numeral is-word" data-en="Today" data-de="Heute">Today</span>
+              <h2 data-en="One campus in Dokki, three languages, one Abitur."
+                  data-de="Ein Campus in Dokki, drei Sprachen, ein Abitur.">One campus in Dokki, three languages, one Abitur.</h2>
+              <p data-en="German, Arabic and English are not three subjects on a list — they are the three languages a corridor conversation moves between without anyone noticing they have switched."
+                 data-de="Deutsch, Arabisch und Englisch sind keine drei Fächer auf einer Liste — es sind die drei Sprachen, zwischen denen ein Flurgespräch wechselt, ohne dass es jemandem auffällt.">
+                German, Arabic and English are not three subjects on a list — they are the three
+                languages a corridor conversation moves between without anyone noticing they
+                have switched.
+              </p>
+              <ul class="sp-meta">
+                <li>Dokki, 12612 Cairo</li>
+                <li data-en="KG to Grade 13" data-de="KG bis Klasse 13">KG to Grade 13</li>
+              </ul>
+            </div>
+            <figure class="sp-figure">
+              <img src="assets/deo-building.jpg" alt="The school building today, seen from the courtyard"
+                   width="2000" height="1333" loading="lazy" decoding="async" style="object-position:58% 60%">
+            </figure>
+          </div>
+        </article>
+
+        <!-- 05 -->
+        <article class="sp-chapter" data-era="#FFCE03" style="--era:#FFCE03">
+          <div class="sp-chapter-inner">
+            <div class="sp-copy">
+              <p class="sp-kicker" data-en="05 — The future" data-de="05 — Die Zukunft">05 — The future</p>
+              <span class="sp-year numeral is-word" data-en="Tomorrow" data-de="Morgen">Tomorrow</span>
+              <h2 data-en="The road does not stop at the gate."
+                  data-de="Der Weg endet nicht am Tor.">The road does not stop at the gate.</h2>
+              <p data-en="It loops. Alumni come back as parents, as teachers, as the people who decide what the next hundred and fifty years look like — which is why our mark has no end point."
+                 data-de="Er kehrt zurück. Ehemalige kommen als Eltern wieder, als Lehrkräfte, als die Menschen, die entscheiden, wie die nächsten hundertfünfzig Jahre aussehen — deshalb hat unser Zeichen keinen Endpunkt.">
+                It loops. Alumni come back as parents, as teachers, as the people who decide what
+                the next hundred and fifty years look like — which is why our mark has no end
+                point.
+              </p>
+              <ul class="sp-meta">
+                <li data-en="Next chapter" data-de="Nächstes Kapitel">Next chapter</li>
+                <li data-en="Yours" data-de="Ihres">Yours</li>
+              </ul>
+            </div>
+            <figure class="sp-figure is-cutout">
+              <img src="assets/students-running.png" alt="Three pupils running forward with books under their arms"
+                   width="1568" height="1080" loading="lazy" decoding="async">
+            </figure>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="sp-scale" aria-hidden="true"><span id="sp-scale-fill"></span></div>
+
+      <!-- Era shortcuts. Hidden without JavaScript, where the eras are simply
+           read one after another. -->
+      <nav class="sp-nav" aria-label="Jump to an era">
+        <button type="button">1873</button>
+        <button type="button">1900s</button>
+        <button type="button">1970s</button>
+        <button type="button" data-en="Today" data-de="Heute">Today</button>
+        <button type="button" data-en="Tomorrow" data-de="Morgen">Tomorrow</button>
+      </nav>
+
+    </div>
+  </section>
+
+  <!-- ===================== WHERE THE ROAD LANDS =====================
+       The road's own curve widens until the mark appears inside it. -->
+  <section class="sp-payoff on-dark">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal data-en="Where the road goes" data-de="Wohin der Weg führt">Where the road goes</p>
+      <h2 data-reveal style="--i:1"
+          data-en="Every path here comes back round."
+          data-de="Jeder Weg hier führt zurück.">Every path here comes back round.</h2>
+
+      <div class="sp-mark" id="sp-mark">
+        <svg viewBox="0 0 156 88" aria-hidden="true" focusable="false">
+          <defs>
+            <!-- The mark is only visible where this stroke has passed. It follows
+                 the same curve as the road and widens from nothing, so the logo
+                 grows out of the journey rather than fading in over it. -->
+            <mask id="sp-logo-mask">
+              <path id="sp-bloom" d="" stroke-width="0"></path>
+            </mask>
+          </defs>
+          <g mask="url(#sp-logo-mask)">
+            <g id="sp-mark-slot"></g>
+          </g>
+        </svg>
+      </div>
+
+      <p class="lede" data-reveal
+         data-en="Two open loops that never quite close: one for where we came from, one for where our students are going. The road you just travelled is the same shape."
+         data-de="Zwei offene Schleifen, die sich nie ganz schließen: eine für unsere Herkunft, eine für den Weg unserer Schülerinnen und Schüler. Der Weg, den Sie gerade gegangen sind, hat dieselbe Form.">
+        Two open loops that never quite close: one for where we came from, one for where our
+        students are going. The road you just travelled is the same shape.
+      </p>
+
+      <div class="sp-payoff-actions" data-reveal style="--i:1">
+        <a class="btn" href="community.html">
+          <span data-en="Meet the people on it" data-de="Die Menschen darauf treffen">Meet the people on it</span>
+          <span class="arw" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="link-arrow" href="contact-v2.html">
+          <span data-en="Come and see the campus" data-de="Den Campus besuchen">Come and see the campus</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-row">
+          <img src="assets/deo-logo.png" alt="" width="68" height="48">
+          <span>DEO Kairo</span>
+        </div>
+        <p data-en="Deutsche Evangelische Oberschule Kairo — a German-Egyptian encounter school, teaching from Kindergarten through the Abitur."
+           data-de="Deutsche Evangelische Oberschule Kairo — eine deutsch-ägyptische Begegnungsschule, vom Kindergarten bis zum Abitur.">
+          Deutsche Evangelische Oberschule Kairo — a German-Egyptian encounter school,
+          teaching from Kindergarten through the Abitur.
+        </p>
+      </div>
+      <nav class="footer-col" aria-label="Pages">
+        <h3 data-en="Pages" data-de="Seiten">Pages</h3>
+        <ul>
+          <li><a href="index.html" data-en="Home" data-de="Start">Home</a></li>
+          <li><a href="values.html" data-en="Our Values" data-de="Unsere Werte">Our Values</a></li>
+          <li><a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a></li>
+          <li><a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a></li>
+          <li><a href="about.html" data-en="About Us" data-de="Über uns">About Us</a></li>
+          <li><a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="footer-col">
+        <h3 data-en="Visit" data-de="Besuch">Visit</h3>
+        <ul>
+          <li>6, El Dokki St., Dokki</li>
+          <li>12612 Cairo, Egypt</li>
+          <li><a href="tel:+20237481475">+20 (0)2 3748 1475</a></li>
+          <li><a href="mailto:info@deokairo.de">info@deokairo.de</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span data-en="© 2026 DEO Kairo · Built as a student web project"
+            data-de="© 2026 DEO Kairo · Erstellt als Studierendenprojekt">© 2026 DEO Kairo · Built as a student web project</span>
+      <span data-en="Era labels are indicative — this is a design concept, not a school archive."
+            data-de="Die Epochenangaben sind beispielhaft — dies ist ein Designkonzept, kein Schularchiv.">Era labels are indicative — this is a design concept, not a school archive.</span>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="to-top" aria-label="Back to top"><span aria-hidden="true">&uarr;</span></button>
+
+<script src="js/deo-mark.js"></script>
+<script src="js/site.js"></script>
+<script src="js/school-path.js"></script>
+</body>
+</html>

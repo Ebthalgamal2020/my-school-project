@@ -994,7 +994,9 @@ html:not(.js) .deo-floating-students { opacity: 1; transform: none; }
     visibility: hidden;
     transition: max-height 0.25s ease;
   }
-  .js .main-nav.open { max-height: 320px; visibility: visible; }
+  /* Six items since Home and the three concept pages joined the nav — the old
+     320px cut the last link off mid-word. */
+  .js .main-nav.open { max-height: 440px; visibility: visible; }
 
   /* Mobile: same idea, a squarer capsule so the building still reads */
   .deo-story { --ring-gap: 9px; }
@@ -1075,9 +1077,10 @@ html:not(.js) .deo-floating-students { opacity: 1; transform: none; }
     <nav class="main-nav" id="main-nav">
       <!-- Same tabs and order as index.html. These four sections live on the
            home page, so they need the full path - a bare #anchor is dead here. -->
-      <a href="index.html#pillars" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
-      <a href="index.html#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
-      <a href="index.html#community" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="index.html" data-en="Home" data-de="Start">Home</a>
+      <a href="values.html" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a>
       <a href="about.html" aria-current="page" data-en="About Us" data-de="Über uns">About Us</a>
       <a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a>
     </nav>
@@ -1333,8 +1336,11 @@ html:not(.js) .deo-floating-students { opacity: 1; transform: none; }
       <nav class="footer-col" aria-label="Pages">
         <h3>Pages</h3>
         <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="values.html">Our Values</a></li>
+          <li><a href="school-path.html">School Path</a></li>
+          <li><a href="community.html">Community</a></li>
           <li><a href="about.html">About</a></li>
-          <li><a href="index.html#path">School Path</a></li>
           <li><a href="contact-v2.html">Contact</a></li>
         </ul>
       </nav>

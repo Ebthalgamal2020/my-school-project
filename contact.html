@@ -923,7 +923,8 @@ html:not(.js) .arch-plate { opacity: 1; transform: none; }
     visibility: hidden;
     transition: max-height 0.25s ease;
   }
-  .js .main-nav.open { max-height: 340px; visibility: visible; }
+  /* Six items since Home and the three concept pages joined the nav. */
+  .js .main-nav.open { max-height: 440px; visibility: visible; }
 
   /* The rail: content steps in so the drawn line has its own column */
   :root { --rail: 26px; }
@@ -1024,9 +1025,10 @@ html:not(.js) .arch-plate { opacity: 1; transform: none; }
     <nav class="main-nav" id="main-nav">
       <!-- Same tabs and order as index.html and about.html. The first three
            sections live on the home page, so they need the full path. -->
-      <a href="index.html#pillars" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
-      <a href="index.html#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
-      <a href="index.html#community" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="index.html" data-en="Home" data-de="Start">Home</a>
+      <a href="values.html" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a>
       <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
       <a href="contact.html" aria-current="page" data-en="Contact" data-de="Kontakt">Contact</a>
     </nav>
@@ -1397,8 +1399,10 @@ html:not(.js) .arch-plate { opacity: 1; transform: none; }
         <h3>Pages</h3>
         <ul>
           <li><a href="index.html">Home</a></li>
+          <li><a href="values.html">Our Values</a></li>
+          <li><a href="school-path.html">School Path</a></li>
+          <li><a href="community.html">Community</a></li>
           <li><a href="about.html">About</a></li>
-          <li><a href="index.html#path">School Path</a></li>
           <li><a href="contact.html">Contact V1</a></li>
           <li><a href="contact-v2.html">Contact V2</a></li>
         </ul>

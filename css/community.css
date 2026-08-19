@@ -1,0 +1,453 @@
+/* =============================================================================
+   COMMUNITY — concept styles
+   -----------------------------------------------------------------------------
+   V1  "The gathering"
+       Four movements, each with its own composition and its own behaviour:
+       students arrive scattered and straighten; a teacher's sentence lands one
+       line at a time; two family fragments travel toward each other and meet;
+       alumni run past in a band that never quite stops. Then everyone on the
+       page assembles into the DEO mark.
+
+   V2  "The wall"
+       The same people as a mosaic you sort. Choosing a group re-lays the wall,
+       and every card travels to its new place rather than blinking there.
+
+   Loads on top of css/site.css.
+   ============================================================================= */
+
+/* ==========================================================================
+   V1 · HERO
+   ========================================================================== */
+.cm-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: calc(100svh - var(--header-h));
+  display: flex; align-items: center;
+  padding: clamp(50px, 9vh, 110px) 0 0;
+  overflow: hidden;
+  background: var(--cream);
+}
+
+/* The headline, the lede and the eyebrow all sit above the photographs. Without
+   this the eyebrow in particular disappears under a fragment. */
+.cm-hero .eyebrow,
+.cm-hero h1,
+.cm-hero .lede { position: relative; z-index: 2; }
+
+.cm-hero h1 {
+  /* Sized so the line ends before the running cut-out begins — black type over
+     a photographed head is unreadable however good it looks in a thumbnail. */
+  font-size: clamp(2.6rem, 9vw, 7.6rem);
+  line-height: .92;
+  letter-spacing: -.035em;
+  max-width: 11ch;
+}
+.cm-hero h1 em {
+  font-style: italic;
+  color: var(--red);
+}
+.cm-hero .lede { margin-top: clamp(20px, 3.5vh, 36px); max-width: 46ch; }
+
+/* The cut-out: three pupils running in from the right, moving a little slower
+   than the page so the hero has depth. --py is written by js/community.js. */
+.cm-cutout {
+  position: absolute;
+  right: clamp(-70px, -3vw, 0px);
+  bottom: 0;
+  width: clamp(300px, 42vw, 640px);
+  z-index: 1;
+  pointer-events: none;
+  transform: translate3d(0, calc(var(--py, 0) * 1px), 0);
+}
+.cm-cutout img { width: 100%; height: auto; }
+
+/* Fragments: small crops of the same few photographs, scattered as if pinned
+   to the page. They drift with the pointer, which is what makes the hero feel
+   inhabited rather than laid out. */
+.cm-orb {
+  position: absolute;
+  z-index: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 24px 50px -28px rgba(20, 20, 20, .7);
+  transform: translate3d(calc(var(--dx, 0) * 1px), calc(var(--dy, 0) * 1px), 0);
+  transition: transform 900ms var(--ease);
+}
+.cm-orb img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Placed in the hero's actual whitespace — the band above the headline and the
+   strip below the lede — so they never land on a word. */
+.cm-orb-1 { left: 3%;  top: 10%;    width: clamp(62px, 7vw, 112px); aspect-ratio: 1; }
+.cm-orb-2 { left: 38%; top: 5%;     width: clamp(50px, 5.5vw, 88px); aspect-ratio: 1; }
+.cm-orb-3 { left: 11%; bottom: 3%;  width: clamp(66px, 8vw, 118px); aspect-ratio: 1; }
+
+@media (max-width: 700px) {
+  /* On a phone the cut-out and the headline would fight for the same space. */
+  .cm-hero { min-height: auto; padding-bottom: clamp(30px, 6vh, 60px); }
+  .cm-cutout { position: relative; right: auto; width: 100%; margin-top: 28px; transform: none; }
+  .cm-orb-2 { display: none; }
+  .cm-orb-3 { bottom: auto; top: 62%; }
+}
+
+/* ==========================================================================
+   V1 · MOVEMENTS — shared
+   ========================================================================== */
+.cm-mv { position: relative; padding: clamp(80px, 13vh, 160px) 0; overflow: hidden; }
+/* The container is capped in pixels; the measure lives on the elements
+   themselves, where a `ch` is measured in the font that actually sets them.
+   30ch on this wrapper would be 30 characters of 16px Manrope — barely wider
+   than a phone, and it wrapped every heading into four lines. */
+.cm-mv-head { max-width: min(760px, 100%); margin-bottom: clamp(34px, 6vh, 66px); }
+.cm-mv h2 {
+  font-size: clamp(2rem, 5.5vw, 4.4rem);
+  line-height: .98;
+  letter-spacing: -.03em;
+  max-width: 15ch;
+  margin: clamp(12px, 2vh, 20px) 0 clamp(14px, 2.2vh, 24px);
+}
+
+/* A headline with a photograph inside it. Guarded, so the words never vanish
+   in a browser that cannot clip a background to text. */
+.cm-through { color: var(--ink); }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .cm-through {
+    background-image: url("../assets/campus-building.jpg");
+    background-size: cover;
+    background-position: 50% 38%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+.cm-caption {
+  font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--text-muted-light);
+}
+
+/* ==========================================================================
+   V1 · STUDENTS — scattered, then aligned
+   --align runs 0 to 1 as the section crosses the viewport.
+   ========================================================================== */
+.cm-mv-students { background: var(--cream-soft); }
+
+.cm-scatter {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2.4vw, 34px);
+  align-items: center;
+}
+.cm-scatter figure {
+  margin: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  box-shadow: 0 30px 60px -36px rgba(20, 20, 20, .55);
+  /* Each card starts thrown down at its own angle and settles into the row.
+     --a is the card's starting angle, --o its starting offset. */
+  transform:
+    translate3d(calc(var(--o, 0) * (1 - var(--align, 0)) * 1px),
+                calc(var(--v, 0) * (1 - var(--align, 0)) * 1px), 0)
+    rotate(calc(var(--a, 0deg) * (1 - var(--align, 0))));
+}
+.cm-scatter img { width: 100%; height: 100%; object-fit: cover; }
+.cm-scatter figure:nth-child(1) { --a: -7deg;  --o: -34; --v: 40; }
+.cm-scatter figure:nth-child(2) { --a: 5deg;   --o: 20;  --v: -52; }
+.cm-scatter figure:nth-child(3) { --a: -4deg;  --o: 40;  --v: 30; }
+
+/* ==========================================================================
+   V1 · TEACHERS — one sentence, landing a line at a time
+   ========================================================================== */
+.cm-mv-teachers { background: var(--ink); color: var(--text-on-dark); }
+.cm-mv-teachers .cm-caption { color: var(--text-muted-dark); }
+
+.cm-split {
+  display: grid;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1fr);
+  gap: clamp(30px, 5vw, 78px);
+  align-items: center;
+}
+.cm-portrait {
+  margin: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+}
+.cm-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+
+.cm-quote {
+  font-family: var(--serif);
+  font-size: clamp(1.5rem, 3.4vw, 2.9rem);
+  line-height: 1.18;
+  letter-spacing: -.02em;
+}
+.cm-quote span { display: block; }
+.cm-attrib { margin-top: clamp(18px, 3vh, 30px); color: var(--text-muted-dark); font-size: .9rem; }
+
+/* ==========================================================================
+   V1 · FAMILIES — two halves that travel toward each other
+   --meet runs 0 to 1; at 0 the halves are apart, at 1 they have met.
+   ========================================================================== */
+.cm-mv-families { background: var(--cream); }
+
+.cm-meet {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(10px, 1.6vw, 22px);
+  align-items: stretch;
+}
+.cm-meet figure {
+  margin: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.cm-meet img { width: 100%; height: 100%; object-fit: cover; }
+.cm-meet-a { transform: translate3d(calc((var(--meet, 0) - 1) * 24%), 0, 0); }
+.cm-meet-b { transform: translate3d(calc((1 - var(--meet, 0)) * 24%), 0, 0); }
+
+/* The sentence that only makes sense once the two halves have arrived. */
+.cm-meet-note {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(calc(.9 + var(--meet, 0) * .1));
+  z-index: 2;
+  width: min(360px, 74%);
+  background: var(--cream-soft);
+  padding: clamp(20px, 2.6vw, 30px);
+  border-radius: var(--radius);
+  box-shadow: 0 30px 70px -34px rgba(20, 20, 20, .55);
+  opacity: var(--meet, 0);
+  text-align: center;
+}
+.cm-meet-note p { font-family: var(--serif); font-size: clamp(1rem, 1.6vw, 1.3rem); }
+
+/* ==========================================================================
+   V1 · ALUMNI — a band that keeps moving
+   ========================================================================== */
+.cm-mv-alumni { background: var(--cream-soft); padding-bottom: clamp(60px, 10vh, 120px); }
+
+.cm-marquee {
+  overflow: hidden;
+  margin-top: clamp(20px, 4vh, 44px);
+  /* Fade the ends so the band reads as passing through rather than starting
+     and stopping at the page edges. */
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.cm-marquee-inner {
+  display: flex;
+  gap: clamp(12px, 2vw, 26px);
+  width: max-content;
+  animation: cm-run 42s linear infinite;
+}
+.cm-marquee:hover .cm-marquee-inner,
+.cm-marquee:focus-within .cm-marquee-inner { animation-play-state: paused; }
+@keyframes cm-run { to { transform: translate3d(-50%, 0, 0); } }
+
+.cm-alum {
+  flex: none;
+  display: flex; flex-direction: column; gap: 4px;
+  padding: clamp(16px, 2vw, 24px) clamp(20px, 2.6vw, 32px);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius);
+  background: var(--cream);
+  transition: transform var(--med) var(--ease), border-color var(--med) var(--ease),
+              background var(--med) var(--ease);
+}
+.cm-alum b {
+  font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem); line-height: 1;
+}
+.cm-alum span { font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; color: var(--text-muted-light); }
+.cm-alum:hover { transform: translateY(-6px); border-color: var(--red); background: var(--cream-soft); }
+
+/* ==========================================================================
+   V1 · TOGETHER — the crowd assembles into the mark
+   -----------------------------------------------------------------------------
+   Cream ground on purpose: the mark's own three colours are black, red and
+   gold, and black only exists on a light page.
+   ========================================================================== */
+.cm-together {
+  background: var(--cream);
+  padding: clamp(70px, 11vh, 140px) 0 clamp(80px, 13vh, 160px);
+  text-align: center;
+}
+.cm-together h2 {
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  letter-spacing: -.03em;
+  margin-bottom: clamp(14px, 2.4vh, 26px);
+}
+.cm-together .lede { margin-inline: auto; }
+
+.cm-canvas-wrap {
+  position: relative;
+  width: 100%;
+  margin: clamp(28px, 5vh, 60px) auto clamp(24px, 4vh, 46px);
+  aspect-ratio: 16 / 9;
+  max-width: 980px;
+}
+.cm-canvas-wrap canvas { width: 100%; height: 100%; display: block; }
+
+/* Without JavaScript there is no canvas worth showing — the mark itself takes
+   its place, which is where the animation was heading anyway. */
+.cm-canvas-fallback { display: none; }
+html:not(.js) .cm-canvas-wrap canvas { display: none; }
+html:not(.js) .cm-canvas-fallback { display: block; width: 100%; }
+
+/* ==========================================================================
+   V1 · CURSOR
+   A soft light that follows the pointer and swells over anything a visitor
+   might want to look at. Pointer devices only, and never under reduced motion.
+   ========================================================================== */
+.cm-cursor {
+  position: fixed; left: 0; top: 0;
+  z-index: 90;
+  width: 22px; height: 22px;
+  margin: -11px 0 0 -11px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(219, 31, 38, .45), rgba(219, 31, 38, 0) 70%);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(var(--cx, 0), var(--cy, 0), 0) scale(var(--cs, 1));
+  transition: opacity var(--med) var(--ease), scale var(--med) var(--ease);
+  will-change: transform;
+}
+.cm-cursor.is-on { opacity: 1; }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cm-cursor { display: none; }
+}
+
+@media (max-width: 860px) {
+  .cm-split { grid-template-columns: minmax(0, 1fr); gap: clamp(20px, 4vh, 34px); }
+  .cm-scatter { grid-template-columns: 1fr 1fr; }
+  .cm-scatter figure:nth-child(3) { grid-column: span 2; aspect-ratio: 16 / 10; }
+  .cm-meet { grid-template-columns: minmax(0, 1fr); }
+  .cm-meet-a, .cm-meet-b { transform: none; }
+  .cm-meet figure { aspect-ratio: 16 / 11; }
+  .cm-meet-note { position: static; transform: none; width: 100%; opacity: 1; }
+}
+
+/* ==========================================================================
+   V2 · THE WALL
+   ========================================================================== */
+.cw-hero {
+  background: var(--cream);
+  padding: clamp(50px, 9vh, 110px) 0 clamp(20px, 3.5vh, 38px);
+}
+.cw-hero h1 {
+  font-size: clamp(2.4rem, 6.5vw, 5.2rem);
+  letter-spacing: -.03em; line-height: 1;
+  margin: clamp(18px, 3vh, 30px) 0 clamp(14px, 2.4vh, 24px);
+  max-width: 16ch;
+}
+
+.cw-wall { background: var(--cream); padding-bottom: clamp(70px, 11vh, 130px); }
+
+.cw-filters {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: clamp(18px, 3vh, 30px) 0 clamp(24px, 4vh, 42px);
+  border-top: 1px solid var(--border-light);
+}
+.cw-filters button {
+  padding: 10px 20px;
+  border: 1.5px solid var(--border-light); border-radius: 999px;
+  background: transparent; cursor: pointer;
+  font-size: .82rem; font-weight: 600;
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease),
+              border-color var(--fast) var(--ease);
+}
+.cw-filters button:hover { border-color: var(--ink); }
+.cw-filters button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--text-on-dark); }
+.cw-count { margin-left: auto; align-self: center; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted-light); }
+
+.cw-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.cw-card {
+  position: relative;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  min-height: 260px;
+  padding: clamp(18px, 2vw, 26px);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--text-on-dark);
+  isolation: isolate;
+  transition: opacity var(--med) var(--ease), transform var(--med) var(--ease);
+}
+.cw-card.is-hidden { display: none; }
+
+.cw-card img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  transition: transform 900ms var(--ease), filter var(--med) var(--ease);
+}
+.cw-card::after {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(transparent 28%, rgba(20, 20, 20, .86));
+}
+.cw-card:hover img, .cw-card:focus-within img { transform: scale(1.06); }
+
+.cw-role {
+  font-size: .68rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.cw-card h3 { font-size: clamp(1.15rem, 1.8vw, 1.5rem); letter-spacing: -.01em; }
+
+/* The quote is folded away until the card is hovered or focused — the wall
+   stays quiet until you look at one person in particular. */
+.cw-card blockquote {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--med) var(--ease), opacity var(--med) var(--ease);
+}
+.cw-card blockquote > span { overflow: hidden; font-size: .92rem; color: var(--text-muted-dark); }
+.cw-card:hover blockquote,
+.cw-card:focus-within blockquote { grid-template-rows: 1fr; opacity: 1; margin-top: 10px; }
+
+/* A card with no photograph: a plain colour field from the mark's palette,
+   so the wall has rhythm instead of twenty identical rectangles. */
+.cw-card.is-plain { background: var(--tone, var(--red)); }
+.cw-card.is-plain::after { display: none; }
+.cw-card.is-plain .cw-role { color: rgba(255, 255, 255, .8); }
+.cw-card.is-plain blockquote > span { color: rgba(255, 255, 255, .82); }
+
+/* Gold is the third colour of the mark and belongs on this wall, but white on
+   gold is 2.5:1 and unreadable. The light variant flips the type instead of
+   dropping the colour. */
+.cw-card.is-plain.is-light { color: var(--ink); }
+.cw-card.is-plain.is-light .cw-role { color: rgba(20, 20, 20, .7); }
+.cw-card.is-plain.is-light blockquote > span { color: rgba(20, 20, 20, .78); }
+
+/* Hover is not available on a touch screen, so there the quote is simply
+   part of the card. */
+@media (hover: none), (pointer: coarse) {
+  .cw-card blockquote { grid-template-rows: 1fr; opacity: 1; margin-top: 10px; }
+}
+
+/* Two cards are given more room, so the grid never reads as a spreadsheet. */
+.cw-card.is-wide { grid-column: span 2; }
+@media (max-width: 620px) { .cw-card.is-wide { grid-column: span 1; } }
+
+/* FLIP: js/community.js measures, re-lays the grid, then plays each card from
+   where it used to be. This class is on only while that animation runs. */
+.cw-card.is-moving { transition: transform var(--slow) var(--ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  .cw-card.is-moving { transition: none; }
+  .cm-marquee-inner { animation: none; }
+  .cm-marquee { overflow-x: auto; }
+  .cm-scatter figure, .cm-meet-a, .cm-meet-b { transform: none; }
+  .cm-meet-note { opacity: 1; transform: translate(-50%, -50%); }
+  .cm-cutout { transform: none; }
+}

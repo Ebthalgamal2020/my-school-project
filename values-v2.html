@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Values V2 — DEO Kairo</title>
+<meta name="description" content="The six values of DEO Kairo as a constellation: one lemniscate drawn from the DEO mark, six nodes, explored in any order by pointer or keyboard.">
+<meta name="theme-color" content="#141414">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/values.css">
+
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div class="scroll-progress" aria-hidden="true"><span id="scroll-bar"></span></div>
+
+<nav class="ver-switch" aria-label="Our Values page version">
+  <a href="values.html">V1</a>
+  <a href="values-v2.html" aria-current="page">V2</a>
+</nav>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/deo-logo.png" alt="DEO Kairo" width="68" height="48">
+      <span>DEO Kairo</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="index.html" data-en="Home" data-de="Start">Home</a>
+      <a href="values.html" aria-current="page" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
+      <a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
+        <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
+      </button>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+      <span class="sr-only">Menu</span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===================== HERO =====================
+       V1 argues that its five values converge, and proves it with a scroll.
+       V2 makes the opposite case: they are one field, and no visitor should be
+       told which to read first. -->
+  <section class="vc-hero on-dark">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal data-en="Our Values · Version 2" data-de="Unsere Werte · Version 2">Our Values · Version 2</p>
+      <h1 data-reveal style="--i:1"
+          data-en="Six values. No first one."
+          data-de="Sechs Werte. Keiner ist der erste.">Six values. No first one.</h1>
+      <p class="lede" data-reveal style="--i:2"
+         data-en="Six ideas drawn on the curve our mark is built from. Move along it, or tab through it, and open whichever value you want first."
+         data-de="Sechs Gedanken, gezeichnet auf der Kurve, aus der unser Zeichen besteht. Fahren Sie darauf entlang oder springen Sie mit der Tabulatortaste — und öffnen Sie den Wert, der Sie zuerst interessiert.">
+        Six ideas drawn on the curve our mark is built from. Move along it, or tab
+        through it, and open whichever value you want first.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== THE FIELD =====================
+       Built entirely by js/values.js from the written list below, so the words
+       exist once in this document and the two views can never drift apart. -->
+  <section class="vc-field on-dark" aria-label="The six values as a constellation">
+    <div class="wrap">
+      <div class="vc-stage" id="vc-stage">
+        <svg id="vc-svg" aria-hidden="true" focusable="false">
+          <path class="vc-curve" id="vc-curve" d="" stroke="#F5F3EF"></path>
+        </svg>
+        <!-- The panel repeats, for the eye, what each node already carries as
+             its description — so it is skipped by assistive technology. -->
+        <div class="vc-panel" id="vc-panel" aria-hidden="true"></div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- ===================== THE VALUES, IN WORDS =====================
+       The source of truth. The field above copies from here, and this is the
+       entire page when JavaScript is off. -->
+  <section class="vc-written">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal data-en="All six, in words" data-de="Alle sechs, in Worten">All six, in words</p>
+
+      <ol>
+        <li data-reveal>
+          <span class="vw-num numeral">01</span>
+          <div class="vc-body" id="vc-text-1">
+            <h2 class="vc-name" data-en="Connection" data-de="Verbindung">Connection</h2>
+            <p data-en="Germany and Egypt. Students and teachers. Past and future. Every day here begins with two traditions choosing to share one room rather than politely dividing it."
+               data-de="Deutschland und Ägypten. Schülerinnen und Lehrkräfte. Vergangenheit und Zukunft. Jeder Tag beginnt hier damit, dass zwei Traditionen sich einen Raum teilen, statt ihn höflich aufzuteilen.">
+              Germany and Egypt. Students and teachers. Past and future. Every day here begins
+              with two traditions choosing to share one room rather than politely dividing it.
+            </p>
+            <span class="vw-aside" data-en="Encounter is a method here, not a motto."
+                  data-de="Begegnung ist hier eine Methode, kein Motto.">Encounter is a method here, not a motto.</span>
+          </div>
+        </li>
+
+        <li data-reveal>
+          <span class="vw-num numeral">02</span>
+          <div class="vc-body" id="vc-text-2">
+            <h2 class="vc-name" data-en="Curiosity" data-de="Neugier">Curiosity</h2>
+            <p data-en="A good question is worth more than a correct answer given too quickly. Lessons are built to leave room for the second question — the one nobody planned for."
+               data-de="Eine gute Frage ist mehr wert als eine zu schnell gegebene richtige Antwort. Unterricht lässt hier Raum für die zweite Frage — die, mit der niemand gerechnet hat.">
+              A good question is worth more than a correct answer given too quickly. Lessons are
+              built to leave room for the second question — the one nobody planned for.
+            </p>
+            <span class="vw-aside" data-en="We would rather a class ran long than ended early."
+                  data-de="Lieber dauert eine Stunde länger, als dass sie zu früh endet.">We would rather a class ran long than ended early.</span>
+          </div>
+        </li>
+
+        <li data-reveal>
+          <span class="vw-num numeral">03</span>
+          <div class="vc-body" id="vc-text-3">
+            <h2 class="vc-name" data-en="Community" data-de="Gemeinschaft">Community</h2>
+            <p data-en="Learning here is not a solo performance. Classes are small enough that an empty chair gets noticed, and mixed enough that nobody spends five years only among people like themselves."
+               data-de="Lernen ist hier kein Solo. Die Klassen sind klein genug, dass ein leerer Stuhl auffällt, und gemischt genug, dass niemand fünf Jahre lang nur unter seinesgleichen verbringt.">
+              Learning here is not a solo performance. Classes are small enough that an empty
+              chair gets noticed, and mixed enough that nobody spends five years only among
+              people like themselves.
+            </p>
+            <span class="vw-aside" data-en="A school is a community before it is a curriculum."
+                  data-de="Eine Schule ist eine Gemeinschaft, bevor sie ein Lehrplan ist.">A school is a community before it is a curriculum.</span>
+          </div>
+        </li>
+
+        <li data-reveal>
+          <span class="vw-num numeral">04</span>
+          <div class="vc-body" id="vc-text-4">
+            <h2 class="vc-name" data-en="Creativity" data-de="Kreativität">Creativity</h2>
+            <p data-en="Room to think sideways: a stage, a workshop, a rehearsal room, and teachers who treat an unexpected idea as progress rather than as a detour from the plan."
+               data-de="Raum für Umwege: eine Bühne, eine Werkstatt, ein Proberaum — und Lehrkräfte, die eine unerwartete Idee als Fortschritt behandeln und nicht als Abweichung vom Plan.">
+              Room to think sideways: a stage, a workshop, a rehearsal room, and teachers who
+              treat an unexpected idea as progress rather than as a detour from the plan.
+            </p>
+            <span class="vw-aside" data-en="The best answers rarely arrive in the expected order."
+                  data-de="Die besten Antworten kommen selten in der erwarteten Reihenfolge.">The best answers rarely arrive in the expected order.</span>
+          </div>
+        </li>
+
+        <li data-reveal>
+          <span class="vw-num numeral">05</span>
+          <div class="vc-body" id="vc-text-5">
+            <h2 class="vc-name" data-en="Future" data-de="Zukunft">Future</h2>
+            <p data-en="The Abitur is a door, not a destination. Students leave here at ease in three languages and at home in more than one country — which is a harder thing to teach than either."
+               data-de="Das Abitur ist eine Tür, kein Ziel. Unsere Schülerinnen und Schüler gehen mit drei Sprachen und in mehr als einem Land zu Hause — und das ist schwerer zu lehren als beides.">
+              The Abitur is a door, not a destination. Students leave here at ease in three
+              languages and at home in more than one country — which is a harder thing to teach
+              than either.
+            </p>
+            <span class="vw-aside" data-en="Prepared for what comes next — wherever next turns out to be."
+                  data-de="Vorbereitet auf das, was kommt — wo immer das sein wird.">Prepared for what comes next — wherever next turns out to be.</span>
+          </div>
+        </li>
+
+        <li data-reveal>
+          <span class="vw-num numeral">06</span>
+          <div class="vc-body" id="vc-text-6">
+            <h2 class="vc-name" data-en="Growth" data-de="Wachstum">Growth</h2>
+            <p data-en="Fourteen years is a long time to watch someone become themselves. We measure a year by how far a child has come from where they started, not by where they finished against everybody else."
+               data-de="Vierzehn Jahre sind eine lange Zeit, um zu begleiten, wie jemand er selbst wird. Wir messen ein Jahr daran, wie weit ein Kind seit dem eigenen Startpunkt gekommen ist — nicht daran, wo es im Vergleich zu allen anderen steht.">
+              Fourteen years is a long time to watch someone become themselves. We measure a
+              year by how far a child has come from where they started, not by where they
+              finished against everybody else.
+            </p>
+            <span class="vw-aside" data-en="Progress is personal before it is comparable."
+                  data-de="Fortschritt ist persönlich, bevor er vergleichbar ist.">Progress is personal before it is comparable.</span>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="vw-next">
+    <div class="wrap vw-next-inner">
+      <h2 data-reveal data-en="Prefer to be led through them?"
+          data-de="Lieber Schritt für Schritt?">Prefer to be led through them?</h2>
+      <div class="vw-next-links" data-reveal style="--i:1">
+        <a class="btn" href="values.html">
+          <span data-en="See version 1" data-de="Version 1 ansehen">See version 1</span>
+          <span class="arw" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="link-arrow" href="school-path.html">
+          <span data-en="Walk the school path" data-de="Den Schulweg gehen">Walk the school path</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-row">
+          <img src="assets/deo-logo.png" alt="" width="68" height="48">
+          <span>DEO Kairo</span>
+        </div>
+        <p data-en="Deutsche Evangelische Oberschule Kairo — a German-Egyptian encounter school, teaching from Kindergarten through the Abitur."
+           data-de="Deutsche Evangelische Oberschule Kairo — eine deutsch-ägyptische Begegnungsschule, vom Kindergarten bis zum Abitur.">
+          Deutsche Evangelische Oberschule Kairo — a German-Egyptian encounter school,
+          teaching from Kindergarten through the Abitur.
+        </p>
+      </div>
+      <nav class="footer-col" aria-label="Pages">
+        <h3 data-en="Pages" data-de="Seiten">Pages</h3>
+        <ul>
+          <li><a href="index.html" data-en="Home" data-de="Start">Home</a></li>
+          <li><a href="values.html" data-en="Our Values" data-de="Unsere Werte">Our Values</a></li>
+          <li><a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a></li>
+          <li><a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a></li>
+          <li><a href="about.html" data-en="About Us" data-de="Über uns">About Us</a></li>
+          <li><a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="footer-col">
+        <h3 data-en="Visit" data-de="Besuch">Visit</h3>
+        <ul>
+          <li>6, El Dokki St., Dokki</li>
+          <li>12612 Cairo, Egypt</li>
+          <li><a href="tel:+20237481475">+20 (0)2 3748 1475</a></li>
+          <li><a href="mailto:info@deokairo.de">info@deokairo.de</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span data-en="© 2026 DEO Kairo · Built as a student web project"
+            data-de="© 2026 DEO Kairo · Erstellt als Studierendenprojekt">© 2026 DEO Kairo · Built as a student web project</span>
+      <span data-en="Unofficial redesign concept — not affiliated with DEO Kairo"
+            data-de="Inoffizielles Redesign-Konzept — nicht mit der DEO Kairo verbunden">Unofficial redesign concept — not affiliated with DEO Kairo</span>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="to-top" aria-label="Back to top"><span aria-hidden="true">&uarr;</span></button>
+
+<script src="js/deo-mark.js"></script>
+<script src="js/site.js"></script>
+<script src="js/values.js"></script>
+</body>
+</html>

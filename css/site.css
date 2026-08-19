@@ -74,9 +74,20 @@ body {
   color: var(--text-on-light);
   background: var(--cream);
   line-height: 1.6;
-  /* The concept pages animate wide elements sideways. Without this a phone can
-     rubber-band horizontally even when nothing is genuinely overflowing. */
-  overflow-x: hidden;
+
+  /* The concept pages move wide elements sideways, and without this a phone can
+     rubber-band horizontally even when nothing is genuinely overflowing.
+
+     It must be `clip`, not `hidden`. `overflow-x: hidden` forces overflow-y to
+     `auto`, which makes <body> a scroll container — and every position:sticky
+     descendant then sticks to a box that never scrolls, so the sticky stages on
+     Our Values and School Path silently stop working. `clip` does the same
+     visual job without creating a scroll container.
+
+     Safari below 16 ignores `clip` and simply allows the horizontal scroll it
+     would have prevented; the sticky behaviour, which matters far more, is
+     correct everywhere. */
+  overflow-x: clip;
 }
 
 h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.08; }
@@ -118,6 +129,9 @@ a { color: inherit; }
   letter-spacing: .22em;
   text-transform: uppercase;
   color: var(--red);
+  /* A default gap so an eyebrow never sits on the shoulders of the heading
+     under it; sections that want more set their own. */
+  margin-bottom: clamp(12px, 2vh, 22px);
 }
 .on-dark .eyebrow { color: var(--gold); }
 
@@ -415,7 +429,7 @@ html:not(.js) .to-top { display: none; }
 }
 
 @media (max-width: 560px) {
-  .footer-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: minmax(0, 1fr); }
   .ver-switch { font-size: .68rem; }
   .ver-switch a { padding: 7px 11px; }
   /* Back-to-top and the version pill share the bottom edge — lift the pill so

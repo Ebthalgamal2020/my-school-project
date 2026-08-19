@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Values — DEO Kairo</title>
+<meta name="description" content="Five values of DEO Kairo, drawn as one line: two separate strands of the DEO mark that converge, value by value, into the shape the school has carried since 1873.">
+<meta name="theme-color" content="#FAF7F1">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/values.css">
+
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div class="scroll-progress" aria-hidden="true"><span id="scroll-bar"></span></div>
+
+<!-- Version switch, in the same corner and the same style as the Contact
+     concepts. V1 is this scroll-led journey; V2 explores the same five values
+     as a field you can wander in any order. -->
+<nav class="ver-switch" aria-label="Our Values page version">
+  <a href="values.html" aria-current="page">V1</a>
+  <a href="values-v2.html">V2</a>
+</nav>
+
+<header class="site-header" id="site-header">
+  <div class="wrap header-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/deo-logo.png" alt="DEO Kairo" width="68" height="48">
+      <span>DEO Kairo</span>
+    </a>
+    <nav class="main-nav" id="main-nav">
+      <a href="index.html" data-en="Home" data-de="Start">Home</a>
+      <a href="values.html" aria-current="page" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
+      <a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
+        <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
+      </button>
+    </div>
+    <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+      <span class="sr-only">Menu</span>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ===================== HERO =====================
+       Two strands enter from opposite edges of the screen and stop short of
+       each other. The page's whole argument, stated before a word is read. -->
+  <section class="vw-hero">
+    <svg class="vw-hero-strands" id="vw-hero-svg" aria-hidden="true" focusable="false"
+         preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="vw-grad-a" x1="0" y1="0" x2="1" y2="0.3">
+          <stop offset="0" stop-color="#141414"></stop>
+          <stop offset="1" stop-color="#DB1F26"></stop>
+        </linearGradient>
+        <linearGradient id="vw-grad-b" x1="0" y1="0.3" x2="1" y2="0">
+          <stop offset="0" stop-color="#DB1F26"></stop>
+          <stop offset="1" stop-color="#FFCE03"></stop>
+        </linearGradient>
+      </defs>
+      <path class="vw-hero-a" d="" stroke="url(#vw-grad-a)"></path>
+      <path class="vw-hero-b" d="" stroke="url(#vw-grad-b)"></path>
+    </svg>
+
+    <div class="wrap vw-hero-inner">
+      <p class="eyebrow" data-reveal data-en="Our Values · DEO Kairo" data-de="Unsere Werte · DEO Kairo">Our Values · DEO Kairo</p>
+
+      <h1 data-reveal style="--i:1">
+        <span data-en="What connects us" data-de="Was uns verbindet">What connects us</span><br>
+        <em data-en="moves us forward." data-de="bringt uns voran.">moves us forward.</em>
+      </h1>
+
+      <div class="vw-hero-foot" data-reveal style="--i:2">
+        <p class="lede"
+           data-en="Five values, drawn as one line. Two separate strands — a German school and an Egyptian city — travel down this page and, value by value, become the single shape our mark has carried since 1873."
+           data-de="Fünf Werte, als eine Linie gezeichnet. Zwei getrennte Stränge — eine deutsche Schule und eine ägyptische Stadt — laufen durch diese Seite und werden Wert für Wert zu der einen Form, die unser Zeichen seit 1873 trägt.">
+          Five values, drawn as one line. Two separate strands — a German school and an
+          Egyptian city — travel down this page and, value by value, become the single
+          shape our mark has carried since 1873.
+        </p>
+        <a class="vw-cue" href="#value-1">
+          <span data-en="Scroll to begin" data-de="Zum Beginnen scrollen">Scroll to begin</span>
+          <i aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== THE FIVE VALUES =====================
+       One <section> holds all five. With JavaScript it becomes a sticky stage
+       and the articles cross-fade in place; without it, the same markup reads
+       as a stacked editorial list with the shape sticking alongside. -->
+  <section class="vw-track" id="vw-track" aria-label="The five values">
+    <div class="vw-stage" id="vw-stage">
+      <div class="wrap vw-stage-inner">
+
+        <div class="vw-copy" id="vw-copy">
+
+          <article class="vw-value" id="value-1">
+            <span class="vw-num numeral">01</span>
+            <h2 class="vw-word" data-en="Connection" data-de="Verbindung">Connection</h2>
+            <p data-en="Germany and Egypt. Students and teachers. Past and future. Every day here begins with two traditions choosing to share one room rather than politely dividing it."
+               data-de="Deutschland und Ägypten. Schülerinnen und Lehrkräfte. Vergangenheit und Zukunft. Jeder Tag beginnt hier damit, dass zwei Traditionen sich einen Raum teilen, statt ihn höflich aufzuteilen.">
+              Germany and Egypt. Students and teachers. Past and future. Every day here begins
+              with two traditions choosing to share one room rather than politely dividing it.
+            </p>
+            <span class="vw-aside" data-en="Encounter is a method here, not a motto."
+                  data-de="Begegnung ist hier eine Methode, kein Motto.">Encounter is a method here, not a motto.</span>
+          </article>
+
+          <article class="vw-value" id="value-2">
+            <span class="vw-num numeral">02</span>
+            <h2 class="vw-word" data-en="Curiosity" data-de="Neugier">Curiosity</h2>
+            <p data-en="A good question is worth more than a correct answer given too quickly. Lessons are built to leave room for the second question — the one nobody planned for."
+               data-de="Eine gute Frage ist mehr wert als eine zu schnell gegebene richtige Antwort. Unterricht lässt hier Raum für die zweite Frage — die, mit der niemand gerechnet hat.">
+              A good question is worth more than a correct answer given too quickly. Lessons are
+              built to leave room for the second question — the one nobody planned for.
+            </p>
+            <span class="vw-aside" data-en="We would rather a class ran long than ended early."
+                  data-de="Lieber dauert eine Stunde länger, als dass sie zu früh endet.">We would rather a class ran long than ended early.</span>
+          </article>
+
+          <article class="vw-value" id="value-3">
+            <span class="vw-num numeral">03</span>
+            <h2 class="vw-word" data-en="Community" data-de="Gemeinschaft">Community</h2>
+            <p data-en="Learning here is not a solo performance. Classes are small enough that an empty chair gets noticed, and mixed enough that nobody spends five years only among people like themselves."
+               data-de="Lernen ist hier kein Solo. Die Klassen sind klein genug, dass ein leerer Stuhl auffällt, und gemischt genug, dass niemand fünf Jahre lang nur unter seinesgleichen verbringt.">
+              Learning here is not a solo performance. Classes are small enough that an empty
+              chair gets noticed, and mixed enough that nobody spends five years only among
+              people like themselves.
+            </p>
+            <span class="vw-aside" data-en="A school is a community before it is a curriculum."
+                  data-de="Eine Schule ist eine Gemeinschaft, bevor sie ein Lehrplan ist.">A school is a community before it is a curriculum.</span>
+          </article>
+
+          <article class="vw-value" id="value-4">
+            <span class="vw-num numeral">04</span>
+            <h2 class="vw-word" data-en="Creativity" data-de="Kreativität">Creativity</h2>
+            <p data-en="Room to think sideways: a stage, a workshop, a rehearsal room, and teachers who treat an unexpected idea as progress rather than as a detour from the plan."
+               data-de="Raum für Umwege: eine Bühne, eine Werkstatt, ein Proberaum — und Lehrkräfte, die eine unerwartete Idee als Fortschritt behandeln und nicht als Abweichung vom Plan.">
+              Room to think sideways: a stage, a workshop, a rehearsal room, and teachers who
+              treat an unexpected idea as progress rather than as a detour from the plan.
+            </p>
+            <span class="vw-aside" data-en="The best answers rarely arrive in the expected order."
+                  data-de="Die besten Antworten kommen selten in der erwarteten Reihenfolge.">The best answers rarely arrive in the expected order.</span>
+          </article>
+
+          <article class="vw-value" id="value-5">
+            <span class="vw-num numeral">05</span>
+            <h2 class="vw-word" data-en="Future" data-de="Zukunft">Future</h2>
+            <p data-en="The Abitur is a door, not a destination. Students leave here at ease in three languages and at home in more than one country — which is a harder thing to teach than either."
+               data-de="Das Abitur ist eine Tür, kein Ziel. Unsere Schülerinnen und Schüler gehen mit drei Sprachen und in mehr als einem Land zu Hause — und das ist schwerer zu lehren als beides.">
+              The Abitur is a door, not a destination. Students leave here at ease in three
+              languages and at home in more than one country — which is a harder thing to teach
+              than either.
+            </p>
+            <span class="vw-aside" data-en="Prepared for what comes next — wherever next turns out to be."
+                  data-de="Vorbereitet auf das, was kommt — wo immer das sein wird.">Prepared for what comes next — wherever next turns out to be.</span>
+          </article>
+
+        </div>
+
+        <!-- The shape. Its two strands are redrawn every frame from the five
+             states in js/values.js; the numeral behind it is a watermark. -->
+        <div class="vw-figure">
+          <div class="vw-ghost numeral" id="vw-ghost" aria-hidden="true">01</div>
+          <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="vw-thread-grad-a" x1="0" y1="0" x2="1" y2="0.4">
+                <stop offset="0" stop-color="#141414"></stop>
+                <stop offset="1" stop-color="#DB1F26"></stop>
+              </linearGradient>
+              <linearGradient id="vw-thread-grad-b" x1="0" y1="0.4" x2="1" y2="0">
+                <stop offset="0" stop-color="#DB1F26"></stop>
+                <stop offset="1" stop-color="#FFCE03"></stop>
+              </linearGradient>
+            </defs>
+            <path class="vw-thread" id="vw-thread-a" d="" stroke="url(#vw-thread-grad-a)"></path>
+            <path class="vw-thread" id="vw-thread-b" d="" stroke="url(#vw-thread-grad-b)"></path>
+          </svg>
+        </div>
+
+      </div>
+
+      <!-- Real anchors: a working jump list even with JavaScript off. -->
+      <nav class="vw-rail" aria-label="Jump to a value">
+        <a href="#value-1"><i aria-hidden="true"></i><span data-en="Connection" data-de="Verbindung">Connection</span></a>
+        <a href="#value-2"><i aria-hidden="true"></i><span data-en="Curiosity" data-de="Neugier">Curiosity</span></a>
+        <a href="#value-3"><i aria-hidden="true"></i><span data-en="Community" data-de="Gemeinschaft">Community</span></a>
+        <a href="#value-4"><i aria-hidden="true"></i><span data-en="Creativity" data-de="Kreativität">Creativity</span></a>
+        <a href="#value-5"><i aria-hidden="true"></i><span data-en="Future" data-de="Zukunft">Future</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ===================== THE PAYOFF =====================
+       The line does not simply stop. Scrolling through this section fades the
+       drawn curve into the real DEO mark, in its own three colours. -->
+  <section class="vw-payoff on-dark" id="vw-payoff">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal data-en="All five, at once" data-de="Alle fünf auf einmal">All five, at once</p>
+      <h2 data-reveal style="--i:1" data-en="Five values. One shape." data-de="Fünf Werte. Eine Form.">Five values. One shape.</h2>
+
+      <div class="vw-mark-frame">
+        <svg id="vw-payoff-svg" viewBox="0 0 156 88" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="vw-grad-mark" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="156" y2="0">
+              <stop offset="0" stop-color="#F5F3EF"></stop>
+              <stop offset="0.5" stop-color="#DB1F26"></stop>
+              <stop offset="1" stop-color="#FFCE03"></stop>
+            </linearGradient>
+          </defs>
+          <g id="vw-payoff-stroke">
+            <path d="" fill="none" stroke="url(#vw-grad-mark)" stroke-width="9"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+          </g>
+          <!-- The real outlines are inserted here by js/deo-mark.js. -->
+          <g id="vw-payoff-mark"></g>
+        </svg>
+      </div>
+
+      <ul class="vw-chorus">
+        <li data-en="Connection" data-de="Verbindung">Connection</li>
+        <li data-en="Curiosity" data-de="Neugier">Curiosity</li>
+        <li data-en="Community" data-de="Gemeinschaft">Community</li>
+        <li data-en="Creativity" data-de="Kreativität">Creativity</li>
+        <li data-en="Future" data-de="Zukunft">Future</li>
+      </ul>
+
+      <p class="lede" data-reveal
+         data-en="Apart, they are five good intentions. Together they draw the mark that has stood over this school for more than 150 years."
+         data-de="Einzeln sind es fünf gute Absichten. Zusammen zeichnen sie das Zeichen, das seit über 150 Jahren über dieser Schule steht.">
+        Apart, they are five good intentions. Together they draw the mark that has stood
+        over this school for more than 150 years.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================== ONWARD ===================== -->
+  <section class="vw-next">
+    <div class="wrap vw-next-inner">
+      <h2 data-reveal data-en="See where the line has already been."
+          data-de="Sehen Sie, wo diese Linie schon war.">See where the line has already been.</h2>
+      <div class="vw-next-links" data-reveal style="--i:1">
+        <a class="btn" href="school-path.html">
+          <span data-en="Walk the school path" data-de="Den Schulweg gehen">Walk the school path</span>
+          <span class="arw" aria-hidden="true">&rarr;</span>
+        </a>
+        <a class="link-arrow" href="community.html">
+          <span data-en="Meet the community" data-de="Die Gemeinschaft treffen">Meet the community</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-row">
+          <img src="assets/deo-logo.png" alt="" width="68" height="48">
+          <span>DEO Kairo</span>
+        </div>
+        <p data-en="Deutsche Evangelische Oberschule Kairo — a German-Egyptian encounter school, teaching from Kindergarten through the Abitur."
+           data-de="Deutsche Evangelische Oberschule Kairo — eine deutsch-ägyptische Begegnungsschule, vom Kindergarten bis zum Abitur.">
+          Deutsche Evangelische Oberschule Kairo — a German-Egyptian encounter school,
+          teaching from Kindergarten through the Abitur.
+        </p>
+      </div>
+      <nav class="footer-col" aria-label="Pages">
+        <h3 data-en="Pages" data-de="Seiten">Pages</h3>
+        <ul>
+          <li><a href="index.html" data-en="Home" data-de="Start">Home</a></li>
+          <li><a href="values.html" data-en="Our Values" data-de="Unsere Werte">Our Values</a></li>
+          <li><a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a></li>
+          <li><a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a></li>
+          <li><a href="about.html" data-en="About Us" data-de="Über uns">About Us</a></li>
+          <li><a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="footer-col">
+        <h3 data-en="Visit" data-de="Besuch">Visit</h3>
+        <ul>
+          <li>6, El Dokki St., Dokki</li>
+          <li>12612 Cairo, Egypt</li>
+          <li><a href="tel:+20237481475">+20 (0)2 3748 1475</a></li>
+          <li><a href="mailto:info@deokairo.de">info@deokairo.de</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span data-en="© 2026 DEO Kairo · Built as a student web project"
+            data-de="© 2026 DEO Kairo · Erstellt als Studierendenprojekt">© 2026 DEO Kairo · Built as a student web project</span>
+      <span data-en="Unofficial redesign concept — not affiliated with DEO Kairo"
+            data-de="Inoffizielles Redesign-Konzept — nicht mit der DEO Kairo verbunden">Unofficial redesign concept — not affiliated with DEO Kairo</span>
+    </div>
+  </div>
+</footer>
+
+<button class="to-top" id="to-top" aria-label="Back to top"><span aria-hidden="true">&uarr;</span></button>
+
+<script src="js/deo-mark.js"></script>
+<script src="js/site.js"></script>
+<script src="js/values.js"></script>
+</body>
+</html>
