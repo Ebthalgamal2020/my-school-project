@@ -349,23 +349,8 @@ html:not(.js) .vw-rail { display: none; }
 /* ==========================================================================
    V1 · CLOSING
    ========================================================================== */
-.vw-next {
-  padding: clamp(70px, 11vh, 130px) 0;
-  background: var(--cream-soft);
-}
-.vw-next-inner {
-  display: flex; flex-wrap: wrap; align-items: flex-end;
-  justify-content: space-between; gap: 32px;
-}
-.vw-next h2 {
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  max-width: 16ch;
-  letter-spacing: -.02em;
-}
-.vw-next-links {
-  display: flex; flex-wrap: wrap; align-items: center;
-  gap: clamp(16px, 3vw, 30px);
-}
+/* .vw-next now lives in css/site.css — it closes more than one page, and
+   community.html never loaded this file, so its ending had no styles at all. */
 
 /* ==========================================================================
    V2 · THE CONSTELLATION

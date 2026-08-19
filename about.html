@@ -892,7 +892,9 @@ html:not(.js) .deo-floating-students { opacity: 1; transform: none; }
 /* ---- Closing statement ---- */
 .deo-closing {
   background: var(--cream);
-  padding-block: clamp(80px, 13vw, 170px);
+  /* vw-based padding collapses to its floor on a phone, which left this
+     closing block sitting 80px off the footer. The foot is set on its own. */
+  padding-block: clamp(80px, 13vw, 170px) clamp(110px, 14vw, 180px);
   text-align: center;
   border-top: 1px solid var(--border-light);
 }

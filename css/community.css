@@ -107,19 +107,11 @@
   margin: clamp(12px, 2vh, 20px) 0 clamp(14px, 2.2vh, 24px);
 }
 
-/* A headline with a photograph inside it. Guarded, so the words never vanish
-   in a browser that cannot clip a background to text. */
+/* Set solid, on the section's own clean ground. This headline used to be
+   filled with a photograph clipped to the letterforms; the picture fought the
+   three real photographs directly beneath it and cost the words their
+   contrast. The weight of the type carries the line on its own. */
 .cm-through { color: var(--ink); }
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .cm-through {
-    background-image: url("../assets/campus-building.jpg");
-    background-size: cover;
-    background-position: 50% 38%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-}
 
 .cm-caption {
   font-size: .72rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
@@ -271,8 +263,35 @@
    ========================================================================== */
 .cm-together {
   background: var(--cream);
-  padding: clamp(70px, 11vh, 140px) 0 clamp(80px, 13vh, 160px);
+  /* Roomier at the foot: the mark needs air under it before the closing line,
+     and the two together are the page's ending, not an afterthought. */
+  padding: clamp(80px, 12vh, 150px) 0 clamp(70px, 11vh, 130px);
   text-align: center;
+}
+
+/* The thread down into the closing block. Grows from nothing when the section
+   is reached, in the mark's own red-through-gold, so the eye is handed from
+   the assembled logo to the invitation rather than dropped between them. */
+.cm-tail {
+  display: block;
+  width: 2px;
+  height: clamp(56px, 9vh, 104px);
+  margin: clamp(34px, 6vh, 68px) auto 0;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--red), var(--amber) 55%, var(--gold));
+  transform-origin: top;
+}
+/* It carries data-reveal so the shared observer drives it, but a line should
+   grow rather than fade up — so the shared fade is overridden here. The extra
+   class in the selector is what wins over `.js [data-reveal]`. */
+.js .cm-tail[data-reveal] {
+  opacity: 1;
+  transform: scaleY(0);
+  transition: transform 900ms var(--ease) 120ms;
+}
+.js .cm-tail[data-reveal].is-visible { transform: scaleY(1); }
+@media (prefers-reduced-motion: reduce) {
+  .js .cm-tail[data-reveal] { transform: scaleY(1); }
 }
 .cm-together h2 {
   font-size: clamp(2.2rem, 6vw, 5rem);

@@ -298,7 +298,9 @@ html:not(.js) .sp-scale { display: none; }
   position: relative;
   background: var(--ink);
   color: var(--text-on-dark);
-  padding: clamp(80px, 13vh, 155px) 0 clamp(70px, 11vh, 130px);
+  /* Roomier at the foot so the mark and its two buttons are not pressed
+     against the footer on a short viewport. */
+  padding: clamp(80px, 13vh, 155px) 0 clamp(104px, 15vh, 168px);
   overflow: hidden;
   text-align: center;
 }
@@ -315,9 +317,12 @@ html:not(.js) .sp-scale { display: none; }
   aspect-ratio: 156 / 88;
 }
 .sp-mark svg { width: 100%; height: 100%; overflow: visible; }
-.sp-mark-ink  { fill: var(--text-on-dark); }
-.sp-mark-red  { fill: var(--red); }
-.sp-mark-gold { fill: var(--gold); }
+/* The mark is stroked now, not filled — one uniform width set on the group by
+   DEO.markGroup(), so these only choose the three colours. Reversed out here:
+   the section is ink, where the mark's black arc would disappear. */
+.sp-mark-ink  { stroke: var(--text-on-dark); }
+.sp-mark-red  { stroke: var(--red); }
+.sp-mark-gold { stroke: var(--gold); }
 
 /* The mark is revealed by a stroke that widens along the same curve it was
    drawn with — it grows out of the road rather than fading in over it.

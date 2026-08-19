@@ -2,12 +2,14 @@
    DEO Kairo — SHARED CHROME
    -----------------------------------------------------------------------------
    Everything that must look identical on every page: tokens, reset, header,
-   navigation, the V1/V2 switch, buttons, footer and the reveal system.
+   navigation, buttons, footer and the reveal system.
 
-   Used by the six pages added after the Contact concepts:
-     values.html · values-v2.html
-     school-path.html · school-path-v2.html
-     community.html · community-v2.html
+   Used by the three pages added after the Contact concepts:
+     values.html · school-path.html · community.html
+
+   Each was explored as two versions; one of each was chosen and the other
+   removed, so the .ver-switch rule below now only serves the two Contact
+   concepts, which are still being compared.
 
    index.html, about.html, contact.html and contact-v2.html carry their own
    copies of these rules inline and are deliberately left alone — this file
@@ -454,4 +456,44 @@ html:not(.js) .to-top { display: none; }
     opacity: 1 !important; transform: none !important;
   }
   .js [data-reveal-mask] > * { transform: none !important; }
+}
+
+/* ==========================================================================
+   THE CLOSING BLOCK
+   --------------------------------------------------------------------------
+   The "where to go next" band that ends values.html and community.html. It
+   used to live in css/values.css, which community.html does not load — so on
+   that page it had no padding at all and sat squashed against the footer.
+   Shared chrome belongs in the shared file.
+   ========================================================================== */
+.vw-next {
+  padding: clamp(96px, 15vh, 170px) 0 clamp(104px, 16vh, 180px);
+  background: var(--cream-soft);
+}
+.vw-next-inner {
+  display: flex; flex-wrap: wrap; align-items: flex-end;
+  justify-content: space-between; gap: clamp(28px, 5vw, 48px);
+}
+.vw-next h2 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  max-width: 16ch;
+  letter-spacing: -.02em;
+}
+.vw-next-links {
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: clamp(16px, 3vw, 30px);
+}
+
+/* Centred variant, for a page whose final section is itself centred: the two
+   read as one ending rather than two blocks stacked on each other. */
+.vw-next--center .vw-next-inner {
+  flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+}
+.vw-next--center h2 { max-width: 20ch; }
+.vw-next--center .vw-next-links { justify-content: center; }
+
+@media (max-width: 700px) {
+  .vw-next-inner { flex-direction: column; align-items: flex-start; }
+  .vw-next--center .vw-next-inner { align-items: center; }
 }

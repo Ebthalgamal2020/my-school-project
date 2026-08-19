@@ -102,10 +102,20 @@
     var loop = null;
 
     /* A tiny deterministic generator: the scatter must be identical before and
-       after a resize, or the crowd visibly reshuffles when a phone rotates. */
+       after a resize, or the crowd visibly reshuffles when a phone rotates.
+
+       An integer hash rather than one step of a linear congruential generator.
+       An LCG fed consecutive seeds returns consecutive outputs — the values
+       walk in a straight line — so neighbouring dots got neighbouring offsets
+       and the assembled crowd combed itself into little radial dashes instead
+       of reading as people. Mixing the bits decorrelates them while staying
+       entirely a function of the index. */
     function rand(seed) {
-      var s = seed * 9301 + 49297;
-      return (s % 233280) / 233280;
+      var s = (seed | 0) + 0x9E3779B9;
+      s = Math.imul(s ^ (s >>> 16), 0x21F0AAAD);
+      s = Math.imul(s ^ (s >>> 15), 0x735A2D97);
+      s = s ^ (s >>> 15);
+      return (s >>> 0) / 4294967296;
     }
 
     /* Resample a point list to even spacing along its length. Parameter

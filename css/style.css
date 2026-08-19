@@ -454,6 +454,9 @@ section h2 {
 
 /* ===== Contact ===== */
 .contact { background: var(--cream); }
+/* The page's last section: `section` gives it 88px, which reads as the footer
+   crowding it. Enough room to feel finished, not enough to feel abandoned. */
+.contact { padding-bottom: clamp(104px, 11vw, 150px); }
 .contact-inner {
   display: grid;
   grid-template-columns: 1fr 1fr;
