@@ -4,16 +4,15 @@
    Everything that must look identical on every page: tokens, reset, header,
    navigation, buttons, footer and the reveal system.
 
-   Used by the three pages added after the Contact concepts:
+   Used by the three pages added after the Contact concept:
      values.html · school-path.html · community.html
 
-   Each was explored as two versions; one of each was chosen and the other
-   removed, so the .ver-switch rule below now only serves the two Contact
-   concepts, which are still being compared.
+   Each of those was explored as two versions; one of each was chosen and the
+   losing version deleted, so there is no version switcher anywhere any more.
 
-   index.html, about.html, contact.html and contact-v2.html carry their own
-   copies of these rules inline and are deliberately left alone — this file
-   adds a shared foundation for the new work without rewriting the old.
+   index.html, about.html and contact.html carry their own copies of these
+   rules inline and are deliberately left alone — this file adds a shared
+   foundation for the newer pages without rewriting the older ones.
 
    Each page then loads exactly one concept stylesheet on top:
      css/values.css · css/school-path.css · css/community.css
@@ -280,39 +279,7 @@ html:not(.js) .scroll-progress { display: none; }
 .menu-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); }
 
 /* ==========================================================================
-   7. V1 / V2 SWITCH
-   Same pill, same corner and same states as the Contact pages, so the
-   comparison control behaves identically wherever it appears.
-
-   It lives OUTSIDE <header> on purpose: .site-header carries a backdrop-filter,
-   which makes it the containing block for any position:fixed child — the pill
-   would scroll away with the header instead of staying put.
-   ========================================================================== */
-.ver-switch {
-  position: fixed;
-  left: clamp(14px, 2vw, 24px);
-  bottom: clamp(14px, 2vw, 24px);
-  z-index: 60;
-  display: inline-flex; align-items: stretch;
-  background: var(--cream-soft);
-  border: 1.5px solid var(--ink);
-  border-radius: 999px;
-  overflow: hidden;
-  font-size: .74rem; font-weight: 700; letter-spacing: .08em;
-  text-transform: uppercase;
-  box-shadow: 0 14px 34px -16px rgba(20, 20, 20, .6);
-}
-.ver-switch a {
-  padding: 8px 13px;
-  color: var(--ink); text-decoration: none;
-  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
-}
-.ver-switch a + a { border-left: 1.5px solid var(--ink); }
-.ver-switch a:hover { background: rgba(20, 20, 20, .08); }
-.ver-switch a[aria-current="page"] { background: var(--ink); color: var(--text-on-dark); }
-
-/* ==========================================================================
-   8. FOOTER
+   7. FOOTER
    ========================================================================== */
 .site-footer {
   position: relative;
@@ -360,7 +327,7 @@ html:not(.js) .scroll-progress { display: none; }
 }
 
 /* ==========================================================================
-   9. BACK TO TOP
+   8. BACK TO TOP
    ========================================================================== */
 .to-top {
   position: fixed; right: 22px; bottom: 22px; z-index: 60;
@@ -380,7 +347,7 @@ html:not(.js) .scroll-progress { display: none; }
 html:not(.js) .to-top { display: none; }
 
 /* ==========================================================================
-   10. REVEAL SYSTEM
+   9. REVEAL SYSTEM
    [data-reveal] fades up when it enters view; --i staggers siblings.
    Scoped to .js so the pages are fully readable with JavaScript off.
    ========================================================================== */
@@ -408,7 +375,7 @@ html:not(.js) .to-top { display: none; }
 .js.lang-switching [data-en] { opacity: 0; }
 
 /* ==========================================================================
-   11. RESPONSIVE CHROME
+   10. RESPONSIVE CHROME
    ========================================================================== */
 @media (max-width: 900px) {
   .main-nav {
@@ -432,15 +399,13 @@ html:not(.js) .to-top { display: none; }
 
 @media (max-width: 560px) {
   .footer-grid { grid-template-columns: minmax(0, 1fr); }
-  .ver-switch { font-size: .68rem; }
-  .ver-switch a { padding: 7px 11px; }
   /* Back-to-top and the version pill share the bottom edge — lift the pill so
      neither covers the other on a narrow screen. */
   .to-top { width: 42px; height: 42px; }
 }
 
 /* ==========================================================================
-   12. REDUCED MOTION
+   11. REDUCED MOTION
    Strip movement, keep every composition and all content.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
