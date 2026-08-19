@@ -255,9 +255,51 @@ a { color: inherit; text-decoration: none; }
    proportions, stroke weight and brand colours are the asset's own rather
    than an approximation. It is never faded in — it is painted by the mask
    below, whose stroke thickens along the very line that drew it. */
-.v2-logo-ink  { fill: #000000; }
+/* Reversed out: the mark now sits on ink, where its black stroke would be
+   invisible. Cream is the standard dark-ground treatment; red and gold are
+   unchanged and carry the identity. */
+.v2-logo-ink  { fill: var(--text-on-dark); }
 .v2-logo-red  { fill: var(--red); }
 .v2-logo-gold { fill: var(--gold); }
+
+/* ---- The living infinity ------------------------------------------------
+   The track is the same fitted curve the logo was built on, closed and
+   stroked boldly — one continuous figure that flows through both loops and
+   crosses once in the middle. The pulse is a dashed segment of that exact
+   path, so the colour can only ever travel where the track goes. */
+.v2-track {
+  fill: none;
+  stroke: rgba(245, 243, 239, .20);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.v2-pulse {
+  fill: none;
+  stroke: url(#v2-pulse-grad);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* A wider, fainter copy of the same segment — a glow without a filter, so
+   nothing has to be re-rasterised every frame. */
+.v2-pulse-glow {
+  fill: none;
+  stroke: url(#v2-pulse-grad);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .22;
+}
+
+.v2-valdot {
+  fill: var(--text-on-dark);
+  stroke: none;
+}
+.v2-val {
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  fill: var(--text-on-dark);
+}
 
 .v2-dot { fill: var(--red); opacity: 0; transition: opacity 400ms var(--ease); }
 .v2-halo { fill: none; stroke: var(--red); stroke-width: 1; opacity: 0; transition: opacity 400ms var(--ease); }
@@ -445,11 +487,14 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
      finished logo's presence on the page. */
   height: clamp(240px, 34vh, 380px);
 }
+/* The mark sits on the night band painted inside the svg, so its caption is
+   light. The band runs from here to the end of the journey, meeting the
+   closing section with no seam. */
 .v2-mark-caption {
   margin-top: clamp(34px, 5vh, 60px);
   text-align: center;
   font-size: .72rem; font-weight: 800; letter-spacing: .24em; text-transform: uppercase;
-  color: var(--text-muted-light);
+  color: rgba(245, 243, 239, .55);
 }
 
 /* ==========================================================================
@@ -526,7 +571,8 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
     max-height: 0; overflow: hidden; visibility: hidden;
     transition: max-height .25s ease;
   }
-  .js .main-nav.open { max-height: 340px; visibility: visible; }
+  /* Six items since Home and the three concept pages joined the nav. */
+  .js .main-nav.open { max-height: 440px; visibility: visible; }
 
   /* Mobile keeps its own rail so the line never runs under the type */
   :root { --rail: 26px; }
@@ -587,9 +633,10 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
       <span data-en="DEO Kairo" data-de="DEO Kairo">DEO Kairo</span>
     </a>
     <nav class="main-nav" id="main-nav">
-      <a href="index.html#pillars" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
-      <a href="index.html#path" data-en="School Path" data-de="Schulaufbau">School Path</a>
-      <a href="index.html#community" data-en="Community" data-de="Gemeinschaft">Community</a>
+      <a href="index.html" data-en="Home" data-de="Start">Home</a>
+      <a href="values.html" data-en="Our Values" data-de="Unsere Werte">Our Values</a>
+      <a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a>
+      <a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a>
       <a href="about.html" data-en="About Us" data-de="Über uns">About Us</a>
       <a href="contact-v2.html" aria-current="page" data-en="Contact" data-de="Kontakt">Contact</a>
     </nav>
@@ -617,8 +664,8 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
         <linearGradient id="v2-grad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000">
           <stop offset="0" stop-color="#DB1F26"></stop>
           <stop id="v2-stop-a" offset="0.9" stop-color="#DB1F26"></stop>
-          <stop id="v2-stop-b" offset="0.97" stop-color="#141414"></stop>
-          <stop offset="1" stop-color="#141414"></stop>
+          <stop id="v2-stop-b" offset="0.97" stop-color="#8C8A85"></stop>
+          <stop offset="1" stop-color="#8C8A85"></stop>
         </linearGradient>
 
         <!-- The brush. Same path, same dash offset as the visible line, just
@@ -635,7 +682,24 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
           <path id="v2-bloom" fill="none" stroke="#fff" stroke-width="0"
                 stroke-linecap="round" stroke-linejoin="round"></path>
         </mask>
+
+        <!-- Anchored to the travelling segment's own chord each frame, so the
+             red-orange-gold ramp moves WITH the light rather than the light
+             sliding through a gradient fixed in space. -->
+        <linearGradient id="v2-pulse-grad" gradientUnits="userSpaceOnUse"
+                        x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0"    stop-color="#DB1F26" stop-opacity="0"></stop>
+          <stop offset="0.18" stop-color="#DB1F26"></stop>
+          <stop offset="0.52" stop-color="#F2760F"></stop>
+          <stop offset="0.82" stop-color="#FFCE03"></stop>
+          <stop offset="1"    stop-color="#FFCE03" stop-opacity="0"></stop>
+        </linearGradient>
       </defs>
+
+      <!-- Night band: painted inside the svg, before everything, so the line
+           and the mark render ON it. A CSS background on the section would
+           sit above the svg and hide them. -->
+      <rect id="v2-night" x="0" y="0" width="0" height="0" fill="#141414"></rect>
 
       <image id="v2-photo" mask="url(#v2-mask)" preserveAspectRatio="xMidYMid slice"
              href="assets/deo-building.jpg" x="0" y="0" width="0" height="0"></image>
@@ -647,6 +711,14 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
       <!-- Outer group carries the mask so the mask content stays in page
            coordinates; the inner group scales the mark's own 156x88 artboard
            into place. -->
+      <!-- The complete infinity the logo settles into, and the light that
+           then travels it forever. Drawn before the logo so the mark sits on
+           top while it is still forming. -->
+      <path class="v2-track" id="v2-track" d="" stroke-width="0"></path>
+      <path class="v2-pulse-glow" id="v2-pulse-glow" d="" stroke-width="0"></path>
+      <path class="v2-pulse" id="v2-pulse" d="" stroke-width="0"></path>
+      <g id="v2-values"></g>
+
       <g mask="url(#v2-logo-mask)">
         <g id="v2-logo">
           <path class="v2-logo-ink"  fill-rule="evenodd" d="M112.88 11.25C113.98 11.19,117.94 11.10,119.25 11.12C120.56 11.15,120.25 11.21,120.75 11.38C121.25 11.54,121.75 12.00,122.25 12.12C122.75 12.25,123.25 12.00,123.75 12.12C124.25 12.25,124.75 12.71,125.25 12.88C125.75 13.04,126.33 12.96,126.75 13.12C127.17 13.29,127.04 13.54,127.75 13.88C128.46 14.21,129.71 14.42,131.00 15.12C132.29 15.83,133.94 16.85,135.50 18.12C137.06 19.40,139.15 21.44,140.38 22.75C141.60 24.06,142.08 24.83,142.88 26.00C143.67 27.17,144.46 28.46,145.12 29.75C145.79 31.04,146.38 32.38,146.88 33.75C147.38 35.12,147.92 37.00,148.12 38.00C148.33 39.00,148.00 39.04,148.12 39.75C148.25 40.46,148.75 40.67,148.88 42.25C149.00 43.83,149.00 47.67,148.88 49.25C148.75 50.83,148.29 50.88,148.12 51.75C147.96 52.62,148.38 52.83,147.88 54.50C147.38 56.17,145.96 59.92,145.12 61.75C144.29 63.58,143.88 64.12,142.88 65.50C141.88 66.88,140.31 68.73,139.12 70.00C137.94 71.27,137.31 71.98,135.75 73.12C134.19 74.27,131.21 76.04,129.75 76.88C128.29 77.71,127.62 77.92,127.00 78.12C126.38 78.33,126.33 78.00,126.00 78.12C125.67 78.25,125.50 78.71,125.00 78.88C124.50 79.04,123.79 78.92,123.00 79.12C122.21 79.33,121.21 79.96,120.25 80.12C119.29 80.29,117.79 80.08,117.25 80.12C116.71 80.17,118.54 80.38,117.00 80.38C115.46 80.38,110.75 80.54,108.00 80.12C105.25 79.71,102.67 78.75,100.50 77.88C98.33 77.00,96.38 75.71,95.00 74.88C93.62 74.04,93.56 74.06,92.25 72.88C90.94 71.69,92.60 73.90,87.12 67.75C81.65 61.60,65.27 42.65,59.38 36.00C53.48 29.35,53.73 29.69,51.75 27.88C49.77 26.06,48.33 25.58,47.50 25.12C46.67 24.67,47.12 25.29,46.75 25.12C46.38 24.96,45.67 24.29,45.25 24.12C44.83 23.96,44.83 24.29,44.25 24.12C43.67 23.96,43.08 23.33,41.75 23.12C40.42 22.92,37.21 22.88,36.25 22.88C35.29 22.88,36.50 23.08,36.00 23.12C35.50 23.17,33.92 23.08,33.25 23.12C32.58 23.17,32.42 23.21,32.00 23.38C31.58 23.54,31.12 24.00,30.75 24.12C30.38 24.25,30.67 23.75,29.75 24.12C28.83 24.50,26.81 25.31,25.25 26.38C23.69 27.44,21.73 29.02,20.38 30.50C19.02 31.98,17.96 33.71,17.12 35.25C16.29 36.79,15.75 38.46,15.38 39.75C15.00 41.04,14.92 41.17,14.88 43.00C14.83 44.83,14.92 48.92,15.12 50.75C15.33 52.58,15.62 52.79,16.12 54.00C16.62 55.21,17.62 57.17,18.12 58.00C18.62 58.83,18.92 58.71,19.12 59.00C19.33 59.29,18.65 58.94,19.38 59.75C20.10 60.56,22.31 62.85,23.50 63.88C24.69 64.90,25.08 65.17,26.50 65.88C27.92 66.58,30.71 67.71,32.00 68.12C33.29 68.54,32.46 68.38,34.25 68.38C36.04 68.38,40.96 68.33,42.75 68.12C44.54 67.92,44.21 67.33,45.00 67.12C45.79 66.92,46.96 66.88,47.50 66.88C48.04 66.88,47.98 66.90,48.25 67.12C48.52 67.35,49.02 67.65,49.12 68.25C49.23 68.85,49.23 70.15,48.88 70.75C48.52 71.35,47.60 71.65,47.00 71.88C46.40 72.10,45.75 71.96,45.25 72.12C44.75 72.29,45.00 72.67,44.00 72.88C43.00 73.08,41.21 73.33,39.25 73.38C37.29 73.42,33.88 73.33,32.25 73.12C30.62 72.92,30.25 72.33,29.50 72.12C28.75 71.92,28.71 72.25,27.75 71.88C26.79 71.50,25.08 70.67,23.75 69.88C22.42 69.08,21.19 68.40,19.75 67.12C18.31 65.85,16.40 63.90,15.12 62.25C13.85 60.60,12.62 58.21,12.12 57.25C11.62 56.29,12.29 56.92,12.12 56.50C11.96 56.08,11.29 55.21,11.12 54.75C10.96 54.29,11.29 54.33,11.12 53.75C10.96 53.17,10.33 52.08,10.12 51.25C9.92 50.42,9.88 50.58,9.88 48.75C9.88 46.92,9.92 42.08,10.12 40.25C10.33 38.42,10.92 38.46,11.12 37.75C11.33 37.04,11.21 36.46,11.38 36.00C11.54 35.54,12.00 35.29,12.12 35.00C12.25 34.71,11.62 35.21,12.12 34.25C12.62 33.29,14.08 30.71,15.12 29.25C16.17 27.79,17.56 26.35,18.38 25.50C19.19 24.65,19.27 24.69,20.00 24.12C20.73 23.56,22.21 22.46,22.75 22.12C23.29 21.79,23.04 22.25,23.25 22.12C23.46 22.00,23.46 21.71,24.00 21.38C24.54 21.04,24.88 20.67,26.50 20.12C28.12 19.58,32.00 18.46,33.75 18.12C35.50 17.79,36.42 18.17,37.00 18.12C37.58 18.08,36.54 17.88,37.25 17.88C37.96 17.88,39.38 17.75,41.25 18.12C43.12 18.50,46.96 19.62,48.50 20.12C50.04 20.62,50.04 20.83,50.50 21.12C50.96 21.42,50.96 21.71,51.25 21.88C51.54 22.04,51.38 21.54,52.25 22.12C53.12 22.71,52.69 21.27,56.50 25.38C60.31 29.48,71.85 43.10,75.12 46.75C78.40 50.40,75.96 47.08,76.12 47.25C76.29 47.42,75.96 47.46,76.12 47.75C76.29 48.04,74.58 46.08,77.12 49.00C79.67 51.92,88.19 61.77,91.38 65.25C94.56 68.73,94.94 68.77,96.25 69.88C97.56 70.98,98.38 71.33,99.25 71.88C100.12 72.42,100.96 72.92,101.50 73.12C102.04 73.33,102.04 72.96,102.50 73.12C102.96 73.29,103.67 73.92,104.25 74.12C104.83 74.33,105.46 74.21,106.00 74.38C106.54 74.54,106.58 74.92,107.50 75.12C108.42 75.33,109.96 75.54,111.50 75.62C113.04 75.71,115.21 75.71,116.75 75.62C118.29 75.54,119.67 75.38,120.75 75.12C121.83 74.88,122.67 74.29,123.25 74.12C123.83 73.96,123.83 74.29,124.25 74.12C124.67 73.96,125.33 73.29,125.75 73.12C126.17 72.96,125.75 73.62,126.75 73.12C127.75 72.62,130.23 71.23,131.75 70.12C133.27 69.02,134.65 67.77,135.88 66.50C137.10 65.23,138.58 63.25,139.12 62.50C139.67 61.75,139.00 62.21,139.12 62.00C139.25 61.79,139.42 62.00,139.88 61.25C140.33 60.50,141.38 58.58,141.88 57.50C142.38 56.42,142.62 55.79,142.88 54.75C143.12 53.71,143.17 52.21,143.38 51.25C143.58 50.29,144.00 50.46,144.12 49.00C144.25 47.54,144.29 44.17,144.12 42.50C143.96 40.83,143.29 39.83,143.12 39.00C142.96 38.17,143.33 38.33,143.12 37.50C142.92 36.67,142.54 35.42,141.88 34.00C141.21 32.58,140.08 30.46,139.12 29.00C138.17 27.54,137.19 26.40,136.12 25.25C135.06 24.10,133.77 22.98,132.75 22.12C131.73 21.27,130.54 20.46,130.00 20.12C129.46 19.79,130.04 20.42,129.50 20.12C128.96 19.83,127.75 18.88,126.75 18.38C125.75 17.88,124.38 17.38,123.50 17.12C122.62 16.88,122.12 17.04,121.50 16.88C120.88 16.71,121.21 16.33,119.75 16.12C118.29 15.92,114.06 15.94,112.75 15.62C111.44 15.31,112.02 14.77,111.88 14.25C111.73 13.73,111.75 12.96,111.88 12.50C112.00 12.04,112.46 11.71,112.62 11.50C112.79 11.29,111.77 11.31,112.88 11.25Z"></path>
@@ -886,6 +958,9 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
         <h3>Pages</h3>
         <ul>
           <li><a href="index.html">Home</a></li>
+          <li><a href="values.html">Our Values</a></li>
+          <li><a href="school-path.html">School Path</a></li>
+          <li><a href="community.html">Community</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="contact.html">Contact V1</a></li>
           <li><a href="contact-v2.html">Contact V2</a></li>
@@ -993,6 +1068,12 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
     var tail  = document.getElementById('v2-tail');
     var bloom = document.getElementById('v2-bloom');
     var logoG = document.getElementById('v2-logo');
+    var night = document.getElementById('v2-night');
+    var track = document.getElementById('v2-track');
+    var pulse = document.getElementById('v2-pulse');
+    var glow  = document.getElementById('v2-pulse-glow');
+    var valG  = document.getElementById('v2-values');
+    var pGrad = document.getElementById('v2-pulse-grad');
     var brush = document.getElementById('v2-brush');
     var photo = document.getElementById('v2-photo');
     var dot   = document.getElementById('v2-dot');
@@ -1018,10 +1099,18 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
     var COVER = 11.25;
     var ENTRY = { x: 8.80, y: 45.20 };
 
+    /* The six values, spaced by equal arc length around the closed figure —
+       three to a loop. Equal spacing in the curve's own parameter would bunch
+       them near the crossing, where a lemniscate moves fastest. */
+    var VALUES = ['COMMUNITY', 'CURIOSITY', 'CREATIVITY', 'CONNECTION', 'GROWTH', 'FUTURE'];
+    var STROKE_U = 9;      // the mark's stroke weight, in artboard units
+    var SEG = 0.17;        // the travelling light, as a share of the loop
+    var LOOP_MS = 7200;    // one circuit
+
     var small = window.matchMedia('(max-width: 860px)');
-    var LEN = 0, ROUTE_LEN = 0, TAIL_LEN = 0;
+    var LEN = 0, ROUTE_LEN = 0, TAIL_LEN = 0, TRACK_LEN = 0;
     var logoScale = 1;
-    var stations = [], ready = false;
+    var stations = [], valPts = [], ready = false;
     /* Scroll window the drawing is spent over. `endScroll` is set so the mark
        is finished at the moment it sits centred in the viewport — otherwise
        the last loop would still be drawing after the logo had scrolled up
@@ -1107,7 +1196,9 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
         /* Bounded by the stage's height and by a share of the page width. The
            share is much larger on a phone: 42% of 390px would render the mark
            at barely more than its 156px artboard. */
-        var maxW = Math.min(wr.width * (isSmall ? 0.80 : 0.44), 620);
+        // Narrower on a phone than the mark alone would want, to leave the
+        // six labels room to sit around it.
+        var maxW = Math.min(wr.width * (isSmall ? 0.66 : 0.44), 620);
         logoScale = Math.min(sh / ART.h, maxW / ART.w);
         var tx = logoAt.x - logoScale * ART.w / 2;
         var ty = logoAt.y - logoScale * ART.h / 2;
@@ -1134,6 +1225,9 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
 
       // ---- the tail: the same stroke, now tracing the mark's own spine ----
       TAIL_LEN = 0;
+      TRACK_LEN = 0;
+      valG.textContent = '';
+      valPts = [];
       if (logoAt) {
         var dTail = poly(spinePts(tx, ty, logoScale, 320));
         tail.setAttribute('d', dTail);
@@ -1141,6 +1235,65 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
         TAIL_LEN = tail.getTotalLength();
         tail.style.strokeDasharray = TAIL_LEN;
         bloom.style.strokeDasharray = TAIL_LEN;
+
+        /* The same curve, closed, is the track the light will travel. It runs
+           through both loops and crosses once in the middle, so it is a single
+           continuous figure rather than two curves that happen to touch. */
+        track.setAttribute('d', dTail + 'Z');
+        pulse.setAttribute('d', dTail + 'Z');
+        glow.setAttribute('d', dTail + 'Z');
+        TRACK_LEN = track.getTotalLength();
+
+        // ---- the six values, by equal arc length ----
+        var segPx = TRACK_LEN * SEG;
+        pulse.style.strokeDasharray = segPx + ' ' + (TRACK_LEN - segPx);
+        glow.style.strokeDasharray  = segPx + ' ' + (TRACK_LEN - segPx);
+
+        var cxp = logoAt.x, cyp = logoAt.y;
+        for (var v = 0; v < VALUES.length; v++) {
+          var at = TRACK_LEN * (v / VALUES.length);
+          var q = track.getPointAtLength(at);
+          // Push the label away from the figure's centre so it never sits on
+          // the curve; none of the six lands near the crossing, where this
+          // direction would be meaningless.
+          var dx = q.x - cxp, dy = q.y - cyp;
+          var m = Math.hypot(dx, dy) || 1;
+          var off = STROKE_U * logoScale * 1.5 + 14;
+          var lx = q.x + dx / m * off, ly = q.y + dy / m * off;
+
+          var dot = document.createElementNS(SVGNS, 'circle');
+          dot.setAttribute('class', 'v2-valdot');
+          dot.setAttribute('cx', r2(q.x)); dot.setAttribute('cy', r2(q.y));
+          dot.setAttribute('r', r2(Math.max(2.6, logoScale * 1.1)));
+          valG.appendChild(dot);
+
+          var t2 = document.createElementNS(SVGNS, 'text');
+          t2.setAttribute('class', 'v2-val');
+          t2.setAttribute('x', r2(lx)); t2.setAttribute('y', r2(ly));
+          t2.setAttribute('text-anchor', dx > 6 ? 'start' : (dx < -6 ? 'end' : 'middle'));
+          t2.setAttribute('dominant-baseline', 'middle');
+          t2.setAttribute('font-size', r2(Math.max(8.5, Math.min(12.5, logoScale * 3.4))));
+          t2.textContent = VALUES[v];
+          valG.appendChild(t2);
+
+          valPts.push({ at: at, dot: dot, label: t2, heat: 0, px: q.x, py: q.y });
+        }
+
+        /* The two labels on the figure's extremes reach furthest sideways and
+           run off a narrow screen. Rather than guess a safe width, measure:
+           anything that overhangs is re-hung above its own dot, where the
+           curve has already turned away and there is nothing to collide with.
+           This also covers the German labels, which are longer. */
+        for (var g = 0; g < valPts.length; g++) {
+          var vp = valPts[g], bb;
+          try { bb = vp.label.getBBox(); } catch (e) { continue; }
+          if (bb.x >= 6 && bb.x + bb.width <= wr.width - 6) continue;
+          var lift = STROKE_U * logoScale * 1.3 + 12;
+          vp.label.setAttribute('text-anchor', 'middle');
+          vp.label.setAttribute('x', r2(Math.min(Math.max(vp.px, bb.width / 2 + 8),
+                                                 wr.width - bb.width / 2 - 8)));
+          vp.label.setAttribute('y', r2(vp.py - lift));
+        }
       }
 
       /* The brush that paints the photograph follows the route only — the
@@ -1163,15 +1316,28 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
         brush.setAttribute('stroke-width', r2(Math.max(cr.height * 0.52, 120)));
       }
 
-      /* ---- gradient: DEO red for the road, resolving to the mark's own ink
-         just before the tail begins, so the line is already the logo's colour
-         by the time it starts drawing it. */
-      grad.setAttribute('y2', r2(wr.height));
-      if (logoAt) {
-        var swap = clamp01((entryY - logoScale * ART.h * 0.9) / wr.height);
-        stopA.setAttribute('offset', r2(Math.max(0, swap - 0.04)));
-        stopB.setAttribute('offset', r2(Math.min(1, swap + 0.02)));
+      /* ---- night band ----------------------------------------------------
+         Runs from the top of the mark section to the end of the journey, so
+         it meets the closing section with no seam and the whole finale reads
+         as one dark room. */
+      var nightTop = wr.height;
+      var markSec = document.getElementById('v2-mark');
+      if (markSec) {
+        var mr = markSec.getBoundingClientRect();
+        nightTop = (mr.top + sy - top);
+        night.setAttribute('x', 0);
+        night.setAttribute('y', r2(nightTop));
+        night.setAttribute('width', r2(wr.width));
+        night.setAttribute('height', r2(Math.max(0, wr.height - nightTop)));
       }
+
+      /* ---- gradient: DEO red for the road, turning light exactly at the
+         edge of the night band — ink on ink would vanish, and a light line on
+         the cream above it would be just as invisible. */
+      grad.setAttribute('y2', r2(wr.height));
+      var swap = clamp01(nightTop / wr.height);
+      stopA.setAttribute('offset', r2(Math.max(0, swap - 0.005)));
+      stopB.setAttribute('offset', r2(Math.min(1, swap + 0.012)));
 
       /* ---- the scroll window ----------------------------------------
          Start: the moment the top of the journey passes the focus line.
@@ -1250,16 +1416,35 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
       if (TAIL_LEN) {
         var pMark = (SPLIT >= 1) ? 0 : clamp01((p - SPLIT) / (1 - SPLIT));
 
-        var trace = clamp01(pMark / 0.58);
+        /*  0.00 - 0.40  the thin line traces the figure
+            0.36 - 0.66  the stroke widens: the real DEO logo forms
+            0.66 - 0.78  it holds, fully formed
+            0.78 - 1.00  it consolidates - the logo's reveal contracts back to
+                         the curve while the bold grey track grows out of it,
+                         so the mark gathers into the figure rather than
+                         being swapped for it. From there the light travels. */
+        var trace = clamp01(pMark / 0.40);
         var tailDrawn = TAIL_LEN * trace;
         tail.style.strokeDashoffset = TAIL_LEN - tailDrawn;
         bloom.style.strokeDashoffset = TAIL_LEN - tailDrawn;
 
-        var grow = ease(clamp01((pMark - 0.50) / 0.50));
-        bloom.setAttribute('stroke-width', r2(2 * COVER * logoScale * grow));
+        var grow = ease(clamp01((pMark - 0.36) / 0.30));
+        var settle = ease(clamp01((pMark - 0.78) / 0.22));
+        bloom.setAttribute('stroke-width',
+          r2(2 * COVER * logoScale * grow * (1 - settle)));
 
-        // 1.6 -> 0 across the last stretch, once the mark is clearly forming
-        tail.style.strokeWidth = r2(1.6 * (1 - ease(clamp01((pMark - 0.66) / 0.34))));
+        // 1.6 -> 0 once the mark is clearly forming
+        tail.style.strokeWidth = r2(1.6 * (1 - ease(clamp01((pMark - 0.50) / 0.30))));
+
+        // The track takes over exactly as the logo's reveal contracts
+        var tw = STROKE_U * logoScale * settle;
+        track.setAttribute('stroke-width', r2(tw));
+        pulse.setAttribute('stroke-width', r2(tw));
+        glow.setAttribute('stroke-width', r2(tw * 2.6));
+        valG.style.opacity = r2(clamp01((pMark - 0.86) / 0.14));
+
+        // Once consolidated the light runs on its own clock, not the scroll's
+        setAlive(settle > 0.995);
 
         if (trace > 0) { tipLen = tailDrawn; tipOnTail = true; }
       }
@@ -1276,6 +1461,96 @@ html:not(.js) .v2-canvas-fallback img { width: 100%; height: auto; }
       for (var i = 0; i < stations.length; i++) {
         stations[i].el.classList.toggle('lit', routeDrawn >= stations[i].at - 2);
       }
+    }
+
+    /* =====================================================================
+       THE TRAVELLING LIGHT
+       ---------------------------------------------------------------------
+       A dashed segment of the track, so the colour is physically constrained
+       to the figure: it follows every curve, passes through the crossing and
+       carries on into the other loop because that is simply where the path
+       goes next.
+
+       The gradient is re-anchored to the segment's own chord each frame, so
+       the red -> orange -> gold ramp travels WITH the light instead of the
+       light sliding through a ramp fixed in space.
+
+       Runs only while the mark is on screen AND consolidated; a loop that
+       keeps painting a figure nobody is looking at is just battery.
+       ===================================================================== */
+    var raf = 0, t0 = 0, onScreen = false, consolidated = false;
+
+    function setAlive(v) {
+      if (v === consolidated) return;
+      consolidated = v;
+      pump();
+    }
+
+    function pump() {
+      var want = consolidated && onScreen && !REDUCE && TRACK_LEN > 0;
+      if (want && !raf) { t0 = 0; raf = requestAnimationFrame(spin); }
+      else if (!want && raf) { cancelAnimationFrame(raf); raf = 0; }
+      if (!want && consolidated && REDUCE && TRACK_LEN) rest();
+    }
+
+    // Reduced motion: the light holds still on the first value instead of
+    // circling, and every value reads as lit.
+    function rest() {
+      paint(0);
+      for (var i = 0; i < valPts.length; i++) heat(valPts[i], 1);
+    }
+
+    function heat(v, h) {
+      v.heat = h;
+      v.dot.setAttribute('r', r2(Math.max(2.6, logoScale * 1.1) * (1 + h * 0.9)));
+      v.dot.style.fill = h > 0.5 ? '#FFCE03' : 'rgba(245,243,239,' + (0.34 + h * 0.5) + ')';
+      v.label.style.fill = 'rgba(245,243,239,' + r2(0.34 + h * 0.66) + ')';
+      v.label.style.letterSpacing = (0.18 + h * 0.05) + 'em';
+    }
+
+    function paint(head) {
+      // head = 0..1 position of the segment's leading edge along the track
+      var segPx = TRACK_LEN * SEG;
+      var startAt = head * TRACK_LEN;
+      pulse.style.strokeDashoffset = r2(-startAt);
+      glow.style.strokeDashoffset = r2(-startAt);
+
+      var a = track.getPointAtLength(startAt % TRACK_LEN);
+      var b = track.getPointAtLength((startAt + segPx) % TRACK_LEN);
+      pGrad.setAttribute('x1', r2(a.x)); pGrad.setAttribute('y1', r2(a.y));
+      pGrad.setAttribute('x2', r2(b.x)); pGrad.setAttribute('y2', r2(b.y));
+      return { start: startAt, end: startAt + segPx };
+    }
+
+    function spin(now) {
+      if (!t0) t0 = now;
+      var head = ((now - t0) / LOOP_MS) % 1;
+      var span = paint(head);
+
+      // Light each value while the segment is over it, then let it cool
+      for (var i = 0; i < valPts.length; i++) {
+        var v = valPts[i], on = false;
+        for (var k = -1; k <= 1; k++) {
+          var at = v.at + k * TRACK_LEN;
+          if (at >= span.start && at <= span.end) { on = true; break; }
+        }
+        var target = on ? 1 : 0;
+        var next = v.heat + (target - v.heat) * (on ? 0.22 : 0.045);
+        if (Math.abs(next - v.heat) > 0.002) heat(v, next);
+      }
+      raf = requestAnimationFrame(spin);
+    }
+
+    if ('IntersectionObserver' in window) {
+      var markSection = document.getElementById('v2-mark');
+      if (markSection) {
+        new IntersectionObserver(function (es) {
+          onScreen = es[0].isIntersecting;
+          pump();
+        }, { rootMargin: '120px 0px' }).observe(markSection);
+      }
+    } else {
+      onScreen = true;
     }
 
     var ticking = false;
