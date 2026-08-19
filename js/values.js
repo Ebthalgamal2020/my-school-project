@@ -371,6 +371,25 @@
       bind(btn, i);
     }
 
+    /* A closed Catmull-Rom: every control point wraps, so the curve rejoins
+       itself with a continuous tangent and there is no seam to find. */
+    function closedLoop(pts) {
+      var n = pts.length;
+      if (n > 2 && Math.abs(pts[0][0] - pts[n - 1][0]) < 0.01 &&
+                   Math.abs(pts[0][1] - pts[n - 1][1]) < 0.01) { n--; }
+      if (n < 4) return DEO.toPath(pts);
+      function q(i) { return pts[((i % n) + n) % n]; }
+      function r(v) { return Math.round(v * 100) / 100; }
+      var d = 'M' + r(q(0)[0]) + ' ' + r(q(0)[1]);
+      for (var i = 0; i < n; i++) {
+        var p0 = q(i - 1), p1 = q(i), p2 = q(i + 1), p3 = q(i + 2);
+        d += 'C' + r(p1[0] + (p2[0] - p0[0]) / 6) + ' ' + r(p1[1] + (p2[1] - p0[1]) / 6) +
+             ' ' + r(p2[0] - (p3[0] - p1[0]) / 6) + ' ' + r(p2[1] - (p3[1] - p1[1]) / 6) +
+             ' ' + r(p2[0]) + ' ' + r(p2[1]);
+      }
+      return d + 'Z';
+    }
+
     function labelFor(nameEl, n) {
       var sr = document.createElement('span');
       sr.className = 'sr-only';
@@ -496,15 +515,39 @@
          upright the figure is symmetrical about its own middle and needs none
          of this. A share of the stage, never a pixel count, so it holds at
          every width. */
-      var NUDGE = upright ? 0 : 0.035;
+      /* Smaller than before: now the figure is closed it is symmetrical about
+         its own middle, so dead centre is genuinely centred and only a light
+         touch is wanted to sit it against the page's left-aligned type. */
+      var NUDGE = upright ? 0 : 0.02;
       var box = upright
         ? { x: w * 0.20, y: h * 0.10, w: w * 0.60, h: h * 0.80 }
         : { x: w * (0.09 - NUDGE), y: h * 0.14, w: w * 0.82, h: h * 0.72 };
 
+      /* open: 0 — the complete figure, not the mark's open-mouthed version.
+         The base has to read as one continuous infinity from end to end, and
+         it is also the track the light runs on, so any gap would be a gap in
+         both. Closed with a wrap-around Catmull-Rom (DEO.toPath clamps its end
+         tangents, which would leave a flat corner where the loop rejoins). */
       points = DEO.lemniscatePoints(box, {
-        steps: SAMPLES, open: 0.05, rotate: upright ? Math.PI / 2 : 0
+        steps: SAMPLES, open: 0, rotate: upright ? Math.PI / 2 : 0
       });
-      curve.setAttribute('d', DEO.toPath(points));
+
+      /* The sampler closes the ring by repeating its first point. Dropping the
+         copy is what lets the ring divide into equal whole slices. */
+      var last = points.length - 1;
+      if (last > 0 && Math.abs(points[0][0] - points[last][0]) < 0.01 &&
+                      Math.abs(points[0][1] - points[last][1]) < 0.01) points.pop();
+
+      /* Now the figure is closed, the two crossings sit at exactly a quarter
+         and three quarters of the ring — which is exactly where the 2nd and
+         5th of six slice midpoints land, stacking two nodes on the same point
+         in the middle of the mark. Rotating the ring by half a slice moves the
+         midpoints to the two loop extremes and to the flanks either side of
+         each crossing: three nodes per loop, none on the waist. */
+      var half = Math.round(points.length / COUNT / 2);
+      if (half > 0) points = points.slice(half).concat(points.slice(0, half));
+
+      curve.setAttribute('d', closedLoop(points));
 
       var per = Math.floor(points.length / COUNT);
       for (var n = 0; n < COUNT; n++) {
@@ -584,19 +627,11 @@
 
     var FLOW_LEN = 0, head = 0, flowRaf = 0, flowT0 = 0, flowSeen = false;
 
-    /* Continue the curve past its two open ends, along their own tangents,
-       so the light has somewhere to go instead of jumping the gap. */
-    function closedPath(pts) {
-      var n = pts.length;
-      if (n < 4) return DEO.toPath(pts);
-      var a = pts[n - 1], a1 = pts[n - 2], b = pts[0], b1 = pts[1];
-      var ta = [a[0] - a1[0], a[1] - a1[1]], tb = [b1[0] - b[0], b1[1] - b[1]];
-      var na = Math.hypot(ta[0], ta[1]) || 1, nb = Math.hypot(tb[0], tb[1]) || 1;
-      var k = Math.hypot(b[0] - a[0], b[1] - a[1]) * 0.62;
-      return DEO.toPath(pts) +
-        'C' + (a[0] + ta[0] / na * k) + ' ' + (a[1] + ta[1] / na * k) +
-        ' ' + (b[0] - tb[0] / nb * k) + ' ' + (b[1] - tb[1] / nb * k) +
-        ' ' + b[0] + ' ' + b[1] + 'Z';
+    /* No geometry of its own. The light reads the grey curve's own `d`, so the
+       two are the same path by construction and cannot drift apart, whatever
+       the breakpoint or the rotation. */
+    function trackPath() {
+      return curve.getAttribute('d') || '';
     }
 
     /* Each sub-stroke shows one slice of the band, so the colour steps along
@@ -677,7 +712,8 @@
     SITE.onResize(function () {
       resolveLabels();
       if (!points.length) return;
-      var d = closedPath(points);
+      var d = trackPath();
+      if (!d) return;
       flowGlow.setAttribute('d', d);
       for (var i = 0; i < FLOW_N; i++) segs[i].setAttribute('d', d);
 
