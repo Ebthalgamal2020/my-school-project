@@ -574,14 +574,16 @@ html:not(.js) .deo-floating-students { opacity: 1; transform: none; }
    Overrides only .journey-step. Every other revealed block keeps its
    translateY rise. Placed after the shared rule so it wins on order, at the
    same specificity. ---- */
-.js .journey-step { transform: translateX(60px); }
+/* The offset can only be as large as the empty margin beside the container,
+   or an un-revealed row hangs off the right edge and the page scrolls
+   sideways. Below 1280px there is no spare margin at all — only the gutter,
+   which never drops under 20px — so the movement settles at a safe 16px and
+   opens up to the full 60px on screens wide enough to absorb it.
+
+   This replaces a 700px breakpoint that left every width from 701px to about
+   1360px overflowing by up to 40px. */
+.js .journey-step { transform: translateX(clamp(16px, calc((100vw - 1280px) / 2), 60px)); }
 .js .journey-step.visible { transform: translateX(0); }
-/* 60px would push the un-revealed rows past a narrow viewport, so the offset
-   shrinks with the screen. Same movement, same direction. */
-@media (max-width: 700px) {
-  .js .journey-step { transform: translateX(16px); }
-  .js .journey-step.visible { transform: translateX(0); }
-}
 
 .js .journey-step:nth-child(2), .js .person-block:nth-child(2), .js .value-block:nth-child(2) { transition-delay:  80ms; }
 .js .journey-step:nth-child(3), .js .person-block:nth-child(3), .js .value-block:nth-child(3) { transition-delay: 160ms; }
@@ -1084,13 +1086,13 @@ html:not(.js) .deo-floating-students { opacity: 1; transform: none; }
       <a href="school-path.html" data-en="School Path" data-de="Schulaufbau">School Path</a>
       <a href="community.html" data-en="Community" data-de="Gemeinschaft">Community</a>
       <a href="about.html" aria-current="page" data-en="About Us" data-de="Über uns">About Us</a>
-      <a href="contact-v2.html" data-en="Contact" data-de="Kontakt">Contact</a>
+      <a href="contact.html" data-en="Contact" data-de="Kontakt">Contact</a>
     </nav>
     <div class="header-actions">
       <button class="lang-toggle" id="lang-toggle" aria-label="Switch language to German">
         <span class="lang-current">EN</span> / <span class="lang-other">DE</span>
       </button>
-      <a href="contact-v2.html" class="btn btn-primary nav-cta" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
+      <a href="contact.html" class="btn btn-primary nav-cta" data-en="Schedule a Visit" data-de="Termin vereinbaren">Schedule a Visit</a>
     </div>
     <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="main-nav">
       <span></span><span></span><span></span>
@@ -1343,7 +1345,7 @@ html:not(.js) .deo-floating-students { opacity: 1; transform: none; }
           <li><a href="school-path.html">School Path</a></li>
           <li><a href="community.html">Community</a></li>
           <li><a href="about.html">About</a></li>
-          <li><a href="contact-v2.html">Contact</a></li>
+          <li><a href="contact.html">Contact</a></li>
         </ul>
       </nav>
 
