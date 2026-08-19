@@ -154,7 +154,14 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       var box = { x: W * 0.08, y: H * 0.14, w: W * 0.84, h: H * 0.72 };
-      var spine = resample(DEO.lemniscatePoints(box, { steps: 900, open: 0.05 }), COUNT);
+
+      /* open: 0 — a CLOSED figure. The DEO mark's own strokes stop short of
+         each other, and lemniscatePoints trims for that by default; but the
+         trim falls at the right extreme, so the crowd was assembling into an
+         infinity with the outside of its right loop missing. Here the people
+         have to make one complete, continuous symbol, both loops closed and
+         joined at the crossing. */
+      var spine = resample(DEO.lemniscatePoints(box, { steps: 1200, open: 0 }), COUNT);
       var thickness = Math.max(Math.min(H * 0.09, 46), 14);
 
       dots = spine.map(function (p, i) {
